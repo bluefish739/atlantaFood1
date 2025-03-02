@@ -5,3 +5,9 @@ export class Student {
     email: string | undefined;
     updatedAt: Date | undefined;
 }
+
+export class Store {
+    id: string | undefined;
+    name: string | undefined;
+    contact: string | undefined;
+}

@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Student } from './kinds';
+import { Student, Store } from './kinds';
 import { firstValueFrom, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 
@@ -24,11 +24,23 @@ export class XapiService {
     return await firstValueFrom(this.http.get<Student[]>(`/xapi/students/all`));
   }
 
+  public async getAllStores() {
+    return await firstValueFrom(this.http.get<Store[]>(`/xapi/stores/all`));
+  }
+
   public async getStudent(id: string) {
     return await firstValueFrom(this.http.get<Student>(`/xapi/students/student/` + id));
   }  
 
   public async saveStudent(student: Student) {
     return await firstValueFrom(this.http.post<Student>(`/xapi/students/student`, student));
+  }
+
+  public async getStore(id: string) {
+    return await firstValueFrom(this.http.get<Store>(`/xapi/stores/store/` + id));
+  }  
+
+  public async saveStore(store: Store) {
+    return await firstValueFrom(this.http.post<Store>(`/xapi/stores/store`, store));
   }  
 }

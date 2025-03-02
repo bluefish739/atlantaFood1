@@ -6,7 +6,8 @@
         <th>Name</th>
     </tr>
     <tr *ngFor="let store of stores; let idx=index">
-        <td>{{idx+1}}</td>
+        <td><a [routerLink]="['/stores/details', store.id]">{{idx+1}}</a></td>
         <td>{{store.name}}</td>
     </tr>
 </table>
+<a [routerLink]="['/stores/details/new']">Create new store</a>
