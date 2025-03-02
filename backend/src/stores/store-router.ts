@@ -56,3 +56,27 @@ storeRouter.get('/store/:storeId', authenticator, async (req: Request, res: Resp
     res.status(500).json({ success: false, message: error.message });
   }
 });
+
+storeRouter.post('/store', authenticator, async (req: Request, res: Response) => {
+  const store = req.body as Store;
+  try {
+    if (!store) {
+      logger.log("Store entity is not provided");
+      res.status(404).json({ success: false, message: "Store entity is not provided" });
+      return;
+    }
+    if (store.id) {
+      const existingStore = await storeDAO.getStore(store.id);
+      if (!existingStore) {
+        res.status(404).json({ success: false, message: "No store with id " + store.id + " was found" });
+        return;
+      }
+    }
+    const id = await storeDAO.saveStore(store);
+    logger.log("Store added successfully! id=" + id);
+    res.status(200).json(store);
+  } catch (error: any) {
+    logger.log("Failed to add a store", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
