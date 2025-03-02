@@ -28,4 +28,10 @@ export class StoreDAO {
         return store;
     }
 
+    public async getStore(storeId: string) {
+        const entityKey = datastore.key([StoreDAO.STORE_KIND, storeId]);
+        const data = await datastore.get(entityKey);
+        const store = data[0];
+        return store;
+      }
 }

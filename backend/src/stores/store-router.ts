@@ -38,3 +38,21 @@ storeRouter.get('/all', authenticator, async (req: Request, res: Response) => {
     res.status(500).json({ success: false, message: error.message });
   }
 });
+
+storeRouter.get('/store/:storeId', authenticator, async (req: Request, res: Response) => {
+  try {
+    const storeId = req.params.storeId as string;
+    if (!storeId) {
+      res.status(400).json({ success: false, message: "Missing store ID" });
+      return;
+    }
+    const store = await storeDAO.getStore(storeId);
+    if (!store) {
+      res.status(404).json({ success: false, message: "Store not found " + storeId });
+      return;
+    }
+    res.status(200).json(store);
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
