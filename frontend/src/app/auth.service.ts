@@ -20,9 +20,9 @@ export class AuthService {
         // For Firebase JS SDK v7.20.0 and later, measurementId is optional
         const firebaseConfig = {
             apiKey: "AIzaSyDXZFYhu4MQrlhHsk8uGuakHKwulxmk3TU",
-            authDomain: "lab-projx.firebaseapp.com",
-            projectId: "lab-projx",
-            storageBucket: "lab-projx.firebasestorage.app",
+            authDomain: "atlantaFood1.firebaseapp.com",
+            projectId: "atlantaFood1",
+            storageBucket: "atlantaFood1.firebasestorage.app",
             messagingSenderId: "37791437540",
             appId: "1:37791437540:web:e8d7c74d0b43bc459e92f1",
             measurementId: "G-E8N2GQS3H5"
