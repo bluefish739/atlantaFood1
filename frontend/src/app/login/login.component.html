@@ -1,0 +1,21 @@
+<a [routerLink]="['/']">Home</a>
+
+<div>Login</div>
+<div *ngIf="authService.getToken()">
+    Already signed in
+</div>
+<table *ngIf="!authService.getToken()">
+    <tr>
+        <td>Email</td>
+        <td><input type="text" [(ngModel)]="email" /></td>
+    </tr>
+    <tr>
+        <td>Password</td>
+        <td><input type="password" [(ngModel)]="password" /></td>
+    </tr>
+    <tr>
+        <td><button (click)="signupClicked()">Sign up</button></td>
+        <td><button (click)="signinClicked()">Sign in</button></td>
+    </tr>
+</table>
+

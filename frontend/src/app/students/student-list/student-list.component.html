@@ -1,0 +1,10 @@
+<p>Student List</p>
+
+<table *ngIf="students">
+    <tr><th></th><th>Name</th><th>Email</th></tr>
+    <tr *ngFor="let student of students; let idx=index">
+        <td><a [routerLink]="['/students/details', student.id]">{{idx+1}}</a></td>
+        <td>{{student.name}}</td><td>{{student.email}}</td>
+    </tr>
+</table>
+<a [routerLink]="['/students/details/new']">Create new student</a>

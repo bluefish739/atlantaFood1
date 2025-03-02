@@ -1,0 +1,13 @@
+<p>Student:</p>
+
+<table *ngIf="student">
+    <tr>
+        <td>Name</td>
+        <td><input [(ngModel)]="student.name" /></td>
+    </tr>
+    <tr>
+        <td>Email</td>
+        <td><input [(ngModel)]="student.email" /></td>
+    </tr>
+</table>
+<button (click)="saveClicked()">Save</button>

@@ -1,0 +1,57 @@
+{
+  "functions": [
+    {
+      "source": "backend",
+      "codebase": "backend",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run build"
+      ]
+    }
+  ],
+  "hosting": {
+    "public": "dist",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "headers": [
+      {
+        "source": "**/*.*",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-store, no-cache, must-revalidate, proxy-revalidate"
+          },
+          {
+            "key": "Expires",
+            "value": "0"
+          }
+        ]
+      }
+    ],
+    "rewrites": [
+		  {
+        "source": "/xapp{,/**}",
+        "destination": "/xapp/index.html"
+      },
+      {
+        "source": "/xapi/**",
+        "function": {
+          "functionId": "xapi"
+        }
+      },
+      {
+        "source": "**",
+        "destination": "/xapp/home.html"
+      }
+    ]
+  }
+}
