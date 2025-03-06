@@ -21,3 +21,19 @@ export class StoreLocation {
     streetNumber: number | undefined;
     storeID: string | undefined;
 }
+
+export class Charity {
+    id: string | undefined;
+    name: string | undefined;
+    contact: string | undefined;
+    locations: CharityLocation[] = [];
+}
+
+export class CharityLocation {
+    id: string | undefined;
+    state: string | undefined;
+    city: string | undefined;
+    streetName: string | undefined;
+    streetNumber: number | undefined;
+    charityID: string | undefined;
+}
