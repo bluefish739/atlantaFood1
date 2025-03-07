@@ -1,7 +1,6 @@
 import { Datastore } from "@google-cloud/datastore";
-import { StoreLocation, Charity, CharityLocation } from "../shared/kinds";
+import { StoreLocation, CharityLocation } from "../shared/kinds";
 import { generateId } from "../shared/idutilities";
-import { entity } from "@google-cloud/datastore/build/src/entity";
 
 const datastore = new Datastore();
 export class StoreLocationDAO {
