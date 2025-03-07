@@ -5,7 +5,8 @@
         <th>Charity</th>
     </tr>
     <tr *ngFor="let charity of charities; let idx=index">
-        <td></td>
-        <td></td>
+        <td><a [routerLink]="[/charities/details, charity.id]">{{ idx + 1 }}</a></td>
+        <td>{{ charity.name }}</td>
     </tr>
 </table>
+<a [routerLink]="[/charities/details/new]">Create new charity</a>
