@@ -3,7 +3,7 @@ import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
 import { Charity } from "../shared/kinds";
 import { CharityLocationDAO } from "../locations/location-dao";
-import { CharityDAO, datastore } from "./charity-dao";
+import { CharityDAO } from "./charity-dao";
 
 const charityDAO = new CharityDAO();
 const locationDAO = new CharityLocationDAO();
