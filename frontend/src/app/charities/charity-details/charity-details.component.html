@@ -1,0 +1,14 @@
+<button (click)="goBack()">←</button>
+<h1>Charity:</h1>
+
+<table *ngIf="charity">
+    <tr>
+        <td>Name</td>
+        <td><input [(ngModel)]="charity.name" /></td>
+    </tr>
+    <tr>
+        <td>Contact</td>
+        <td><input [(ngModel)]="charity.contact" /></td>
+    </tr>
+</table>
+<button (click)="saveClicked()">Save</button>

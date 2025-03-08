@@ -12,5 +12,9 @@ export const routes: Routes = [
     {
         path: 'stores',
         loadChildren: () => import('./stores/stores-routing.module').then(mod => mod.StoreRoutingModule),
+    },
+    {
+        path: 'charities',
+        loadChildren: () => import('./charities/charities-routing.module').then(mod => mod.CharityRoutingModule)
     }
 ];

@@ -11,3 +11,9 @@ export class Store {
     name: string | undefined;
     contact: string | undefined;
 }
+
+export class Charity {
+    id: string | undefined;
+    name: string | undefined;
+    contact: string | undefined;
+}
