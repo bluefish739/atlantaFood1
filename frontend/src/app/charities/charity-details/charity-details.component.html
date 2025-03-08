@@ -1,12 +1,13 @@
-<h1>Charity Details:</h1>
+<h1>Charity:</h1>
+
 <table *ngIf="charity">
     <tr>
-        <th><b>Name</b></th>
-        <th><b>Contact</b></th>
+        <td>Name</td>
+        <td><input [(ngModel)]="charity.name" /></td>
     </tr>
     <tr>
-        <td><input [(ngModel)]="charity.name" /></td>
+        <td>Contact</td>
         <td><input [(ngModel)]="charity.contact" /></td>
     </tr>
 </table>
-<button (click)="saveClicked()">Save Charity</button>
+<button (click)="saveClicked()">Save</button>

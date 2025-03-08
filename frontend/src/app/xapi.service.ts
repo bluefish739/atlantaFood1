@@ -49,10 +49,10 @@ export class XapiService {
   }
 
   public async saveCharity(charity: Charity) {
-    return await firstValueFrom(this.http.post<Charity>(`xapi/charities/charity`, charity));
+    return await firstValueFrom(this.http.post<Charity>(`/xapi/charities/charity`, charity));
   }
 
   public async getCharity(id: string) {
-    return await firstValueFrom(this.http.get<Charity>(`xapi/charities/charity` + id));
+    return await firstValueFrom(this.http.get<Charity>(`/xapi/charities/charity/` + id));
   }
 }
