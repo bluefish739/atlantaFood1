@@ -34,4 +34,8 @@ export class CharityDetailsComponent {
         await this.xapiService.saveCharity(this.charity!);
         this.router.navigateByUrl('/charities/list');
       }
+
+      goBack() {
+        this.router.navigateByUrl('charities/list');
+      }
 }
