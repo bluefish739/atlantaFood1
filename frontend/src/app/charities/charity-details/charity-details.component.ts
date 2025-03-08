@@ -31,7 +31,6 @@ export class CharityDetailsComponent {
       }
     
       async saveClicked() {
-        console.log("working");
         await this.xapiService.saveCharity(this.charity!);
         this.router.navigateByUrl('/charities/list');
       }
