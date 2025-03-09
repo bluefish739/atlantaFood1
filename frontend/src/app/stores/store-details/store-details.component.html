@@ -9,5 +9,39 @@
         <td>Contact</td>
         <td><input [(ngModel)]="store.contact" /></td>
     </tr>
+    <tr>
+        <td>Locations</td>
+        <td>
+            <div *ngFor="let location of storeLocations; let idx=index">
+                <p>{{ location.state }}, {{ location.city }}, {{ location.streetNumber }} {{ location.streetName }}</p>
+            </div>
+        </td>
+    </tr>
 </table>
+<hr>
+<div>
+    <button (click)="activateNewLocationForm()">Add new location</button>
+    <table *ngIf="newLocationFormActive">
+        <tr>
+            <td><p>State: </p></td>
+            <td><input type="text" [(ngModel)]="newLocation.state" /></td>
+        </tr>
+        <tr>
+            <td><p>City: </p></td>
+            <td><input type="text" [(ngModel)]="newLocation.city" /></td>
+        </tr>
+        <tr>
+            <td><p>Street Name: </p></td>
+            <td><input type="text" [(ngModel)]="newLocation.streetNumber" /></td>
+        </tr>
+        <tr>
+            <td><p>Street Number: </p></td>
+            <td><input type="number" [(ngModel)]="newLocation.streetName" /></td>
+        </tr>
+        <tr>
+            <button (click)="addLocation()">Add Location</button>
+        </tr>
+    </table>
+</div>
+<hr>
 <button (click)="saveClicked()">Save</button>

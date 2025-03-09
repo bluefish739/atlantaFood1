@@ -33,5 +33,5 @@ export class StoreDAO {
         const data = await datastore.get(entityKey);
         const store = data[0];
         return store;
-      }
+    }
 }
