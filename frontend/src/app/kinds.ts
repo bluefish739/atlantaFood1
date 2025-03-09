@@ -10,6 +10,13 @@ export class Store {
     id: string | undefined;
     name: string | undefined;
     contact: string | undefined;
+    locations: StoreLocation[] = [];
+}
+
+export class StoreLocation {
+    state: string | undefined;
+    city: string | undefined;
+    streetAddress: string | undefined;
 }
 
 export class Charity {
