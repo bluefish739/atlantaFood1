@@ -16,7 +16,8 @@ export class Store {
 export class StoreLocation {
     state: string | undefined;
     city: string | undefined;
-    streetAddress: string | undefined;
+    streetName: string | undefined;
+    streetNumber: number | undefined;
 }
 
 export class Charity {

@@ -9,5 +9,13 @@
         <td>Contact</td>
         <td><input [(ngModel)]="store.contact" /></td>
     </tr>
+    <tr>
+        <td>Locations</td>
+        <td>
+            <div *ngFor="let location of store.locations; let idx=index">
+                <p>{{ location.state }}, {{ location.city }}, {{ location.streetNumber }} {{ location.streetName }}</p>
+            </div>
+        </td>
+    </tr>
 </table>
 <button (click)="saveClicked()">Save</button>
