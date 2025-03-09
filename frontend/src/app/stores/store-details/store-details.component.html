@@ -18,4 +18,29 @@
         </td>
     </tr>
 </table>
+<hr>
+<div>
+    <button (click)="activateNewLocationForm()">Add new location</button>
+    <table *ngIf="newLocationFormActive">
+        <tr>
+            <td><p>State: </p></td>
+            <td><input type="text" [(ngModel)]="newLocation.state" /></td>
+        </tr>
+        <tr>
+            <td><p>City: </p></td>
+            <td><input type="text" [(ngModel)]="newLocation.city" /></td>
+        </tr>
+        <tr>
+            <td><p>Street Name: </p></td>
+            <td><input type="text" [(ngModel)]="newLocation.streetNumber" /></td>
+        </tr>
+        <tr>
+            <td><p>Street Number: </p></td>
+            <td><input type="number" [(ngModel)]="newLocation.streetName" /></td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+</div>
+<hr>
 <button (click)="saveClicked()">Save</button>

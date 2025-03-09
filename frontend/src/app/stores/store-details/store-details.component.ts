@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { XapiService } from '../../xapi.service';
-import { Store } from '../../kinds';
+import { Store, StoreLocation } from '../../kinds';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,6 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './store-details.component.scss'
 })
 export class StoreDetailsComponent {
+  newLocationFormActive = false;
   store = new Store();
   constructor(private xapiService: XapiService,
     private activatedRoute: ActivatedRoute,
@@ -32,5 +33,10 @@ export class StoreDetailsComponent {
   async saveClicked() {
     await this.xapiService.saveStore(this.store!);
     this.router.navigateByUrl('/stores/list');
+  }
+
+  newLocation = new StoreLocation();
+  activateNewLocationForm() {
+    this.newLocationFormActive = true;
   }
 }
