@@ -15,7 +15,7 @@ expressApp.use((req, res, next) => {
 
 expressApp.use('/xapi/students', studentRouter);
 expressApp.use('/xapi/stores', storeRouter);
-expressApp.use('/xapi/locations', locationRouter)
-expressApp.use('/xapi/charities', charityRouter)
+expressApp.use('/xapi/locations', locationRouter);
+expressApp.use('/xapi/charities', charityRouter);
 
 export const xapi = onRequest(expressApp);

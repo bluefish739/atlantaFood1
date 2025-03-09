@@ -38,5 +38,15 @@ export class StoreDetailsComponent {
   newLocation = new StoreLocation();
   activateNewLocationForm() {
     this.newLocationFormActive = true;
+    this.newLocation.storeID = this.store.id;
+  }
+
+  async addLocation() {
+    await this.xapiService.saveStoreLocation(this.newLocation);
+    /*
+    this.store.locations.push(this.newLocation);
+    await this.xapiService.saveStore(this.store!);
+    this.newLocationFormActive = false;
+    */
   }
 }

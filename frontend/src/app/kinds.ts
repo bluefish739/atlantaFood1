@@ -14,10 +14,12 @@ export class Store {
 }
 
 export class StoreLocation {
+    id: string | undefined;
     state: string | undefined;
     city: string | undefined;
     streetName: string | undefined;
     streetNumber: number | undefined;
+    storeID: string | undefined;
 }
 
 export class Charity {

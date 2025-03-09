@@ -5,7 +5,7 @@ import { generateId } from "../shared/idutilities";
 const datastore = new Datastore();
 export class StoreLocationDAO {
     static LOCATION_KIND = "storeLocation";
-    public async addLocation(location: StoreLocation) {
+    public async saveLocation(location: StoreLocation) {
         location.id = generateId();
         const entityKey = datastore.key([StoreLocationDAO.LOCATION_KIND, location.id]);
 

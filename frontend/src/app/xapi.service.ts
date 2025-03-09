@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Student, Store, Charity } from './kinds';
+import { Student, Store, Charity, StoreLocation } from './kinds';
 import { firstValueFrom, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 
@@ -54,5 +54,10 @@ export class XapiService {
 
   public async getCharity(id: string) {
     return await firstValueFrom(this.http.get<Charity>(`/xapi/charities/charity/` + id));
+  }
+
+  public async saveStoreLocation(storeLocation: StoreLocation) {
+    console.log(storeLocation);
+    return await firstValueFrom(this.http.post<StoreLocation>(`/xapi/locations/location`, storeLocation));
   }
 }
