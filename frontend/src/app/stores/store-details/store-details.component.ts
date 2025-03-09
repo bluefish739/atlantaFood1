@@ -20,10 +20,14 @@ export class StoreDetailsComponent {
   ) {
   }
 
+  storeID = ""
+  storeLocations: StoreLocation[] = [];
   async ngOnInit() {
     const id = this.activatedRoute.snapshot.params['id'];
     if(id && id!='new') {
+      this.storeLocations = (await this.xapiService.getAllStoreLocations()).filter(location => location.storeID == id);
       this.store = await this.xapiService.getStore(id);
+      this.storeID = id;
       if(!this.store) {
         this.store = new Store();
       }
@@ -36,14 +40,14 @@ export class StoreDetailsComponent {
   }
 
   newLocation = new StoreLocation();
-  activateNewLocationForm() {
+  async activateNewLocationForm() {
     this.newLocationFormActive = true;
     this.newLocation.storeID = this.store.id;
   }
 
   async addLocation() {
     await this.xapiService.saveStoreLocation(this.newLocation);
-    await this.xapiService.saveStore(this.store!);
+    this.storeLocations = (await this.xapiService.getAllStoreLocations()).filter(location => location.storeID == this.storeID);
     this.newLocationFormActive = false;
   }
 }

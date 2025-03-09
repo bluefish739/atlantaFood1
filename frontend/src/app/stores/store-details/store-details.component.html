@@ -12,7 +12,7 @@
     <tr>
         <td>Locations</td>
         <td>
-            <div *ngFor="let location of store.locations; let idx=index">
+            <div *ngFor="let location of storeLocations; let idx=index">
                 <p>{{ location.state }}, {{ location.city }}, {{ location.streetNumber }} {{ location.streetName }}</p>
             </div>
         </td>
