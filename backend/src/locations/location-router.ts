@@ -57,3 +57,14 @@ locationRouter.post('/location', authenticator, async (req: Request, res: Respon
     res.status(500).json({ success: false, message: error.message });
   }
 });
+
+locationRouter.get('/all', authenticator, async (req: Request, res: Response) => {
+  try {
+    const locations = storeLocationDAO.getAllLocations();
+    logger.log("Successfully retrieved all store locations!")
+    res.status(200).json(locations);
+  } catch (error: any) {
+    logger.log("Failed to retrieve store locations")
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
