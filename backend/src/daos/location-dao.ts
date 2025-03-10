@@ -2,7 +2,6 @@ import { StoreLocation, CharityLocation } from "../shared/kinds";
 import { generateId } from "../shared/idutilities";
 import { datastore } from "./data-store-factory";
 
-
 export class StoreLocationDAO {
     static LOCATION_KIND = "storeLocation";
     public async saveLocation(location: StoreLocation) {

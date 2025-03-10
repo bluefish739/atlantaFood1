@@ -2,11 +2,7 @@ import express, { Request, Response } from "express";
 import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
 import { Store } from "../shared/kinds";
-import { StoreDAO } from "../daos/store-dao";
-import { StoreLocationDAO } from "../daos/location-dao";
-
-const storeDAO = new StoreDAO();
-const locationDAO = new StoreLocationDAO();
+import { storeLocationDAO, storeDAO } from "../daos/dao-factory";
 
 export const storeRouter = express.Router();
 
@@ -29,7 +25,7 @@ storeRouter.get('/add-sample-store', authenticator, async (req: Request, res: Re
 storeRouter.get('/all', authenticator, async (req: Request, res: Response) => {
   try {
     const stores = await storeDAO.getAllStores();
-    const locations = await locationDAO.getAllLocations();
+    const locations = await storeLocationDAO.getAllLocations();
     for (let store of stores) {
       store.locations = locations.filter((location) => location.storeID == store.id);
     }

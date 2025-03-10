@@ -2,13 +2,10 @@ import express, { Request, Response } from "express";
 import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
 import { Student } from "../shared/kinds";
-import { StudentDAO } from "../daos/student-dao";
-
-const studentDAO = new StudentDAO();
+import { studentDAO } from "../daos/dao-factory";
 
 export const studentRouter = express.Router();
-
-studentRouter.get('/add-sample-student', authenticator, async (req: Request, res: Response) => {
+async function addSampleStudent(req: Request, res: Response) {
   try {
     let student = new Student();
     student.name = "John Doe";
@@ -22,9 +19,8 @@ studentRouter.get('/add-sample-student', authenticator, async (req: Request, res
     logger.log("Failed to add a new sample student", error);
     res.status(500).json({ success: false, message: error.message });
   }
-});
-
-studentRouter.post('/student', authenticator, async (req: Request, res: Response) => {
+}
+async function addStudent(req: Request, res: Response)  {
   const student = req.body as Student;
   try {
     if (!student) {
@@ -47,18 +43,16 @@ studentRouter.post('/student', authenticator, async (req: Request, res: Response
     logger.log("Failed to add a student", error);
     res.status(500).json({ success: false, message: error.message });
   }
-});
-
-studentRouter.get('/all', authenticator, async (req: Request, res: Response) => {
+}
+async function getAllStudents(req: Request, res: Response)  {
   try {
     const students = await studentDAO.getAllStudents();
     res.status(200).json(students);
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
   }
-});
-
-studentRouter.get('/student/:studentId', authenticator, async (req: Request, res: Response) => {
+}
+async function getStudent(req: Request, res: Response) {
   try {
     const studentId = req.params.studentId as string;
     if (!studentId) {
@@ -74,4 +68,9 @@ studentRouter.get('/student/:studentId', authenticator, async (req: Request, res
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
   }
-});
+}
+
+studentRouter.get('/add-sample-student', authenticator, addSampleStudent);
+studentRouter.post('/student', authenticator, addStudent);
+studentRouter.get('/all', authenticator, getAllStudents);
+studentRouter.get('/student/:studentId', authenticator, getStudent);
