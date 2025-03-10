@@ -2,8 +2,8 @@ import express, { Request, Response } from "express";
 import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
 import { StoreLocation } from "../shared/kinds";
-import { StoreLocationDAO } from "./location-dao";
-import { StoreDAO } from "../stores/store-dao";
+import { StoreLocationDAO } from "../daos/location-dao";
+import { StoreDAO } from "../daos/store-dao";
 
 const storeLocationDAO = new StoreLocationDAO();
 const storeDAO = new StoreDAO();

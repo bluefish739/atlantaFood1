@@ -2,8 +2,8 @@ import express, { Request, Response } from "express";
 import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
 import { Charity } from "../shared/kinds";
-import { CharityLocationDAO } from "../locations/location-dao";
-import { CharityDAO } from "./charity-dao";
+import { CharityLocationDAO } from "../daos/location-dao";
+import { CharityDAO } from "../daos/charity-dao";
 
 const charityDAO = new CharityDAO();
 const locationDAO = new CharityLocationDAO();
