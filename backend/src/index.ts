@@ -1,9 +1,9 @@
 import { onRequest } from "firebase-functions/v2/https";
 import express from "express";
-import { studentRouter } from './routers/student-router';
 import { storeRouter } from './routers/store-router';
 import { charityRouter } from "./routers/charity-router";
 import { locationRouter } from "./routers/location-router";
+import { StudentRouter } from "./routers/student-router";
 
 const expressApp = express();
 expressApp.use(express.json());
@@ -13,7 +13,8 @@ expressApp.use((req, res, next) => {
     next();
 });
 
-expressApp.use('/xapi/students', studentRouter);
+
+expressApp.use('/xapi/students', StudentRouter.buildRouter());
 expressApp.use('/xapi/stores', storeRouter);
 expressApp.use('/xapi/locations', locationRouter);
 expressApp.use('/xapi/charities', charityRouter);
