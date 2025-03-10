@@ -19,6 +19,7 @@ async function addSampleStudent(req: Request, res: Response) {
     res.status(500).json({ success: false, message: error.message });
   }
 }
+
 async function addStudent(req: Request, res: Response) {
   const student = req.body as Student;
   try {
@@ -43,6 +44,7 @@ async function addStudent(req: Request, res: Response) {
     res.status(500).json({ success: false, message: error.message });
   }
 }
+
 async function getAllStudents(req: Request, res: Response) {
   try {
     const students = await studentDAO.getAllStudents();
@@ -51,6 +53,7 @@ async function getAllStudents(req: Request, res: Response) {
     res.status(500).json({ success: false, message: error.message });
   }
 }
+
 async function getStudent(req: Request, res: Response) {
   try {
     const studentId = req.params.studentId as string;

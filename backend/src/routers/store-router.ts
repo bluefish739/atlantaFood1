@@ -19,6 +19,7 @@ async function addSampleStore(req: Request, res: Response) {
     res.status(500).json({ success: false, message: error.message });
   }
 }
+
 async function getAllStores(req: Request, res: Response) {
   try {
     const stores = await storeDAO.getAllStores();
@@ -31,6 +32,7 @@ async function getAllStores(req: Request, res: Response) {
     res.status(500).json({ success: false, message: error.message });
   }
 }
+
 async function getStore(req: Request, res: Response) {
   try {
     const storeId = req.params.storeId as string;
@@ -48,6 +50,7 @@ async function getStore(req: Request, res: Response) {
     res.status(500).json({ success: false, message: error.message });
   }
 }
+
 async function addStore(req: Request, res: Response) {
   const store = req.body as Store;
   try {
@@ -71,6 +74,7 @@ async function addStore(req: Request, res: Response) {
     res.status(500).json({ success: false, message: error.message });
   }
 }
+
 export const storeRouter = express.Router();
 storeRouter.get('/add-sample-store', authenticator, addSampleStore);
 storeRouter.get('/all', authenticator, getAllStores);
