@@ -75,11 +75,10 @@ export class StudentRouter {
 
   static buildRouter(): Router {
     const studentRouter = new StudentRouter();
-    const expressRouter = express.Router();
-    expressRouter.get('/add-sample-student', authenticator, studentRouter.addSampleStudent);
-    expressRouter.post('/student', authenticator, studentRouter.addStudent);
-    expressRouter.get('/all', authenticator, studentRouter.getAllStudents);
-    expressRouter.get('/student/:studentId', authenticator, studentRouter.getStudent);
-    return expressRouter;
+    return express.Router()
+      .get('/add-sample-student', authenticator, studentRouter.addSampleStudent)
+      .post('/student', authenticator, studentRouter.addStudent)
+      .get('/all', authenticator, studentRouter.getAllStudents)
+      .get('/student/:studentId', authenticator, studentRouter.getStudent);
   }
 }
