@@ -1,9 +1,6 @@
-import { Datastore } from "@google-cloud/datastore";
 import { Student } from "../shared/kinds";
 import { generateId } from "../shared/idutilities";
-
-// Initialize Datastore
-const datastore = new Datastore();
+import { datastore } from "./data-store-factory";
 
 export class StudentDAO {
   public static readonly STUDENT_KIND = "Student";

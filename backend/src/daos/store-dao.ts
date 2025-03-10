@@ -1,8 +1,8 @@
-import { Datastore } from "@google-cloud/datastore";
 import { Store } from "../shared/kinds";
 import { generateId } from "../shared/idutilities";
+import { datastore } from "./data-store-factory";
 
-export const datastore = new Datastore();
+
 export class StoreDAO {
     static STORE_KIND = "Store";
 

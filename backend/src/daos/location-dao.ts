@@ -1,8 +1,8 @@
-import { Datastore } from "@google-cloud/datastore";
 import { StoreLocation, CharityLocation } from "../shared/kinds";
 import { generateId } from "../shared/idutilities";
+import { datastore } from "./data-store-factory";
 
-const datastore = new Datastore();
+
 export class StoreLocationDAO {
     static LOCATION_KIND = "storeLocation";
     public async saveLocation(location: StoreLocation) {
