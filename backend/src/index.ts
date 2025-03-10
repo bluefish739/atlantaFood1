@@ -1,9 +1,9 @@
 import { onRequest } from "firebase-functions/v2/https";
 import express from "express";
-import { studentRouter } from './students/student-router';
-import { storeRouter } from './stores/store-router';
-import { charityRouter } from "./charities/charity-router";
-import { locationRouter } from "./locations/location-router";
+import { studentRouter } from './routers/student-router';
+import { storeRouter } from './routers/store-router';
+import { charityRouter } from "./routers/charity-router";
+import { locationRouter } from "./routers/location-router";
 
 const expressApp = express();
 expressApp.use(express.json());
