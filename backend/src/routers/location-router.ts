@@ -9,6 +9,7 @@ async function getRandomStore() {
   const randomIdx = Math.floor(Math.random() * stores.length);
   return stores[randomIdx];
 }
+
 async function addSampleLocation(req: Request, res: Response) {
   try {
     let location = new StoreLocation();
@@ -27,6 +28,7 @@ async function addSampleLocation(req: Request, res: Response) {
     res.status(500).json({ success: false, message: error.message });
   }
 }
+
 async function getLocation(req: Request, res: Response) {
   const storeLocation = req.body as StoreLocation;
   try {
@@ -50,6 +52,7 @@ async function getLocation(req: Request, res: Response) {
     res.status(500).json({ success: false, message: error.message });
   }
 }
+
 async function getAllLocations(req: Request, res: Response) {
   try {
     const locations = await storeLocationDAO.getAllLocations();
@@ -60,6 +63,7 @@ async function getAllLocations(req: Request, res: Response) {
     res.status(500).json({ success: false, message: error.message });
   }
 }
+
 export const locationRouter = express.Router();
 locationRouter.get('/add-sample-location', authenticator, addSampleLocation);
 locationRouter.post('/location', authenticator, getLocation);
