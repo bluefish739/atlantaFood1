@@ -4,15 +4,12 @@ import { authenticator } from "../shared/authentication";
 import { StoreLocation } from "../shared/kinds";
 import { storeDAO, storeLocationDAO } from "../daos/dao-factory";
 
-export const locationRouter = express.Router();
-
 async function getRandomStore() {
   const stores = await storeDAO.getAllStores();
   const randomIdx = Math.floor(Math.random() * stores.length);
   return stores[randomIdx];
 }
-
-locationRouter.get('/add-sample-location', authenticator, async (req: Request, res: Response) => {
+async function addSampleLocation(req: Request, res: Response) {
   try {
     let location = new StoreLocation();
     location.storeID = (await getRandomStore()).id;
@@ -29,9 +26,8 @@ locationRouter.get('/add-sample-location', authenticator, async (req: Request, r
     logger.log("Failed to add a new sample location", error);
     res.status(500).json({ success: false, message: error.message });
   }
-});
-
-locationRouter.post('/location', authenticator, async (req: Request, res: Response) => {
+}
+async function getLocation(req: Request, res: Response) {
   const storeLocation = req.body as StoreLocation;
   try {
     if (!storeLocation) {
@@ -53,9 +49,8 @@ locationRouter.post('/location', authenticator, async (req: Request, res: Respon
     logger.log("Failed to add a store location", error);
     res.status(500).json({ success: false, message: error.message });
   }
-});
-
-locationRouter.get('/all', authenticator, async (req: Request, res: Response) => {
+}
+async function getAllLocations(req: Request, res: Response) {
   try {
     const locations = await storeLocationDAO.getAllLocations();
     logger.log("Successfully retrieved all store locations!");
@@ -64,4 +59,8 @@ locationRouter.get('/all', authenticator, async (req: Request, res: Response) =>
     logger.log("Failed to retrieve store locations")
     res.status(500).json({ success: false, message: error.message });
   }
-});
+}
+export const locationRouter = express.Router();
+locationRouter.get('/add-sample-location', authenticator, addSampleLocation);
+locationRouter.post('/location', authenticator, getLocation);
+locationRouter.get('/all', authenticator, getAllLocations);
