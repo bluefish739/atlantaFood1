@@ -2,11 +2,8 @@ import express, { Request, Response } from "express";
 import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
 import { StoreLocation } from "../shared/kinds";
-import { StoreLocationDAO } from "../daos/location-dao";
-import { StoreDAO } from "../daos/store-dao";
+import { storeDAO, storeLocationDAO } from "../daos/dao-factory";
 
-const storeLocationDAO = new StoreLocationDAO();
-const storeDAO = new StoreDAO();
 export const locationRouter = express.Router();
 
 async function getRandomStore() {
