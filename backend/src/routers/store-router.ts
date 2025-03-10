@@ -4,9 +4,7 @@ import { authenticator } from "../shared/authentication";
 import { Store } from "../shared/kinds";
 import { storeLocationDAO, storeDAO } from "../daos/dao-factory";
 
-export const storeRouter = express.Router();
-
-storeRouter.get('/add-sample-store', authenticator, async (req: Request, res: Response) => {
+async function addSampleStore(req: Request, res: Response) {
   try {
     let store = new Store();
     store.name = "Kroger";
@@ -20,9 +18,8 @@ storeRouter.get('/add-sample-store', authenticator, async (req: Request, res: Re
     logger.log("Failed to add a new sample store", error);
     res.status(500).json({ success: false, message: error.message });
   }
-});
-
-storeRouter.get('/all', authenticator, async (req: Request, res: Response) => {
+}
+async function getAllStores(req: Request, res: Response) {
   try {
     const stores = await storeDAO.getAllStores();
     const locations = await storeLocationDAO.getAllLocations();
@@ -33,9 +30,8 @@ storeRouter.get('/all', authenticator, async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
   }
-});
-
-storeRouter.get('/store/:storeId', authenticator, async (req: Request, res: Response) => {
+}
+async function getStore(req: Request, res: Response) {
   try {
     const storeId = req.params.storeId as string;
     if (!storeId) {
@@ -51,9 +47,8 @@ storeRouter.get('/store/:storeId', authenticator, async (req: Request, res: Resp
   } catch (error: any) {
     res.status(500).json({ success: false, message: error.message });
   }
-});
-
-storeRouter.post('/store', authenticator, async (req: Request, res: Response) => {
+}
+async function addStore(req: Request, res: Response) {
   const store = req.body as Store;
   try {
     if (!store) {
@@ -75,4 +70,9 @@ storeRouter.post('/store', authenticator, async (req: Request, res: Response) =>
     logger.log("Failed to add a store", error);
     res.status(500).json({ success: false, message: error.message });
   }
-});
+}
+export const storeRouter = express.Router();
+storeRouter.get('/add-sample-store', authenticator, addSampleStore);
+storeRouter.get('/all', authenticator, getAllStores);
+storeRouter.get('/store/:storeId', authenticator, getStore);
+storeRouter.post('/store', authenticator, addStore);

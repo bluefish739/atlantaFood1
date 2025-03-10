@@ -4,7 +4,6 @@ import { authenticator } from "../shared/authentication";
 import { Student } from "../shared/kinds";
 import { studentDAO } from "../daos/dao-factory";
 
-export const studentRouter = express.Router();
 async function addSampleStudent(req: Request, res: Response) {
   try {
     let student = new Student();
@@ -20,7 +19,7 @@ async function addSampleStudent(req: Request, res: Response) {
     res.status(500).json({ success: false, message: error.message });
   }
 }
-async function addStudent(req: Request, res: Response)  {
+async function addStudent(req: Request, res: Response) {
   const student = req.body as Student;
   try {
     if (!student) {
@@ -44,7 +43,7 @@ async function addStudent(req: Request, res: Response)  {
     res.status(500).json({ success: false, message: error.message });
   }
 }
-async function getAllStudents(req: Request, res: Response)  {
+async function getAllStudents(req: Request, res: Response) {
   try {
     const students = await studentDAO.getAllStudents();
     res.status(200).json(students);
@@ -70,6 +69,7 @@ async function getStudent(req: Request, res: Response) {
   }
 }
 
+export const studentRouter = express.Router();
 studentRouter.get('/add-sample-student', authenticator, addSampleStudent);
 studentRouter.post('/student', authenticator, addStudent);
 studentRouter.get('/all', authenticator, getAllStudents);
