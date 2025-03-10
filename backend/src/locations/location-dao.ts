@@ -24,6 +24,13 @@ export class StoreLocationDAO {
         const locations: StoreLocation[] = data[0];
         return locations;
     }
+
+    public async getStoreLocation(storeLocationID: string) {
+        const entityKey = datastore.key([StoreLocationDAO.LOCATION_KIND, storeLocationID]);
+        const data = await datastore.get(entityKey);
+        const storeLocation = data[0];
+        return storeLocation;
+    }
 }
 
 export class CharityLocationDAO {

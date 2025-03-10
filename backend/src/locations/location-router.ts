@@ -43,7 +43,7 @@ locationRouter.post('/location', authenticator, async (req: Request, res: Respon
       return;
     }
     if (storeLocation.id) {
-      const existingStoreLocation = await storeDAO.getStore(storeLocation.id);
+      const existingStoreLocation = await storeLocationDAO.getStoreLocation(storeLocation.id);
       if (!existingStoreLocation) {
         res.status(404).json({ success: false, message: "No store location with id " + storeLocation.id + " was found" });
         return;
