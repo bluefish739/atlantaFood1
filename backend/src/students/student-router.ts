@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
 import { Student } from "../shared/kinds";
-import { StudentDAO } from "./student-dao";
+import { StudentDAO } from "../daos/student-dao";
 
 const studentDAO = new StudentDAO();
 
