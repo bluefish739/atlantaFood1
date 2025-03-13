@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, Router } from "express";
 import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
 import { Charity } from "../shared/kinds";
@@ -79,7 +79,7 @@ export class CharityRouter {
     }
   }
 
-  static buildRouter() {
+  static buildRouter(): Router {
     const charityRouter = new CharityRouter();
     return express.Router()
       .get("/add-sample-charity", authenticator, charityRouter.addSampleCharity)
