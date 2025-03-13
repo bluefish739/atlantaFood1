@@ -1,7 +1,7 @@
 import { onRequest } from "firebase-functions/v2/https";
 import express from "express";
 import { StoreRouter } from './routers/store-router';
-import { charityRouter } from "./routers/charity-router";
+import { CharityRouter } from "./routers/charity-router";
 import { locationRouter } from "./routers/location-router";
 import { StudentRouter } from "./routers/student-router";
 
@@ -17,6 +17,6 @@ expressApp.use((req, res, next) => {
 expressApp.use('/xapi/students', StudentRouter.buildRouter());
 expressApp.use('/xapi/stores', StoreRouter.buildRouter());
 expressApp.use('/xapi/locations', locationRouter);
-expressApp.use('/xapi/charities', charityRouter);
+expressApp.use('/xapi/charities', CharityRouter.buildRouter());
 
 export const xapi = onRequest(expressApp);
