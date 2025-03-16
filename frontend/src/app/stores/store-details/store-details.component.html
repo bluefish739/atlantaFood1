@@ -10,6 +10,10 @@
         <td><input [(ngModel)]="store.contact" /></td>
     </tr>
     <tr>
+        <td></td>
+        <td><button (click)="saveClicked()">Save</button></td>
+    </tr>
+    <tr>
         <td>Locations</td>
         <td>
             <div *ngFor="let location of storeLocations; let idx=index">
@@ -44,4 +48,3 @@
     </table>
 </div>
 <hr>
-<button (click)="saveClicked()">Save</button>
