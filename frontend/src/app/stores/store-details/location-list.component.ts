@@ -3,11 +3,11 @@ import { XapiService } from '../../xapi.service';
 import { Store, StoreLocation } from '../../kinds';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'stores-locations-list',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './location-list.component.html',
   styleUrl: './location-list.component.scss'
 })

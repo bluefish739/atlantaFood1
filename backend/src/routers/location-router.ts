@@ -29,7 +29,7 @@ async function addSampleLocation(req: Request, res: Response) {
   }
 }
 
-async function getLocation(req: Request, res: Response) {
+async function saveLocation(req: Request, res: Response) {
   const storeLocation = req.body as StoreLocation;
   try {
     if (!storeLocation) {
@@ -64,7 +64,26 @@ async function getAllLocations(req: Request, res: Response) {
   }
 }
 
+async function getLocation(req: Request, res: Response) {
+  try {
+    const locationID = req.params.locationID as string;
+    if (!locationID) {
+      res.status(400).json({ success: false, message: "Missing location ID" });
+      return;
+    }
+    const location = await storeLocationDAO.getStoreLocation(locationID);
+    if (!location) {
+      res.status(404).json({ success: false, message: "Location not found " + locationID });
+      return;
+    }
+    res.status(200).json(location);
+  } catch (error: any) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+}
+
 export const locationRouter = express.Router();
 locationRouter.get('/add-sample-location', authenticator, addSampleLocation);
-locationRouter.post('/location', authenticator, getLocation);
+locationRouter.post('/location', authenticator, saveLocation);
 locationRouter.get('/all', authenticator, getAllLocations);
+locationRouter.get('/location/:locationID', authenticator, getLocation);

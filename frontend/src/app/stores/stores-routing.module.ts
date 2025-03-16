@@ -13,6 +13,10 @@ const routes: Routes = [
     {
         path: 'location-list/:id',
         loadComponent: () => import('./store-details/location-list.component').then(c => c.LocationListComponent)
+    },
+    {
+        path: 'location-details/:storeID/:locationID',
+        loadComponent: () => import('./store-details/location-details.component').then(c => c.LocationDetailsComponent)
     }
 ];
 

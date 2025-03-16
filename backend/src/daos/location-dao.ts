@@ -5,9 +5,10 @@ import { datastore } from "./data-store-factory";
 export class StoreLocationDAO {
     static LOCATION_KIND = "storeLocation";
     public async saveLocation(location: StoreLocation) {
-        location.id = generateId();
+        if (!location.id) {
+            location.id = generateId();
+        }
         const entityKey = datastore.key([StoreLocationDAO.LOCATION_KIND, location.id]);
-
         const entity = {
             key: entityKey,
             data: location

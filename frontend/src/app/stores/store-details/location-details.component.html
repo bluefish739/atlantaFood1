@@ -1,0 +1,24 @@
+<p>Location:</p>
+
+<table *ngIf="location">
+    <tr>
+        <td>Street Number</td>
+        <td><input [(ngModel)]="location.streetNumber" /></td>
+    </tr>
+    <tr>
+        <td>Street Name</td>
+        <td><input [(ngModel)]="location.streetName" /></td>
+    </tr>
+    <tr>
+        <td>City</td>
+        <td><input [(ngModel)]="location.city" /></td>
+    </tr>
+    <tr>
+        <td>State</td>
+        <td><input [(ngModel)]="location.state" /></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td><button (click)="saveClicked()">Save</button></td>
+    </tr>
+</table>

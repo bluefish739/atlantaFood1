@@ -63,4 +63,8 @@ export class XapiService {
   public async getAllStoreLocations() {
     return await firstValueFrom(this.http.get<StoreLocation[]>(`/xapi/locations/all`));
   }
+
+  public async getStoreLocation(id: string) {
+    return await firstValueFrom(this.http.get<StoreLocation>(`/xapi/locations/location/` + id));
+  }  
 }

@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
 import { Charity } from "../shared/kinds";
-import { charityDAO, locationDAO } from "../daos/dao-factory";
+import { charityDAO, charityLocationDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
 
 export class CharityRouter extends BaseRouter {
@@ -25,7 +25,7 @@ export class CharityRouter extends BaseRouter {
   async getAllCharities(req: Request, res: Response) {
     try {
       const charities = await charityDAO.getAllCharities();
-      const locations = await locationDAO.getAllLocations();
+      const locations = await charityLocationDAO.getAllLocations();
       for (let charity of charities) {
         charity.locations = locations.filter((location) => location.charityID == charity.id);
       }

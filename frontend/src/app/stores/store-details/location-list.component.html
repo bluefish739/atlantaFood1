@@ -2,10 +2,11 @@
 <p>Store Locations:</p>
 <table>
     <tr *ngFor="let location of storeLocations; let idx=index">
-        <td>{{ idx + 1 }}</td>
+        <td><a [routerLink]="['/stores/location-details', storeID, location.id]">{{idx+1}}</a></td>
         <td>{{ location.streetNumber }}</td>
         <td>{{ location.streetName }}</td>
         <td>{{ location.city }}</td>
         <td>{{ location.state }}</td>
     </tr>
 </table>
+<a [routerLink]="['/stores/location-details', storeID, 'new']">Create new store</a>
