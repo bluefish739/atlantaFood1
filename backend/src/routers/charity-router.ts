@@ -14,10 +14,10 @@ export class CharityRouter {
 
       charity = await charityDAO.saveCharity(charity);
       logger.log(`A new sample charity has successfully been added! id: ${charity.id}`);
-      res.status(200).json(charity);
+      this.sendSuccessfulResponse(res, charity);
     } catch (error: any) {
       logger.log(`Error: Sample charity couldn't be added! ${error}`);
-      res.status(500).json({ success: false, message: error.message });
+      this.sendSeverErrorResponse(res, { success: false, message: error.message });
     }
   }
 
@@ -29,11 +29,27 @@ export class CharityRouter {
         charity.locations = locations.filter((location) => location.charityID == charity.id);
       }
       logger.log("Charities successfully fetched!");
-      res.status(200).json(charities);
+      this.sendSuccessfulResponse(res, charities);
     } catch (error: any) {
       logger.log(`Error: charities could not be fetched! ${error}`);
-      res.status(500).json({ success: false, message: error.message });
+      this.sendSeverErrorResponse(res, { success: false, message: error.message });
     }
+  }
+
+  sendResponse(res: Response, resObj: any, statusCode: number) {
+    res.status(statusCode).json(resObj);
+  }
+
+  sendSuccessfulResponse(res: Response, resObj: any) {
+    this.sendResponse(res, resObj, 200);
+  }
+
+  sendSeverErrorResponse(res: Response, resObj: any) {
+    this.sendResponse(res, resObj, 500);
+  }
+
+  sendClientErrorResponse(res: Response, resObj: any) {
+    this.sendResponse(res, resObj, 400);
   }
 
   async getCharity(req: Request, res: Response) {
@@ -41,17 +57,17 @@ export class CharityRouter {
       const charityID = req.params.charityID as string;
       if (!charityID) {
         logger.log("No charity ID provided");
-        res.status(400).json({ success: false, message: "No charity ID provided" });
+        this.sendClientErrorResponse(res, { success: false, message: "No charity ID provided" });
         return;
       }
       const charity = await charityDAO.getCharity(charityID);
       if (!charity) {
         logger.log("No charity with id: " + charityID);
-        res.status(400).json({ success: false, message: "No charity found with id: " + charityID });
+        this.sendClientErrorResponse(res, { success: false, message: "No charity found with id: " + charityID });
       }
-      res.status(200).json(charity);
+      this.sendSuccessfulResponse(res, charity);
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      this.sendSeverErrorResponse(res, { success: false, message: error.message });
     }
   }
 
@@ -72,19 +88,19 @@ export class CharityRouter {
       }
       const id = await charityDAO.saveCharity(charity);
       logger.log("Charity saved successfully! id=" + id);
-      res.status(200).json(charity);
+      this.sendSuccessfulResponse(res, charity);
     } catch (error: any) {
       logger.log("Failed to save a charity", error);
-      res.status(500).json({ success: false, message: error.message });
+      this.sendSeverErrorResponse(res, { success: false, message: error.message });
     }
   }
 
   static buildRouter() {
     const charityRouter = new CharityRouter();
     return express.Router()
-      .get("/add-sample-charity", authenticator, charityRouter.addSampleCharity)
-      .get("/all", authenticator, charityRouter.getAllCharities)
-      .get("/charity/:charityID", authenticator, charityRouter.getCharity)
-      .post('/charity', authenticator, charityRouter.saveCharity);
+      .get("/add-sample-charity", authenticator, charityRouter.addSampleCharity.bind(charityRouter))
+      .get("/all", authenticator, charityRouter.getAllCharities.bind(charityRouter))
+      .get("/charity/:charityID", authenticator, charityRouter.getCharity.bind(charityRouter))
+      .post('/charity', authenticator, charityRouter.saveCharity.bind(charityRouter));
   }
 }
