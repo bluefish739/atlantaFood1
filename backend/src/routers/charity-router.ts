@@ -3,8 +3,9 @@ import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
 import { Charity } from "../shared/kinds";
 import { charityDAO, locationDAO } from "../daos/dao-factory";
+import { BaseRouter } from "./base-router";
 
-export class CharityRouter {
+export class CharityRouter extends BaseRouter {
   async addSampleCharity(req: Request, res: Response) {
     try {
       let charity = new Charity();
@@ -34,22 +35,6 @@ export class CharityRouter {
       logger.log(`Error: charities could not be fetched! ${error}`);
       this.sendSeverErrorResponse(res, { success: false, message: error.message });
     }
-  }
-
-  sendResponse(res: Response, resObj: any, statusCode: number) {
-    res.status(statusCode).json(resObj);
-  }
-
-  sendSuccessfulResponse(res: Response, resObj: any) {
-    this.sendResponse(res, resObj, 200);
-  }
-
-  sendSeverErrorResponse(res: Response, resObj: any) {
-    this.sendResponse(res, resObj, 500);
-  }
-
-  sendClientErrorResponse(res: Response, resObj: any) {
-    this.sendResponse(res, resObj, 400);
   }
 
   async getCharity(req: Request, res: Response) {
