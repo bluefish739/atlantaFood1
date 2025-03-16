@@ -1,0 +1,11 @@
+<button (click)="navigateBackToStoreDetails()">Back</button>
+<p>Store Locations:</p>
+<table>
+    <tr *ngFor="let location of storeLocations; let idx=index">
+        <td>{{ idx + 1 }}</td>
+        <td>{{ location.streetNumber }}</td>
+        <td>{{ location.streetName }}</td>
+        <td>{{ location.city }}</td>
+        <td>{{ location.state }}</td>
+    </tr>
+</table>
