@@ -8,7 +8,7 @@ export class BaseRouter {
         this.sendResponse(res, resObj, 200);
     }
 
-    sendSeverErrorResponse(res: Response, resObj: any) {
+    sendServerErrorResponse(res: Response, resObj: any) {
         this.sendResponse(res, resObj, 500);
     }
 

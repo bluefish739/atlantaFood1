@@ -18,7 +18,7 @@ export class CharityRouter extends BaseRouter {
       this.sendSuccessfulResponse(res, charity);
     } catch (error: any) {
       logger.log(`Error: Sample charity couldn't be added! ${error}`);
-      this.sendSeverErrorResponse(res, { success: false, message: error.message });
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
 
@@ -33,7 +33,7 @@ export class CharityRouter extends BaseRouter {
       this.sendSuccessfulResponse(res, charities);
     } catch (error: any) {
       logger.log(`Error: charities could not be fetched! ${error}`);
-      this.sendSeverErrorResponse(res, { success: false, message: error.message });
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
 
@@ -52,7 +52,7 @@ export class CharityRouter extends BaseRouter {
       }
       this.sendSuccessfulResponse(res, charity);
     } catch (error: any) {
-      this.sendSeverErrorResponse(res, { success: false, message: error.message });
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
 
@@ -76,7 +76,7 @@ export class CharityRouter extends BaseRouter {
       this.sendSuccessfulResponse(res, charity);
     } catch (error: any) {
       logger.log("Failed to save a charity", error);
-      this.sendSeverErrorResponse(res, { success: false, message: error.message });
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
 
