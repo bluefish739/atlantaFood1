@@ -27,11 +27,7 @@ export class LocationListComponent {
       this.storeID = id;
     }
   }
-
-  async addLocation() {
-    
-  }
-
+  
   navigateBackToStoreDetails() {
     this.router.navigate(['/stores/details', this.storeID]);
   }
