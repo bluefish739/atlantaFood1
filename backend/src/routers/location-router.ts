@@ -24,10 +24,10 @@ export class LocationRouter extends BaseRouter {
 
       location = await storeLocationDAO.saveLocation(location);
       logger.log("A new sample location added successfully! id=" + location.id);
-      this.sendSuccessfulResponse(res, location);
+      BaseRouter.sendSuccessfulResponse(res, location);
     } catch (error: any) {
       logger.log("Failed to add a new sample location", error);
-      this.sendServerErrorResponse(res, { success: false, message: error.message });
+      BaseRouter.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
 
@@ -48,10 +48,10 @@ export class LocationRouter extends BaseRouter {
       }
       const id = await storeLocationDAO.saveLocation(storeLocation);
       logger.log("Store location added successfully! id=" + id);
-      this.sendSuccessfulResponse(res, storeLocation);
+      BaseRouter.sendSuccessfulResponse(res, storeLocation);
     } catch (error: any) {
       logger.log("Failed to add a store location", error);
-      this.sendServerErrorResponse(res, { success: false, message: error.message });
+      BaseRouter.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
 
@@ -59,10 +59,10 @@ export class LocationRouter extends BaseRouter {
     try {
       const locations = await storeLocationDAO.getAllLocations();
       logger.log("Successfully retrieved all store locations!");
-      this.sendSuccessfulResponse(res, locations);
+      BaseRouter.sendSuccessfulResponse(res, locations);
     } catch (error: any) {
       logger.log("Failed to retrieve store locations")
-      this.sendServerErrorResponse(res, { success: false, message: error.message });
+      BaseRouter.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
 
@@ -78,9 +78,9 @@ export class LocationRouter extends BaseRouter {
         res.status(404).json({ success: false, message: "Location not found " + locationID });
         return;
       }
-      this.sendSuccessfulResponse(res, location);
+      BaseRouter.sendSuccessfulResponse(res, location);
     } catch (error: any) {
-      this.sendServerErrorResponse(res, { success: false, message: error.message });
+      BaseRouter.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
 
