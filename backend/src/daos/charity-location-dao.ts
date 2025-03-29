@@ -1,0 +1,25 @@
+import { CharityLocation } from "../shared/kinds";
+import { generateId } from "../shared/idutilities";
+import { datastore } from "./data-store-factory";
+
+
+export class CharityLocationDAO {
+    static LOCATION_KIND = "charityLocation";
+    public async addLocation(location: CharityLocation) {
+        location.id = generateId();
+        const entityKey = datastore.key([CharityLocationDAO.LOCATION_KIND, location.id]);
+        const entity = {
+            key: entityKey,
+            data: location
+        }
+        await datastore.save(entity);
+        return location;
+    }
+
+    public async getAllLocations() {
+        const query = datastore.createQuery(CharityLocationDAO.LOCATION_KIND);
+        const data = await query.run();
+        const locations: CharityLocation[] = data[0];
+        return locations;
+    }
+}

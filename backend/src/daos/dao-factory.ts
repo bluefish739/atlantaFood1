@@ -1,6 +1,7 @@
 import { CharityDAO } from "./charity-dao";
-import { CharityLocationDAO, StoreLocationDAO } from "./location-dao";
+import { CharityLocationDAO } from "./charity-location-dao";
 import { StoreDAO } from "./store-dao";
+import { StoreLocationDAO } from "./store-location-dao";
 import { StudentDAO } from "./student-dao";
 
 export const charityDAO = new CharityDAO();
