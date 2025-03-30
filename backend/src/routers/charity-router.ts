@@ -84,16 +84,8 @@ export class CharityRouter extends BaseRouter {
     const charityID = req.params.charityID as string;
         logger.log(`getCharityLocations charityID as: ` + charityID);
         try {
-          //const locations = await CharityLocationDAO.getCharityLocationsByStoreID(charityID);
-          //logger.log("Successfully retrieved all store locations!");
-          const locations: CharityLocation[] = [{
-              id: "jojojojo",
-              state: "Kentucky",
-              city: "mass",
-              streetName: "yes",
-              streetNumber: 99912,
-              charityID: "nah id win"
-          }];
+          const locations: CharityLocation[] = await charityLocationDAO.getCharityLocationsByCharityID(charityID);
+          logger.log("Successfully retrieved all charity locations!");
           this.sendSuccessfulResponse(res, locations);
         } catch (error: any) {
           logger.log("Failed to retrieve charity locations", error);
