@@ -57,11 +57,11 @@ export class XapiService {
   }
 
   public async saveStoreLocation(storeLocation: StoreLocation) {
-    return await firstValueFrom(this.http.post<StoreLocation>(`/xapi/locations/location`, storeLocation));
+    return await firstValueFrom(this.http.post<StoreLocation>(`/xapi/store-locations/location`, storeLocation));
   }
 
   public async getAllStoreLocations() {
-    return await firstValueFrom(this.http.get<StoreLocation[]>(`/xapi/locations/all`));
+    return await firstValueFrom(this.http.get<StoreLocation[]>(`/xapi/store-locations/all`));
   }
 
   public async getStoreLocations(storeID: string) {
@@ -69,7 +69,7 @@ export class XapiService {
   }
 
   public async getStoreLocation(id: string) {
-    return await firstValueFrom(this.http.get<StoreLocation>(`/xapi/locations/location/` + id));
+    return await firstValueFrom(this.http.get<StoreLocation>(`/xapi/store-locations/location/` + id));
   }
 
   public async getCharityLocations(charityID: string) {
@@ -77,9 +77,6 @@ export class XapiService {
   }
 
   public async saveCharityLocation(charityLocation: CharityLocation) {
-    let locationWithID = charityLocation;
-    locationWithID.id = Math.random().toString();
-    return locationWithID;
-    //await firstValueFrom(this.http.post<CharityLocation>(`/xapi/locations/location`, charityLocation));
+    return await firstValueFrom(this.http.post<CharityLocation>(`/xapi/charity-locations/location`, charityLocation));
   }
 }

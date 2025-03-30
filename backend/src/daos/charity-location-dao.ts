@@ -6,8 +6,10 @@ import { PropertyFilter } from "@google-cloud/datastore";
 
 export class CharityLocationDAO {
     static LOCATION_KIND = "charityLocation";
-    public async addLocation(location: CharityLocation) {
-        location.id = generateId();
+    public async saveLocation(location: CharityLocation) {
+        if (!location.id) {
+            location.id = generateId();
+        }
         const entityKey = datastore.key([CharityLocationDAO.LOCATION_KIND, location.id]);
         const entity = {
             key: entityKey,

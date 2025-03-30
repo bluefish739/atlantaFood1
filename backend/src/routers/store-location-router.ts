@@ -5,7 +5,7 @@ import { StoreLocation } from "../shared/kinds";
 import { storeDAO, storeLocationDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
 
-export class LocationRouter extends BaseRouter {
+export class StoreLocationRouter extends BaseRouter {
   async getRandomStore() {
     const stores = await storeDAO.getAllStores();
     const randomIdx = Math.floor(Math.random() * stores.length);
@@ -85,7 +85,7 @@ export class LocationRouter extends BaseRouter {
   }
 
   static buildRouter() {
-    const locationRouter = new LocationRouter();
+    const locationRouter = new StoreLocationRouter();
     return express.Router()
       .get('/add-sample-location', authenticator, locationRouter.addSampleLocation.bind(locationRouter))
       .post('/location', authenticator, locationRouter.saveLocation.bind(locationRouter))
