@@ -10,5 +10,13 @@
         <td>Contact</td>
         <td><input [(ngModel)]="charity.contact" /></td>
     </tr>
+    <tr>
+        <td><button (click)="saveClicked()">Save</button></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Locations: </td>
+        <td><button (click)="viewCharityLocations()">View Locations</button></td>
+    </tr>
 </table>
-<button (click)="saveClicked()">Save</button>
+

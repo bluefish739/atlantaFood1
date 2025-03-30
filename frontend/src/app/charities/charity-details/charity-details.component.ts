@@ -19,11 +19,13 @@ export class CharityDetailsComponent {
         private router: Router
       ) {
       }
-    
+      
+      charityID = "";
       async ngOnInit() {
         const id = this.activatedRoute.snapshot.params['id'];
         if(id && id!='new') {
           this.charity = await this.xapiService.getCharity(id);
+          this.charityID = id;
           if(!this.charity) {
             this.charity = new Charity();
           }
@@ -37,5 +39,9 @@ export class CharityDetailsComponent {
 
       goBack() {
         this.router.navigateByUrl('charities/list');
+      }
+
+      viewCharityLocations() {
+        this.router.navigate(['charities/locations-list', this.charityID]);
       }
 }
