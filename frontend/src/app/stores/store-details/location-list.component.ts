@@ -23,7 +23,7 @@ export class LocationListComponent {
   async ngOnInit() {
     const id = this.activatedRoute.snapshot.params['id'];
     if (id) {
-      this.storeLocations = (await this.xapiService.getAllStoreLocations()).filter(location => location.storeID == id);
+      this.storeLocations = (await this.xapiService.getStoreLocations(id));
       this.storeID = id;
     }
   }

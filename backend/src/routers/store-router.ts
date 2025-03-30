@@ -3,8 +3,9 @@ import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
 import { Store } from "../shared/kinds";
 import { storeLocationDAO, storeDAO } from "../daos/dao-factory";
+import { BaseRouter } from "./base-router";
 
-export class StoreRouter {
+export class StoreRouter extends BaseRouter {
   async addSampleStore(req: Request, res: Response) {
     try {
       let store = new Store();
@@ -76,12 +77,26 @@ export class StoreRouter {
     }
   }
 
+  async getStoreLocations(req: Request, res: Response) {
+    const storeID = req.params.storeID as string;
+    logger.log(`getStoreLocations storeID as: ` + storeID);
+    try {
+      const locations = await storeLocationDAO.getStoreLocationsByStoreID(storeID);
+      logger.log("Successfully retrieved all store locations!");
+      this.sendSuccessfulResponse(res, locations);
+    } catch (error: any) {
+      logger.log("Failed to retrieve store locations", error);
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
+    }
+  }
+
   static buildRouter(): Router {
     const storeRouter = new StoreRouter();
     return express.Router()
       .get('/add-sample-store', authenticator, storeRouter.addSampleStore.bind(storeRouter))
       .get('/all', authenticator, storeRouter.getAllStores.bind(storeRouter))
       .get('/store/:storeId', authenticator, storeRouter.getStore.bind(storeRouter))
+      .get('/:storeID/locations', authenticator, storeRouter.getStoreLocations.bind(storeRouter))
       .post('/store', authenticator, storeRouter.addStore.bind(storeRouter));
   }
 }

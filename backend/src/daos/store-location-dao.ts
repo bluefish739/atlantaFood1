@@ -1,6 +1,7 @@
 import { StoreLocation } from "../shared/kinds";
 import { generateId } from "../shared/idutilities";
 import { datastore } from "./data-store-factory";
+import { PropertyFilter } from "@google-cloud/datastore";
 
 
 export class StoreLocationDAO {
@@ -21,6 +22,14 @@ export class StoreLocationDAO {
 
     public async getAllLocations() {
         const query = datastore.createQuery(StoreLocationDAO.LOCATION_KIND);
+        const data = await query.run();
+        const locations: StoreLocation[] = data[0];
+        return locations;
+    }
+
+    public async getStoreLocationsByStoreID(storeID: string) {
+        const query = datastore.createQuery(StoreLocationDAO.LOCATION_KIND)
+            .filter(new PropertyFilter('storeID', '=', storeID));
         const data = await query.run();
         const locations: StoreLocation[] = data[0];
         return locations;
