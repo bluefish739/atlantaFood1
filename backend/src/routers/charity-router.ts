@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
-import { Charity } from "../shared/kinds";
+import { Charity, CharityLocation } from "../shared/kinds";
 import { charityDAO, charityLocationDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
 
@@ -80,12 +80,34 @@ export class CharityRouter extends BaseRouter {
     }
   }
 
+  async getCharityLocations(req: Request, res: Response) {
+    const charityID = req.params.charityID as string;
+        logger.log(`getCharityLocations charityID as: ` + charityID);
+        try {
+          //const locations = await CharityLocationDAO.getCharityLocationsByStoreID(charityID);
+          //logger.log("Successfully retrieved all store locations!");
+          const locations: CharityLocation[] = [{
+              id: "jojojojo",
+              state: "Kentucky",
+              city: "mass",
+              streetName: "yes",
+              streetNumber: 99912,
+              charityID: "nah id win"
+          }];
+          this.sendSuccessfulResponse(res, locations);
+        } catch (error: any) {
+          logger.log("Failed to retrieve charity locations", error);
+          this.sendServerErrorResponse(res, { success: false, message: error.message });
+        }
+  }
+
   static buildRouter() {
     const charityRouter = new CharityRouter();
     return express.Router()
       .get("/add-sample-charity", authenticator, charityRouter.addSampleCharity.bind(charityRouter))
       .get("/all", authenticator, charityRouter.getAllCharities.bind(charityRouter))
       .get("/charity/:charityID", authenticator, charityRouter.getCharity.bind(charityRouter))
+      .get("/:charityID/locations", authenticator, charityRouter.getCharityLocations.bind(charityRouter))
       .post('/charity', authenticator, charityRouter.saveCharity.bind(charityRouter));
   }
 }
