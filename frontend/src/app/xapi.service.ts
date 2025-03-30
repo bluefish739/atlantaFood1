@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 
 export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
   const authToken = inject(AuthService).getToken();
-  const reqWithHeader = authToken? req.clone({
+  const reqWithHeader = authToken ? req.clone({
     headers: req.headers.set('Authorization', 'Bearer ' + authToken),
   }) : req;
   console.log('Request url ' + req.url);
@@ -30,7 +30,7 @@ export class XapiService {
 
   public async getStudent(id: string) {
     return await firstValueFrom(this.http.get<Student>(`/xapi/students/student/` + id));
-  }  
+  }
 
   public async saveStudent(student: Student) {
     return await firstValueFrom(this.http.post<Student>(`/xapi/students/student`, student));
@@ -38,7 +38,7 @@ export class XapiService {
 
   public async getStore(id: string) {
     return await firstValueFrom(this.http.get<Store>(`/xapi/stores/store/` + id));
-  }  
+  }
 
   public async saveStore(store: Store) {
     return await firstValueFrom(this.http.post<Store>(`/xapi/stores/store`, store));
@@ -70,5 +70,19 @@ export class XapiService {
 
   public async getStoreLocation(id: string) {
     return await firstValueFrom(this.http.get<StoreLocation>(`/xapi/locations/location/` + id));
-  }  
+  }
+
+  public async getCharityLocations(charityID: string) {
+    return [
+      {
+        id: "jojojojojojojo",
+        state: "Kansas",
+        city: "City",
+        streetName: "Chiefs",
+        streetNumber: 777,
+        charityID: charityID
+      }
+    ];
+    //await firstValueFrom(this.http.get<StoreLocation[]>(`/xapi/stores/` + charityID + `/locations`));
+  }
 }

@@ -27,3 +27,12 @@ export class Charity {
     name: string | undefined;
     contact: string | undefined;
 }
+
+export class CharityLocation {
+    id: string | undefined;
+    state: string | undefined;
+    city: string | undefined;
+    streetName: string | undefined;
+    streetNumber: number | undefined;
+    charityID: string | undefined;
+}
