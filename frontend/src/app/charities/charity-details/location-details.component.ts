@@ -24,7 +24,6 @@ export class LocationDetailsComponent {
   async ngOnInit() {
     this.charityID = this.activatedRoute.snapshot.params['charityID'];
     this.location.charityID = this.charityID;
-    /*
     const locationID = this.activatedRoute.snapshot.params['locationID'];
     if(locationID && locationID!='new') {
       this.locationID = locationID;
@@ -34,7 +33,6 @@ export class LocationDetailsComponent {
         this.location.charityID = this.charityID;
       }
     }
-      */
   }
 
   async saveClicked() {

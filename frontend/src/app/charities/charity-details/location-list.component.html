@@ -2,8 +2,7 @@
 <p>Charity Locations:</p>
 <table>
     <tr *ngFor="let location of charityLocations; let idx=index">
-        <!--<td><a [routerLink]="['/stores/location-details', storeID, location.id]">{{idx+1}}</a></td>-->
-        <td>{{ idx+1 }}</td>
+        <td><a [routerLink]="['/charities/location-details', charityID, location.id]">{{idx+1}}</a></td>
         <td>{{ location.streetNumber }}</td>
         <td>{{ location.streetName }}</td>
         <td>{{ location.city }}</td>
