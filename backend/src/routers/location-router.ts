@@ -24,10 +24,10 @@ export class LocationRouter extends BaseRouter {
 
       location = await storeLocationDAO.saveLocation(location);
       logger.log("A new sample location added successfully! id=" + location.id);
-      BaseRouter.sendSuccessfulResponse(res, location);
+      this.sendSuccessfulResponse(res, location);
     } catch (error: any) {
       logger.log("Failed to add a new sample location", error);
-      BaseRouter.sendServerErrorResponse(res, { success: false, message: error.message });
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
 
@@ -48,10 +48,10 @@ export class LocationRouter extends BaseRouter {
       }
       const id = await storeLocationDAO.saveLocation(storeLocation);
       logger.log("Store location added successfully! id=" + id);
-      BaseRouter.sendSuccessfulResponse(res, storeLocation);
+      this.sendSuccessfulResponse(res, storeLocation);
     } catch (error: any) {
       logger.log("Failed to add a store location", error);
-      BaseRouter.sendServerErrorResponse(res, { success: false, message: error.message });
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
 
@@ -59,10 +59,10 @@ export class LocationRouter extends BaseRouter {
     try {
       const locations = await storeLocationDAO.getAllLocations();
       logger.log("Successfully retrieved all store locations!");
-      BaseRouter.sendSuccessfulResponse(res, locations);
+      this.sendSuccessfulResponse(res, locations);
     } catch (error: any) {
       logger.log("Failed to retrieve store locations")
-      BaseRouter.sendServerErrorResponse(res, { success: false, message: error.message });
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
 
@@ -78,18 +78,18 @@ export class LocationRouter extends BaseRouter {
         res.status(404).json({ success: false, message: "Location not found " + locationID });
         return;
       }
-      BaseRouter.sendSuccessfulResponse(res, location);
+      this.sendSuccessfulResponse(res, location);
     } catch (error: any) {
-      BaseRouter.sendServerErrorResponse(res, { success: false, message: error.message });
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
 
   static buildRouter() {
     const locationRouter = new LocationRouter();
     return express.Router()
-      .get('/add-sample-location', authenticator, locationRouter.addSampleLocation)
-      .post('/location', authenticator, locationRouter.saveLocation)
-      .get('/all', authenticator, locationRouter.getAllLocations)
-      .get('/location/:locationID', authenticator, locationRouter.getLocation);
+      .get('/add-sample-location', authenticator, locationRouter.addSampleLocation.bind(locationRouter))
+      .post('/location', authenticator, locationRouter.saveLocation.bind(locationRouter))
+      .get('/all', authenticator, locationRouter.getAllLocations.bind(locationRouter))
+      .get('/location/:locationID', authenticator, locationRouter.getLocation.bind(locationRouter));
   }
 }

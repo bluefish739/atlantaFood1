@@ -15,10 +15,10 @@ export class CharityRouter extends BaseRouter {
 
       charity = await charityDAO.saveCharity(charity);
       logger.log(`A new sample charity has successfully been added! id: ${charity.id}`);
-      BaseRouter.sendSuccessfulResponse(res, charity);
+      this.sendSuccessfulResponse(res, charity);
     } catch (error: any) {
       logger.log(`Error: Sample charity couldn't be added! ${error}`);
-      BaseRouter.sendServerErrorResponse(res, { success: false, message: error.message });
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
 
@@ -30,10 +30,10 @@ export class CharityRouter extends BaseRouter {
         charity.locations = locations.filter((location) => location.charityID == charity.id);
       }
       logger.log("Charities successfully fetched!");
-      BaseRouter.sendSuccessfulResponse(res, charities);
+      this.sendSuccessfulResponse(res, charities);
     } catch (error: any) {
       logger.log(`Error: charities could not be fetched! ${error}`);
-      BaseRouter.sendServerErrorResponse(res, { success: false, message: error.message });
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
 
@@ -42,17 +42,17 @@ export class CharityRouter extends BaseRouter {
       const charityID = req.params.charityID as string;
       if (!charityID) {
         logger.log("No charity ID provided");
-        BaseRouter.sendClientErrorResponse(res, { success: false, message: "No charity ID provided" });
+        this.sendClientErrorResponse(res, { success: false, message: "No charity ID provided" });
         return;
       }
       const charity = await charityDAO.getCharity(charityID);
       if (!charity) {
         logger.log("No charity with id: " + charityID);
-        BaseRouter.sendClientErrorResponse(res, { success: false, message: "No charity found with id: " + charityID });
+        this.sendClientErrorResponse(res, { success: false, message: "No charity found with id: " + charityID });
       }
-      BaseRouter.sendSuccessfulResponse(res, charity);
+      this.sendSuccessfulResponse(res, charity);
     } catch (error: any) {
-      BaseRouter.sendServerErrorResponse(res, { success: false, message: error.message });
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
 
@@ -73,10 +73,10 @@ export class CharityRouter extends BaseRouter {
       }
       const id = await charityDAO.saveCharity(charity);
       logger.log("Charity saved successfully! id=" + id);
-      BaseRouter.sendSuccessfulResponse(res, charity);
+      this.sendSuccessfulResponse(res, charity);
     } catch (error: any) {
       logger.log("Failed to save a charity", error);
-      BaseRouter.sendServerErrorResponse(res, { success: false, message: error.message });
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
 

@@ -76,9 +76,9 @@ export class StudentRouter {
   static buildRouter(): Router {
     const studentRouter = new StudentRouter();
     return express.Router()
-      .get('/add-sample-student', authenticator, studentRouter.addSampleStudent)
-      .post('/student', authenticator, studentRouter.addStudent)
-      .get('/all', authenticator, studentRouter.getAllStudents)
-      .get('/student/:studentId', authenticator, studentRouter.getStudent);
+      .get('/add-sample-student', authenticator, studentRouter.addSampleStudent.bind(studentRouter))
+      .post('/student', authenticator, studentRouter.addStudent.bind(studentRouter))
+      .get('/all', authenticator, studentRouter.getAllStudents.bind(studentRouter))
+      .get('/student/:studentId', authenticator, studentRouter.getStudent.bind(studentRouter));
   }
 }

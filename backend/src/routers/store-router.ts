@@ -79,9 +79,9 @@ export class StoreRouter {
   static buildRouter(): Router {
     const storeRouter = new StoreRouter();
     return express.Router()
-      .get('/add-sample-store', authenticator, storeRouter.addSampleStore)
-      .get('/all', authenticator, storeRouter.getAllStores)
-      .get('/store/:storeId', authenticator, storeRouter.getStore)
-      .post('/store', authenticator, storeRouter.addStore);
+      .get('/add-sample-store', authenticator, storeRouter.addSampleStore.bind(storeRouter))
+      .get('/all', authenticator, storeRouter.getAllStores.bind(storeRouter))
+      .get('/store/:storeId', authenticator, storeRouter.getStore.bind(storeRouter))
+      .post('/store', authenticator, storeRouter.addStore.bind(storeRouter));
   }
 }
