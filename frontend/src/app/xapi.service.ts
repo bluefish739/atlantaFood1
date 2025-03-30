@@ -75,4 +75,11 @@ export class XapiService {
   public async getCharityLocations(charityID: string) {
     return await firstValueFrom(this.http.get<CharityLocation[]>(`/xapi/charities/` + charityID + `/locations`));
   }
+
+  public async saveCharityLocation(charityLocation: CharityLocation) {
+    let locationWithID = charityLocation;
+    locationWithID.id = Math.random().toString();
+    return locationWithID;
+    //await firstValueFrom(this.http.post<CharityLocation>(`/xapi/locations/location`, charityLocation));
+  }
 }

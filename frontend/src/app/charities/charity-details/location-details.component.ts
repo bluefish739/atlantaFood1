@@ -18,13 +18,13 @@ export class LocationDetailsComponent {
     private router: Router
   ) {
   }
-  /*
 
   charityID = ""
   locationID = ""
   async ngOnInit() {
     this.charityID = this.activatedRoute.snapshot.params['charityID'];
     this.location.charityID = this.charityID;
+    /*
     const locationID = this.activatedRoute.snapshot.params['locationID'];
     if(locationID && locationID!='new') {
       this.locationID = locationID;
@@ -34,11 +34,11 @@ export class LocationDetailsComponent {
         this.location.charityID = this.charityID;
       }
     }
+      */
   }
 
   async saveClicked() {
     await this.xapiService.saveCharityLocation(this.location!);
-    this.router.navigate(['/charities/location-list', this.charityID]);
+    this.router.navigate(['/charities/locations-list', this.charityID]);
   }
-    */
 }
