@@ -15,10 +15,10 @@ export class StoreRouter extends BaseRouter {
 
       store = await storeDAO.saveStore(store);
       logger.log("A new sample store added successfully! id=" + store.id);
-      res.status(200).json(store);
+      this.sendSuccessfulResponse(res, store);
     } catch (error: any) {
       logger.log("Failed to add a new sample store", error);
-      res.status(500).json({ success: false, message: error.message });
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
 
@@ -29,9 +29,9 @@ export class StoreRouter extends BaseRouter {
       for (let store of stores) {
         store.locations = locations.filter((location) => location.storeID == store.id);
       }
-      res.status(200).json(stores);
+      this.sendSuccessfulResponse(res, stores);
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
 
@@ -39,17 +39,17 @@ export class StoreRouter extends BaseRouter {
     try {
       const storeId = req.params.storeId as string;
       if (!storeId) {
-        res.status(400).json({ success: false, message: "Missing store ID" });
+        this.sendClientErrorResponse(res, { success: false, message: "Missing store ID" }, 400);
         return;
       }
       const store = await storeDAO.getStore(storeId);
       if (!store) {
-        res.status(404).json({ success: false, message: "Store not found " + storeId });
+        this.sendClientErrorResponse(res, { success: false, message: "Store not found " + storeId }, 404);
         return;
       }
-      res.status(200).json(store);
+      this.sendSuccessfulResponse(res, store);
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
 
@@ -58,22 +58,22 @@ export class StoreRouter extends BaseRouter {
     try {
       if (!store) {
         logger.log("Store entity is not provided");
-        res.status(404).json({ success: false, message: "Store entity is not provided" });
+        this.sendClientErrorResponse(res, { success: false, message: "Store entity is not provided" }, 404);
         return;
       }
       if (store.id) {
         const existingStore = await storeDAO.getStore(store.id);
         if (!existingStore) {
-          res.status(404).json({ success: false, message: "No store with id " + store.id + " was found" });
+          this.sendClientErrorResponse(res, { success: false, message: "No store with id " + store.id + " was found" }, 404);
           return;
         }
       }
       const id = await storeDAO.saveStore(store);
       logger.log("Store added successfully! id=" + id);
-      res.status(200).json(store);
+      this.sendSuccessfulResponse(res, store);
     } catch (error: any) {
       logger.log("Failed to add a store", error);
-      res.status(500).json({ success: false, message: error.message });
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
 

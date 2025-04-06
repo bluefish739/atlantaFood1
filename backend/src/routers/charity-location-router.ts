@@ -36,13 +36,13 @@ export class CharityLocationRouter extends BaseRouter {
     try {
       if (!charityLocation) {
         logger.log("Charity location entity is not provided");
-        res.status(404).json({ success: false, message: "Charity location entity is not provided" });
+        this.sendClientErrorResponse(res, { success: false, message: "Charity location entity is not provided" }, 404);
         return;
       }
       if (charityLocation.id) {
         const existingCharityLocation = await charityLocationDAO.getCharityLocation(charityLocation.id);
         if (!existingCharityLocation) {
-          res.status(404).json({ success: false, message: "No charity location with id " + charityLocation.id + " was found" });
+          this.sendClientErrorResponse(res, { success: false, message: "No charity location with id " + charityLocation.id + " was found" }, 404);
           return;
         }
       }
@@ -70,12 +70,12 @@ export class CharityLocationRouter extends BaseRouter {
     try {
       const locationID = req.params.locationID as string;
       if (!locationID) {
-        res.status(400).json({ success: false, message: "Missing location ID" });
+        this.sendClientErrorResponse(res, { success: false, message: "Missing location ID" }, 400);
         return;
       }
       const location = await charityLocationDAO.getCharityLocation(locationID);
       if (!location) {
-        res.status(404).json({ success: false, message: "Location not found " + locationID });
+        this.sendClientErrorResponse(res, { success: false, message: "Location not found " + locationID }, 404);
         return;
       }
       this.sendSuccessfulResponse(res, location);

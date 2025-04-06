@@ -1,5 +1,4 @@
 import { Response } from "express";
-//import * as logger from "firebase-functions/logger";
 
 export class BaseRouter {
     sendResponse(res: Response, resObj: any, statusCode: number) {
@@ -14,7 +13,7 @@ export class BaseRouter {
         this.sendResponse(res, resObj, 500);
     }
 
-    sendClientErrorResponse(res: Response, resObj: any) {
-        this.sendResponse(res, resObj, 400);
+    sendClientErrorResponse(res: Response, resObj: any, statusCode: number) {
+        this.sendResponse(res, resObj, statusCode);
     }
 }

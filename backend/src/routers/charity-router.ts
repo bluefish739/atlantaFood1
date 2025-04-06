@@ -42,13 +42,13 @@ export class CharityRouter extends BaseRouter {
       const charityID = req.params.charityID as string;
       if (!charityID) {
         logger.log("No charity ID provided");
-        this.sendClientErrorResponse(res, { success: false, message: "No charity ID provided" });
+        this.sendClientErrorResponse(res, { success: false, message: "No charity ID provided" }, 400);
         return;
       }
       const charity = await charityDAO.getCharity(charityID);
       if (!charity) {
         logger.log("No charity with id: " + charityID);
-        this.sendClientErrorResponse(res, { success: false, message: "No charity found with id: " + charityID });
+        this.sendClientErrorResponse(res, { success: false, message: "No charity found with id: " + charityID }, 400);
       }
       this.sendSuccessfulResponse(res, charity);
     } catch (error: any) {
@@ -61,13 +61,13 @@ export class CharityRouter extends BaseRouter {
     try {
       if (!charity) {
         logger.log("Charity entity is not provided");
-        res.status(404).json({ success: false, message: "Charity entity is not provided" });
+        this.sendClientErrorResponse(res, { success: false, message: "Charity entity is not provided" }, 404);
         return;
       }
       if (charity.id) {
         const existingCharity = await charityDAO.getCharity(charity.id);
         if (!existingCharity) {
-          res.status(404).json({ success: false, message: "No charity with id " + charity.id + " was found" });
+          this.sendClientErrorResponse(res, { success: false, message: "No charity with id " + charity.id + " was found" }, 404);
           return;
         }
       }

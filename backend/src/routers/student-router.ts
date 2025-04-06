@@ -3,8 +3,9 @@ import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
 import { Student } from "../shared/kinds";
 import { studentDAO } from "../daos/dao-factory";
+import { BaseRouter } from "./base-router";
 
-export class StudentRouter {
+export class StudentRouter extends BaseRouter {
   async addSampleStudent(req: Request, res: Response) {
     try {
       let student = new Student();
@@ -14,10 +15,10 @@ export class StudentRouter {
 
       student = await studentDAO.saveStudent(student);
       logger.log("A new sample student added successfully! id=" + student.id);
-      res.status(200).json(student);
+      this.sendSuccessfulResponse(res, student);
     } catch (error: any) {
       logger.log("Failed to add a new sample student", error);
-      res.status(500).json({ success: false, message: error.message });
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
 
@@ -26,32 +27,32 @@ export class StudentRouter {
     try {
       if (!student) {
         logger.log("Student entity is not provided");
-        res.status(404).json({ success: false, message: "Student entity is not provided" });
+        this.sendClientErrorResponse(res, { success: false, message: "Student entity is not provided" }, 404);
         return;
       }
       if (student.id) {
         const existingStudent = await studentDAO.getStudent(student.id);
         if (!existingStudent) {
-          res.status(404).json({ success: false, message: "No student with id " + student.id + " was found" });
+          this.sendClientErrorResponse(res, { success: false, message: "No student with id " + student.id + " was found" }, 404);
           return;
         }
       }
       student.updatedAt = new Date();
       const id = await studentDAO.saveStudent(student);
       logger.log("Student added successfully! id=" + id);
-      res.status(200).json(student);
+      this.sendSuccessfulResponse(res, student);
     } catch (error: any) {
       logger.log("Failed to add a student", error);
-      res.status(500).json({ success: false, message: error.message });
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
 
   async getAllStudents(req: Request, res: Response) {
     try {
       const students = await studentDAO.getAllStudents();
-      res.status(200).json(students);
+      this.sendSuccessfulResponse(res, students);
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
 
@@ -59,17 +60,17 @@ export class StudentRouter {
     try {
       const studentId = req.params.studentId as string;
       if (!studentId) {
-        res.status(400).json({ success: false, message: "Missing student ID" });
+        this.sendClientErrorResponse(res, { success: false, message: "Missing student ID" }, 400);
         return;
       }
       const student = await studentDAO.getStudent(studentId);
       if (!student) {
-        res.status(404).json({ success: false, message: "Student not found " + studentId });
+        this.sendClientErrorResponse(res, { success: false, message: "Student not found " + studentId }, 404);
         return;
       }
-      res.status(200).json(student);
+      this.sendSuccessfulResponse(res, student);
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
 

@@ -36,13 +36,13 @@ export class StoreLocationRouter extends BaseRouter {
     try {
       if (!storeLocation) {
         logger.log("Store location entity is not provided");
-        res.status(404).json({ success: false, message: "Store location entity is not provided" });
+        this.sendClientErrorResponse(res, { success: false, message: "Store location entity is not provided" }, 404);
         return;
       }
       if (storeLocation.id) {
         const existingStoreLocation = await storeLocationDAO.getStoreLocation(storeLocation.id);
         if (!existingStoreLocation) {
-          res.status(404).json({ success: false, message: "No store location with id " + storeLocation.id + " was found" });
+          this.sendClientErrorResponse(res, { success: false, message: "No store location with id " + storeLocation.id + " was found" }, 404);
           return;
         }
       }
@@ -70,12 +70,12 @@ export class StoreLocationRouter extends BaseRouter {
     try {
       const locationID = req.params.locationID as string;
       if (!locationID) {
-        res.status(400).json({ success: false, message: "Missing location ID" });
+        this.sendClientErrorResponse(res, { success: false, message: "Missing location ID" }, 400);
         return;
       }
       const location = await storeLocationDAO.getStoreLocation(locationID);
       if (!location) {
-        res.status(404).json({ success: false, message: "Location not found " + locationID });
+        this.sendClientErrorResponse(res, { success: false, message: "Location not found " + locationID }, 404);
         return;
       }
       this.sendSuccessfulResponse(res, location);
