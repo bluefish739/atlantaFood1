@@ -37,3 +37,32 @@ export class CharityLocation {
     streetNumber: number | undefined;
     charityID: string | undefined;
 }
+
+/*
+export class User {
+    id: string | undefined;
+    name: string | undefined;
+    placeOfWorkID: string | undefined;
+    roles: {
+        roleID: string,
+        enabled: boolean
+    }[] = [];
+}
+*/
+
+export class Role {
+    id: string | undefined;
+    siteID: string | undefined;
+    name: string | undefined;
+    description: string | undefined;
+    permissions: {
+        permissionID: string,
+        enabled: boolean
+    }[] = [];
+}
+
+export class Permission {
+    id: string | undefined;
+    name: string | undefined;
+    description: string | undefined;
+}
