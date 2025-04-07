@@ -9,7 +9,7 @@ import { RouterModule } from '@angular/router';
     styleUrl: './roles-permissions-component.scss',
     imports: [CommonModule, RouterModule]
 })
-export class CharityListComponent {
+export class RolePermissionsComponent {
     constructor(private xapiService: XapiService) {
     }
 }

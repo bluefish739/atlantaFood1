@@ -36,3 +36,22 @@ export class CharityLocation {
     streetNumber: number | undefined;
     charityID: string | undefined;
 }
+
+export class User {
+    id: string | undefined;
+    name: string | undefined;
+    placeOfWorkID: string | undefined;
+    roles: {
+        roleID: string,
+        enabled: boolean
+    }[] = [];
+}
+
+export class Role {
+    id: string | undefined;
+    name: string | undefined;
+    permissions: {
+        permissionID: string,
+        enabled: boolean
+    }[] = [];
+}
