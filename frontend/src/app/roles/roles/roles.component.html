@@ -1,0 +1,7 @@
+<h2><b>Roles:</b></h2>
+<table *ngIf="roles">
+    <tr *ngFor="let role of roles; let idx=index">
+        <td><button>Modify Role Permissions</button></td>
+        <td>{{ role.name }}</td>
+    </tr>
+</table>

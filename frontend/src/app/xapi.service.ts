@@ -83,4 +83,16 @@ export class XapiService {
   public async getCharityLocation(id: string) {
     return await firstValueFrom(this.http.get<CharityLocation>(`/xapi/charity-locations/location/` + id));
   }
+
+  public async getSiteRoles(siteID: string) {
+    return [
+      {
+        id: "qwertyuiop",
+        siteID: "whoknowswhere",
+        name: "canUseFlintAndSteel",
+        description: "Allow use of flint and steel",
+        permissions: []
+      }
+    ];
+  }
 }

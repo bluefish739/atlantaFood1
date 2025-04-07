@@ -37,6 +37,7 @@ export class CharityLocation {
     charityID: string | undefined;
 }
 
+/*
 export class User {
     id: string | undefined;
     name: string | undefined;
@@ -46,12 +47,21 @@ export class User {
         enabled: boolean
     }[] = [];
 }
+*/
 
 export class Role {
     id: string | undefined;
+    siteID: string | undefined;
     name: string | undefined;
+    description: string | undefined;
     permissions: {
         permissionID: string,
         enabled: boolean
     }[] = [];
+}
+
+export class Permission {
+    id: string | undefined;
+    name: string | undefined;
+    description: string | undefined;
 }
