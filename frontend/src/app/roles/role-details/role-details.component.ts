@@ -4,9 +4,9 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 @Component({
-    selector: 'role-permissions',
-    templateUrl: './role-permissions.component.html',
-    styleUrl: './roles-permissions.component.scss',
+    selector: 'role-details',
+    templateUrl: './role-details.component.html',
+    styleUrl: './roles-details.component.scss',
     imports: [CommonModule, RouterModule]
 })
 export class RolePermissionsComponent {

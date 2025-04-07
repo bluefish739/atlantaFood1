@@ -3,12 +3,12 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
     {
-        path: 'user-roles',
-        loadComponent: () => import('./roles/roles.component').then(c => c.RolesListComponent)
+        path: 'roles-list',
+        loadComponent: () => import('./roles-list/roles-list.component').then(c => c.RolesListComponent)
     },
     {
         path: 'role-permissions',
-        loadComponent: () => import('./role-permissions/role-permissions.component').then(c => c.RolePermissionsComponent)
+        loadComponent: () => import('./role-details/role-details.component').then(c => c.RolePermissionsComponent)
     }
 ];
 

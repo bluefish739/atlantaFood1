@@ -5,6 +5,7 @@ import { CharityRouter } from "./routers/charity-router";
 import { StoreLocationRouter } from "./routers/store-location-router";
 import { StudentRouter } from "./routers/student-router";
 import { CharityLocationRouter } from "./routers/charity-location-router";
+import { RoleRouter } from "./routers/role-router";
 
 const expressApp = express();
 expressApp.use(express.json());
@@ -19,5 +20,6 @@ expressApp.use('/xapi/stores', StoreRouter.buildRouter());
 expressApp.use('/xapi/store-locations', StoreLocationRouter.buildRouter());
 expressApp.use('/xapi/charity-locations', CharityLocationRouter.buildRouter());
 expressApp.use('/xapi/charities', CharityRouter.buildRouter());
+expressApp.use('/xapi/charities', RoleRouter.buildRouter());
 
 export const xapi = onRequest(expressApp);

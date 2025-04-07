@@ -6,8 +6,8 @@ import { Role } from '../../kinds';
 
 @Component({
     selector: 'roles-list',
-    templateUrl: './roles.component.html',
-    styleUrl: './roles.component.scss',
+    templateUrl: './roles-list.component.html',
+    styleUrl: './roles-list.component.scss',
     imports: [CommonModule, RouterModule]
 })
 export class RolesListComponent {
