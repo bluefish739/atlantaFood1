@@ -55,7 +55,7 @@ export class Role {
     name: string | undefined;
     description: string | undefined;
     permissions: {
-        permissionID: string,
+        permissionName: string,
         enabled: boolean
     }[] = [];
 }

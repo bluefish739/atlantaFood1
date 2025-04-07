@@ -21,14 +21,24 @@ export class RolePermissionsComponent {
 
     }
 
+    assignBlankPermissions(role: Role): Role {
+        role.permissions = [
+            {permissionName: "Edit Roles", enabled: false}
+        ]
+        return role;
+    }
+
     async ngOnInit() {
         const siteID = this.activatedRoute.snapshot.params['siteID'];
         const roleID = this.activatedRoute.snapshot.params['roleID'];
         this.role.siteID = siteID;
+        this.role = this.assignBlankPermissions(this.role);
         if (roleID && roleID != 'new') {
             this.role = await this.xapiService.getRole(roleID);
+            this.role = this.assignBlankPermissions(this.role);
             if (!this.role) {
                 this.role = new Role();
+                this.role = this.assignBlankPermissions(this.role);
             }
         }
     }

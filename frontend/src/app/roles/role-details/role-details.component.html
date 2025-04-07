@@ -9,5 +9,22 @@
         <td>Role Description</td>
         <td><input [(ngModel)]="role.description" /></td>
     </tr>
+    <tr>
+        <td>Role Permissions</td>
+        <td>
+            <input type="checkbox" [(ngModel)]="role.permissions[0].enabled">
+            <span>Can Edit Roles</span><br>
+            <!--
+            <input type="checkbox" >
+            <label for="vehicle2"> I have a car</label><br>
+            <input type="checkbox" >
+            <label for="vehicle3"> I have a boat</label><br>
+            <input type="checkbox" >
+            <label for="vehicle2"> I have a car</label><br>
+            <input type="checkbox" >
+            <label for="vehicle3"> I have a boat</label><br>
+            -->
+        </td>
+    </tr>
 </table>
 <button (click)="saveClicked()">Save</button>
