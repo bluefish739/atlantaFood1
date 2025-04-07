@@ -89,7 +89,7 @@ export class XapiService {
   }
 
   public async getRole(roleID: string) {
-    return await firstValueFrom(this.http.get<Role>(`/xapi/roles/role`))
+    return await firstValueFrom(this.http.get<Role>(`/xapi/roles/role/` + roleID))
   }
 
   public async saveRole(role: Role) {
