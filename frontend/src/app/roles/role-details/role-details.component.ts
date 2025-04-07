@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Role } from '../../kinds';
 import { FormsModule } from '@angular/forms';
+import { permissions } from '../permissions';
 
 @Component({
     selector: 'role-details',
@@ -13,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class RolePermissionsComponent {
     role: Role = new Role();
+    permissions = permissions;
     constructor(
         private xapiService: XapiService,
         private activatedRoute: ActivatedRoute,
@@ -22,9 +24,13 @@ export class RolePermissionsComponent {
     }
 
     assignBlankPermissions(role: Role): Role {
-        role.permissions = [
-            {permissionName: "Edit Roles", enabled: false}
-        ]
+        role.permissions = [];
+        for (let permission of permissions) {
+            role.permissions.push({
+                permissionName: permission.name as string,
+                enabled: false
+            });
+        }
         return role;
     }
 
@@ -35,7 +41,6 @@ export class RolePermissionsComponent {
         this.role = this.assignBlankPermissions(this.role);
         if (roleID && roleID != 'new') {
             this.role = await this.xapiService.getRole(roleID);
-            this.role = this.assignBlankPermissions(this.role);
             if (!this.role) {
                 this.role = new Role();
                 this.role = this.assignBlankPermissions(this.role);
