@@ -16,5 +16,9 @@ export const routes: Routes = [
     {
         path: 'charities',
         loadChildren: () => import('./charities/charities-routing.module').then(mod => mod.CharityRoutingModule)
+    },
+    {
+        path: 'roles',
+        loadChildren: () => import('./roles/roles-routing.module').then(mod => mod.RolesRoutingModule)
     }
 ];

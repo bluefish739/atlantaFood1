@@ -1,0 +1,20 @@
+<p>Role:</p>
+
+<table *ngIf="role">
+    <tr>
+        <td>Role Name</td>
+        <td><input [(ngModel)]="role.name" /></td>
+    </tr>
+    <tr>
+        <td>Role Description</td>
+        <td><input [(ngModel)]="role.description" /></td>
+    </tr>
+    <tr>
+        <td>Role Permissions</td>
+        <td *ngFor="let permission of permissions; let idx=index" style="display: block">
+            <input type="checkbox" [(ngModel)]='role.permissions[idx].enabled'>
+            <span title="{{permissions[idx].description}}">{{ permission.name }}</span>
+        </td>
+    </tr>
+</table>
+<button (click)="saveClicked()">Save</button>
