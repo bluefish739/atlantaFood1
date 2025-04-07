@@ -4,12 +4,12 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 @Component({
-    selector: 'role-permissions',
-    templateUrl: './role-permissions-component.html',
-    styleUrl: './roles-permissions-component.scss',
+    selector: 'roles-list',
+    templateUrl: './roles-component.html',
+    styleUrl: './roles-component.scss',
     imports: [CommonModule, RouterModule]
 })
-export class CharityListComponent {
+export class RolesListComponent {
     constructor(private xapiService: XapiService) {
     }
 }
