@@ -20,6 +20,6 @@ expressApp.use('/xapi/stores', StoreRouter.buildRouter());
 expressApp.use('/xapi/store-locations', StoreLocationRouter.buildRouter());
 expressApp.use('/xapi/charity-locations', CharityLocationRouter.buildRouter());
 expressApp.use('/xapi/charities', CharityRouter.buildRouter());
-expressApp.use('/xapi/charities', RoleRouter.buildRouter());
+expressApp.use('/xapi/roles', RoleRouter.buildRouter());
 
 export const xapi = onRequest(expressApp);

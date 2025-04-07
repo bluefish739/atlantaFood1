@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Student, Store, Charity, StoreLocation, CharityLocation } from './kinds';
+import { Student, Store, Charity, StoreLocation, CharityLocation, Role } from './kinds';
 import { first, firstValueFrom, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 
@@ -89,10 +89,14 @@ export class XapiService {
       {
         id: "qwertyuiop",
         siteID: "whoknowswhere",
-        name: "canUseFlintAndSteel",
+        name: "Can Use Flint and Steel",
         description: "Allow use of flint and steel",
         permissions: []
       }
     ];
+  }
+
+  public async getRole(roleID: string) {
+    return await firstValueFrom(this.http.get<Role>(`/xapi/roles/role`))
   }
 }

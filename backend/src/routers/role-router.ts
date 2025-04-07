@@ -30,9 +30,28 @@ export class RoleRouter extends BaseRouter {
         }
     }
 
+    async getRole(req: Request, res: Response) {
+        try {
+            const roleID = req.params.roleID as string;
+            if (!roleID) {
+                this.sendClientErrorResponse(res, { success: false, message: "Missing role ID" }, 400);
+                return;
+            }
+            const role = await roleDAO.getRole(roleID);
+            if (!role) {
+                this.sendClientErrorResponse(res, { success: false, message: "Role not found " + roleID }, 404);
+                return;
+            }
+            this.sendSuccessfulResponse(res, role);
+        } catch (error: any) {
+            this.sendServerErrorResponse(res, { success: false, message: error.message });
+        }
+    }
+
     static buildRouter() {
         const roleRouter = new RoleRouter();
         return express.Router()
-            .post('/role', authenticator, roleRouter.saveRole.bind(roleRouter));
+            .post('/role', authenticator, roleRouter.saveRole.bind(roleRouter))
+            .get('/role/:roleID', authenticator, roleRouter.getRole.bind(roleRouter));
     }
 }

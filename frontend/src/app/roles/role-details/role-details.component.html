@@ -1,0 +1,12 @@
+<p>Role:</p>
+
+<table *ngIf="role">
+    <tr>
+        <td>Role Name</td>
+        <td><input [(ngModel)]="role.name" /></td>
+    </tr>
+    <tr>
+        <td>Role Description</td>
+        <td><input [(ngModel)]="role.description" /></td>
+    </tr>
+</table>
