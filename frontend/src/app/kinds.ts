@@ -61,7 +61,6 @@ export class Role {
 }
 
 export class Permission {
-    id: string | undefined;
     name: string | undefined;
     description: string | undefined;
 }
