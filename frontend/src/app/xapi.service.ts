@@ -85,18 +85,14 @@ export class XapiService {
   }
 
   public async getSiteRoles(siteID: string) {
-    return [
-      {
-        id: "qwertyuiop",
-        siteID: "whoknowswhere",
-        name: "Can Use Flint and Steel",
-        description: "Allow use of flint and steel",
-        permissions: []
-      }
-    ];
+    return firstValueFrom(this.http.get<Role[]>(`/xapi/roles/` + siteID + `/list-roles`))
   }
 
   public async getRole(roleID: string) {
     return await firstValueFrom(this.http.get<Role>(`/xapi/roles/role`))
+  }
+
+  public async saveRole(role: Role) {
+    return await firstValueFrom(this.http.post<Role>(`/xapi/roles/role`, role));
   }
 }
