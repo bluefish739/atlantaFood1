@@ -60,3 +60,11 @@ export class Role {
         enabled: boolean
     }[] = [];
 }
+
+export class User {
+    firstName: string | undefined;
+    lastName: string | undefined;
+    roles: {
+        roleID: string | undefined;
+    }[] = [];
+}

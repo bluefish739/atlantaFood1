@@ -64,3 +64,11 @@ export class Permission {
     name: string | undefined;
     description: string | undefined;
 }
+
+export class User {
+    firstName: string | undefined;
+    lastName: string | undefined;
+    roles: {
+        roleID: string | undefined;
+    }[] = [];
+}
