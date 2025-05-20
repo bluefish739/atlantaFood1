@@ -20,5 +20,9 @@ export const routes: Routes = [
     {
         path: 'roles',
         loadChildren: () => import('./roles/roles-routing.module').then(mod => mod.RolesRoutingModule)
+    },
+    {
+        path: 'users',
+        loadChildren: () => import('./users/users-routing.module').then(mod => mod.UserRoutingModule)
     }
 ];
