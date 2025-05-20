@@ -6,6 +6,10 @@ const routes: Routes = [
         path: 'list',
         loadComponent: () => import('./users-list/users-list.component').then(c => c.UserListComponent)
     },
+    {
+        path: 'details/:id',
+        loadComponent: () => import('./user-details/user-details.component').then(c => c.UserDetailsComponent)
+    },
 ];
 
 @NgModule({
