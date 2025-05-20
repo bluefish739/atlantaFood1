@@ -50,9 +50,11 @@ export class Role {
 }
 
 export class User {
+    userName: string | undefined;
     firstName: string | undefined;
     lastName: string | undefined;
     siteID: string | undefined;
+    phoneNumber: string | undefined;
     roles: {
         roleID: string | undefined;
     }[] = [];

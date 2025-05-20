@@ -1,1 +1,24 @@
-<h1>User Details</h1>
+
+<table *ngIf="user">
+    <h1>User Details for {{ user.userName }}</h1>
+    <tr>
+        <td>First Name</td>
+        <td><input [(ngModel)]="user.firstName" /></td>
+    </tr>
+    <tr>
+        <td>Last Name</td>
+        <td><input [(ngModel)]="user.lastName" /></td>
+    </tr>
+    <tr>
+        <td>Phone Number</td>
+        <td><input [(ngModel)]="user.phoneNumber" /></td>
+    </tr>
+    <tr>
+        <td>Roles</td>
+        <td><button>View Roles</button></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td><button>Save</button></td>
+    </tr>
+</table>
