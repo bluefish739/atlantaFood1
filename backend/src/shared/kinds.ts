@@ -38,18 +38,6 @@ export class CharityLocation {
     charityID: string | undefined;
 }
 
-/*
-export class User {
-    id: string | undefined;
-    name: string | undefined;
-    placeOfWorkID: string | undefined;
-    roles: {
-        roleID: string,
-        enabled: boolean
-    }[] = [];
-}
-*/
-
 export class Role {
     id: string | undefined;
     siteID: string | undefined;
@@ -64,6 +52,7 @@ export class Role {
 export class User {
     firstName: string | undefined;
     lastName: string | undefined;
+    siteID: string | undefined;
     roles: {
         roleID: string | undefined;
     }[] = [];
