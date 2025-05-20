@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Student, Store, Charity, StoreLocation, CharityLocation, Role } from './kinds';
+import { Student, Store, Charity, StoreLocation, CharityLocation, Role, User } from './kinds';
 import { first, firstValueFrom, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 
@@ -94,5 +94,9 @@ export class XapiService {
 
   public async saveRole(role: Role) {
     return await firstValueFrom(this.http.post<Role>(`/xapi/roles/role`, role));
+  }
+
+  public async getAllSiteUsers(siteID: string) {
+    return await firstValueFrom(this.http.get<User[]>(`/xapi/users/` + siteID + `/list-users`));
   }
 }
