@@ -1,0 +1,11 @@
+
+$marginTop: 3%;
+$borderDefault: 2px solid black;
+
+#content {
+    margin-top: $marginTop;
+    margin-left: $marginTop - 2%;
+    #infoTable {
+        border: $borderDefault;
+    }
+}
