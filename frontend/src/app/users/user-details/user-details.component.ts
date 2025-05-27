@@ -30,4 +30,9 @@ export class UserDetailsComponent {
             roles: []
         }
     }
+
+    async saveClicked() {
+        await this.xapiService.saveUser(this.user!);
+        this.router.navigateByUrl("/users/list")
+    }
 }

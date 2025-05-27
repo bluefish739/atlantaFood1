@@ -99,4 +99,8 @@ export class XapiService {
   public async getAllSiteUsers(siteID: string) {
     return await firstValueFrom(this.http.get<User[]>(`/xapi/users/` + siteID + `/list-users`));
   }
+
+  public async saveUser(user: User) {
+    return await firstValueFrom(this.http.post<User>(`/xapi/users/user`, user));
+  }
 }
