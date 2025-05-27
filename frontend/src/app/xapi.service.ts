@@ -19,7 +19,9 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn):
 export class XapiService {
 
   constructor(private http: HttpClient) { }
-
+  //============================================================================================
+  // Student API Requests
+  //============================================================================================
   public async getAllStudents() {
     return await firstValueFrom(this.http.get<Student[]>(`/xapi/students/all`));
   }

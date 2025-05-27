@@ -52,8 +52,7 @@ export class UserDetailsComponent {
         this.updateRolesRef();
     }
 
-    toggleRoleStatus(id: string | undefined) {
-        id = id as string;
+    toggleRoleStatus(id: string) {
         let roleIdx: number = this.user.roles.indexOf(id);
         if (roleIdx > -1) {
             this.user.roles.splice(roleIdx, 1);
