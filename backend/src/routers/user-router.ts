@@ -14,7 +14,6 @@ export class UserRouter extends BaseRouter {
         this.sendClientErrorResponse(res, { success: false, message: "User entity is not provided" }, 404);
         return;
       }
-      /*
       if (user.userID) {
         const existingUser = await userDAO.getUser(user.userID);
         if (!existingUser) {
@@ -22,7 +21,6 @@ export class UserRouter extends BaseRouter {
           return;
         }
       }
-        */
       const id = await userDAO.saveUser(user);
       logger.log("User added successfully! id=" + id);
       this.sendSuccessfulResponse(res, user);
@@ -32,9 +30,10 @@ export class UserRouter extends BaseRouter {
     }
   }
 
-  async getAllUsers(req: Request, res: Response) {
+  async getAllSiteUsers(req: Request, res: Response) {
+    const siteID = req.params.siteID as string;
     try {
-      const users = await userDAO.getAllUsers();
+      const users = await userDAO.getAllUsers(siteID);
       this.sendSuccessfulResponse(res, users);
     } catch (error: any) {
       this.sendServerErrorResponse(res, { success: false, message: error.message });
@@ -63,7 +62,7 @@ export class UserRouter extends BaseRouter {
     const userRouter = new UserRouter();
     return express.Router()
       .post('/user', authenticator, userRouter.saveUser.bind(userRouter))
-      .get('/all', authenticator, userRouter.getAllUsers.bind(userRouter))
+      .get('/:siteID/list-users', authenticator, userRouter.getAllSiteUsers.bind(userRouter))
       .get('/user/:userId', authenticator, userRouter.getUser.bind(userRouter));
   }
 }

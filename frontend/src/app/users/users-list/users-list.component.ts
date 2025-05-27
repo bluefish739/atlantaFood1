@@ -18,6 +18,6 @@ export class UserListComponent {
   }
   
   async ngOnInit() {
-    // this.users = await this.xapiService.getAllSiteUsers(this.siteID);
+    this.users = await this.xapiService.getAllSiteUsers(this.siteID);
   }
 }

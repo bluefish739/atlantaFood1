@@ -1,12 +1,14 @@
 import { User } from "../shared/kinds";
 import { generateId } from "../shared/idutilities";
 import { datastore } from "./data-store-factory";
+import { PropertyFilter } from "@google-cloud/datastore";
 
 export class UserDAO {
     static STORE_KIND = "User";
 
-    public async getAllUsers() {
-        const query = datastore.createQuery(UserDAO.STORE_KIND);
+    public async getAllUsers(siteID: string) {
+        const query = datastore.createQuery(UserDAO.STORE_KIND)
+            .filter(new PropertyFilter('siteID', '=', siteID));;
         const data = await query.run();
         const users = data[0];
 

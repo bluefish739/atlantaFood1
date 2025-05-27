@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
     styleUrl: './user-details.component.scss'
 })
 export class UserDetailsComponent {
-    user!: User;
+    user = new User();
     constructor(private xapiService: XapiService,
         private activatedRoute: ActivatedRoute,
         private router: Router
@@ -21,6 +21,7 @@ export class UserDetailsComponent {
 
     async ngOnInit() {
         const siteID = this.activatedRoute.snapshot.params['id'];
+        /*
         this.user = {
             userID: "new",
             userName: "ouiOuiMaster",
@@ -29,6 +30,15 @@ export class UserDetailsComponent {
             siteID: siteID,
             phoneNumber: "123-456-7890",
             roles: []
+        }
+        */
+        const id = this.activatedRoute.snapshot.params['id'];
+        console.log(id);
+        if (id && id != 'new') {
+            this.user = await this.xapiService.getUser(id);
+            if (!this.user) {
+                this.user = new User();
+            }
         }
     }
 

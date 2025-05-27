@@ -103,4 +103,8 @@ export class XapiService {
   public async saveUser(user: User) {
     return await firstValueFrom(this.http.post<User>(`/xapi/users/user`, user));
   }
+
+  public async getUser(userID: string) {
+    return await firstValueFrom(this.http.get<User>(`/xapi/users/user/` + userID))
+  }
 }
