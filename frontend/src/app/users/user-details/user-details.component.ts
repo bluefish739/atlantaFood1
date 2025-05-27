@@ -20,19 +20,8 @@ export class UserDetailsComponent {
     }
 
     async ngOnInit() {
-        const siteID = this.activatedRoute.snapshot.params['id'];
-        /*
-        this.user = {
-            userID: "new",
-            userName: "ouiOuiMaster",
-            firstName: "Johnathon",
-            lastName: "Von Mousou",
-            siteID: siteID,
-            phoneNumber: "123-456-7890",
-            roles: []
-        }
-        */
         const id = this.activatedRoute.snapshot.params['id'];
+        const siteID = this.activatedRoute.snapshot.params['siteID'];
         console.log(id);
         if (id && id != 'new') {
             this.user = await this.xapiService.getUser(id);
@@ -40,9 +29,11 @@ export class UserDetailsComponent {
                 this.user = new User();
             }
         }
+        this.user.siteID = siteID;
     }
 
     async saveClicked() {
+        console.log(this.user)
         await this.xapiService.saveUser(this.user!);
         this.router.navigateByUrl("/users/list")
     }

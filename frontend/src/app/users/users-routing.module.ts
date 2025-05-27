@@ -7,7 +7,7 @@ const routes: Routes = [
         loadComponent: () => import('./users-list/users-list.component').then(c => c.UserListComponent)
     },
     {
-        path: 'details/:id',
+        path: 'details/:id/:siteID',
         loadComponent: () => import('./user-details/user-details.component').then(c => c.UserDetailsComponent)
     },
 ];

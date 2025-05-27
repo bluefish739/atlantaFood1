@@ -19,5 +19,6 @@ export class UserListComponent {
   
   async ngOnInit() {
     this.users = await this.xapiService.getAllSiteUsers(this.siteID);
+    console.log(this.users);
   }
 }
