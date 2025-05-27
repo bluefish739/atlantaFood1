@@ -4,10 +4,10 @@ import { datastore } from "./data-store-factory";
 import { PropertyFilter } from "@google-cloud/datastore";
 
 export class UserDAO {
-    static STORE_KIND = "User";
+    static USER_KIND = "User";
 
     public async getAllUsers(siteID: string) {
-        const query = datastore.createQuery(UserDAO.STORE_KIND)
+        const query = datastore.createQuery(UserDAO.USER_KIND)
             .filter(new PropertyFilter('siteID', '=', siteID));
         const data = await query.run();
         const users = data[0];
@@ -19,7 +19,7 @@ export class UserDAO {
         if (!user.userID) {
             user.userID = generateId();
         }
-        const entityKey = datastore.key([UserDAO.STORE_KIND, user.userID]);
+        const entityKey = datastore.key([UserDAO.USER_KIND, user.userID]);
         const entity = {
             key: entityKey,
             data: user
@@ -30,7 +30,7 @@ export class UserDAO {
     }
 
     public async getUser(userId: string) {
-        const entityKey = datastore.key([UserDAO.STORE_KIND, userId]);
+        const entityKey = datastore.key([UserDAO.USER_KIND, userId]);
         const data = await datastore.get(entityKey);
         const user = data[0];
         return user;
