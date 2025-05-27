@@ -56,7 +56,5 @@ export class User {
     lastName: string | undefined;
     siteID: string | undefined;
     phoneNumber: string | undefined;
-    roles: {
-        roleID: string | undefined;
-    }[] = [];
+    roles: string[] = [];
 }

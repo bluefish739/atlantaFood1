@@ -23,9 +23,9 @@
                 <button (click)="toggleRolesView()">View Roles</button>
                 <table *ngIf="rolesViewActive">
                     <tr>
-                        <td *ngFor="let role of roles; let idx=index" style="display: block">
+                        <td *ngFor="let role of siteRoles; let idx=index" style="display: block">
                             <span>{{ role.name }}</span>
-                            <input type="checkbox">
+                            <input type="checkbox" (click)="toggleRoleStatus(role.id)" [(checked)]="rolesCheckBoxRef[idx]">
                         </td>
                     </tr>
                 </table>

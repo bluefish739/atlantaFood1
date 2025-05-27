@@ -13,7 +13,8 @@ import { FormsModule } from '@angular/forms';
 })
 export class UserDetailsComponent {
     rolesViewActive = false;
-    roles: Role[] = [];
+    siteRoles: Role[] = [];
+    rolesCheckBoxRef: boolean[] = [];
     user = new User();
     constructor(private xapiService: XapiService,
         private activatedRoute: ActivatedRoute,
@@ -31,16 +32,35 @@ export class UserDetailsComponent {
             }
         }
         this.user.siteID = siteID;
+        this.siteRoles = await this.xapiService.getSiteRoles(this.user.siteID as string);
+        this.siteRoles.forEach((role) => {
+            if (this.user.roles.includes(role.id as string)) {
+                this.rolesCheckBoxRef.push(true);
+            } else {
+                this.rolesCheckBoxRef.push(false);
+            }
+        });
+        console.log(this.user.roles);
     }
 
-    async toggleRolesView() {
+    toggleRolesView() {
         this.rolesViewActive = !this.rolesViewActive;
-        if (this.rolesViewActive) {
-            this.roles = await this.xapiService.getSiteRoles(this.user.siteID as string);
+    }
+    
+    toggleRoleStatus(id: string | undefined) {
+        console.log(this.user.roles);
+        id = id as string;
+        let roleIdx: number = this.user.roles.indexOf(id);
+        if (roleIdx > -1) {
+            this.user.roles.splice(roleIdx, 1);
+        } else {
+            this.user.roles.push(id);
         }
+        console.log(this.user.roles);
     }
 
     async saveClicked() {
+        console.log(this.user.roles);
         await this.xapiService.saveUser(this.user!);
         this.router.navigateByUrl("/users/list")
     }
