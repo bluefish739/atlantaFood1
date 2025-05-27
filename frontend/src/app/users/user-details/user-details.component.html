@@ -1,4 +1,3 @@
-
 <div id="content">
     <table *ngIf="user" id="infoTable">
         <h1>User Details for {{ user.userName }}</h1>
@@ -20,9 +19,18 @@
         </tr>
         <tr>
             <td>Roles</td>
-            <td><button>View Roles</button></td>
+            <td>
+                <button (click)="toggleRolesView()">View Roles</button>
+                <table *ngIf="rolesViewActive">
+                    <tr>
+                        <td *ngFor="let role of roles; let idx=index" style="display: block">
+                            <span>{{ role.name }}</span>
+                            <input type="checkbox">
+                        </td>
+                    </tr>
+                </table>
+            </td>
         </tr>
     </table>
     <button (click)="saveClicked()">Save</button>
 </div>
-

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { XapiService } from '../../xapi.service';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { User } from '../../kinds';
+import { Role, User } from '../../kinds';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -12,6 +12,8 @@ import { FormsModule } from '@angular/forms';
     styleUrl: './user-details.component.scss'
 })
 export class UserDetailsComponent {
+    rolesViewActive = false;
+    roles: Role[] = [];
     user = new User();
     constructor(private xapiService: XapiService,
         private activatedRoute: ActivatedRoute,
@@ -29,6 +31,13 @@ export class UserDetailsComponent {
             }
         }
         this.user.siteID = siteID;
+    }
+
+    async toggleRolesView() {
+        this.rolesViewActive = !this.rolesViewActive;
+        if (this.rolesViewActive) {
+            this.roles = await this.xapiService.getSiteRoles(this.user.siteID as string);
+        }
     }
 
     async saveClicked() {
