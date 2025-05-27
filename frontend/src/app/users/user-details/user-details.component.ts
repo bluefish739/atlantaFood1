@@ -22,6 +22,7 @@ export class UserDetailsComponent {
     async ngOnInit() {
         const siteID = this.activatedRoute.snapshot.params['id'];
         this.user = {
+            userID: "new",
             userName: "ouiOuiMaster",
             firstName: "Johnathon",
             lastName: "Von Mousou",

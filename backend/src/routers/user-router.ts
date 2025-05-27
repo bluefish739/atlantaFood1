@@ -1,0 +1,69 @@
+import express, { Request, Response, Router } from "express";
+import * as logger from "firebase-functions/logger";
+import { authenticator } from "../shared/authentication";
+import { User } from "../shared/kinds";
+import { userDAO } from "../daos/dao-factory";
+import { BaseRouter } from "./base-router";
+
+export class UserRouter extends BaseRouter {
+  async saveUser(req: Request, res: Response) {
+    const user = req.body as User;
+    try {
+      if (!user) {
+        logger.log("User entity is not provided");
+        this.sendClientErrorResponse(res, { success: false, message: "User entity is not provided" }, 404);
+        return;
+      }
+      /*
+      if (user.userID) {
+        const existingUser = await userDAO.getUser(user.userID);
+        if (!existingUser) {
+          this.sendClientErrorResponse(res, { success: false, message: "No user with id " + user.userID + " was found" }, 404);
+          return;
+        }
+      }
+        */
+      const id = await userDAO.saveUser(user);
+      logger.log("User added successfully! id=" + id);
+      this.sendSuccessfulResponse(res, user);
+    } catch (error: any) {
+      logger.log("Failed to add a user", error);
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
+    }
+  }
+
+  async getAllUsers(req: Request, res: Response) {
+    try {
+      const users = await userDAO.getAllUsers();
+      this.sendSuccessfulResponse(res, users);
+    } catch (error: any) {
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
+    }
+  }
+
+  async getUser(req: Request, res: Response) {
+    try {
+      const userId = req.params.userId as string;
+      if (!userId) {
+        this.sendClientErrorResponse(res, { success: false, message: "Missing user ID" }, 400);
+        return;
+      }
+      const user = await userDAO.getUser(userId);
+      if (!user) {
+        this.sendClientErrorResponse(res, { success: false, message: "User not found " + userId }, 404);
+        return;
+      }
+      this.sendSuccessfulResponse(res, user);
+    } catch (error: any) {
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
+    }
+  }
+
+  static buildRouter(): Router {
+    const userRouter = new UserRouter();
+    return express.Router()
+      .post('/user', authenticator, userRouter.saveUser.bind(userRouter))
+      .get('/all', authenticator, userRouter.getAllUsers.bind(userRouter))
+      .get('/user/:userId', authenticator, userRouter.getUser.bind(userRouter));
+  }
+}

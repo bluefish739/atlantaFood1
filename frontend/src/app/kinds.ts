@@ -54,6 +54,7 @@ export class Permission {
 }
 
 export class User {
+    userID: string | undefined;
     userName: string | undefined;
     firstName: string | undefined;
     lastName: string | undefined;

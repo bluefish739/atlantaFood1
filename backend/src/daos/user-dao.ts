@@ -1,0 +1,36 @@
+import { User } from "../shared/kinds";
+import { generateId } from "../shared/idutilities";
+import { datastore } from "./data-store-factory";
+
+export class UserDAO {
+    static STORE_KIND = "User";
+
+    public async getAllUsers() {
+        const query = datastore.createQuery(UserDAO.STORE_KIND);
+        const data = await query.run();
+        const users = data[0];
+
+        return users as User[];
+    }
+
+    public async saveUser(user: User) {
+        if (!user.userID) {
+            user.userID = generateId();
+        }
+        const entityKey = datastore.key([UserDAO.STORE_KIND, user.userID]);
+        const entity = {
+            key: entityKey,
+            data: user
+        };
+
+        await datastore.save(entity);
+        return user;
+    }
+
+    public async getUser(userId: string) {
+        const entityKey = datastore.key([UserDAO.STORE_KIND, userId]);
+        const data = await datastore.get(entityKey);
+        const user = data[0];
+        return user;
+    }
+}
