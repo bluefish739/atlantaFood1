@@ -3,6 +3,10 @@
     <table *ngIf="user" id="infoTable">
         <h1>User Details for {{ user.userName }}</h1>
         <tr>
+            <td>User Name</td>
+            <td><input [(ngModel)]="user.userName" /></td>
+        </tr>
+        <tr>
             <td>First Name</td>
             <td><input [(ngModel)]="user.firstName" /></td>
         </tr>

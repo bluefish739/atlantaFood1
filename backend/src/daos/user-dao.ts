@@ -8,7 +8,7 @@ export class UserDAO {
 
     public async getAllUsers(siteID: string) {
         const query = datastore.createQuery(UserDAO.STORE_KIND)
-            .filter(new PropertyFilter('siteID', '=', siteID));;
+            .filter(new PropertyFilter('siteID', '=', siteID));
         const data = await query.run();
         const users = data[0];
 

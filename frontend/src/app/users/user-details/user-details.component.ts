@@ -22,7 +22,6 @@ export class UserDetailsComponent {
     async ngOnInit() {
         const id = this.activatedRoute.snapshot.params['id'];
         const siteID = this.activatedRoute.snapshot.params['siteID'];
-        console.log(id);
         if (id && id != 'new') {
             this.user = await this.xapiService.getUser(id);
             if (!this.user) {
@@ -33,7 +32,6 @@ export class UserDetailsComponent {
     }
 
     async saveClicked() {
-        console.log(this.user)
         await this.xapiService.saveUser(this.user!);
         this.router.navigateByUrl("/users/list")
     }

@@ -3,8 +3,8 @@
 <table *ngIf="users">
     <tr><th></th><th>First Name</th><th>Last Name</th></tr>
     <tr *ngFor="let user of users; let idx=index">
-        <td><a [routerLink]="['/user/details', user.userID, siteID]">{{idx+1}}</a></td>
+        <td><a [routerLink]="['/users/details', user.userID, siteID]">{{idx+1}}</a></td>
         <td>{{user.firstName}}</td><td>{{user.lastName}}</td>
     </tr>
 </table>
-<a [routerLink]="['/users/details/new/:siteID']">Add User</a>
+<a [routerLink]="['/users/details', 'new', siteID]">Add User</a>
