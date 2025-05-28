@@ -10,8 +10,8 @@ export const permissions: Permission[] = [
         description: "Enables user to add, delete, and edit rows to transaction logs"
     },
     {
-        name: "Edit Roles",
-        description: "Enables user to edit and assign roles for other users"
+        name: "Sleeper",
+        description: "Sleeps on the job, occasionally"
     },
     {
         name: "Add Users",

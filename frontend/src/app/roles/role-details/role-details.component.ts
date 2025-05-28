@@ -14,6 +14,7 @@ import { permissions } from '../permissions';
 })
 export class RolePermissionsComponent {
     role: Role = new Role();
+    permsCheckBoxRef: boolean[] = [];
     permissions = permissions;
     constructor(
         private xapiService: XapiService,
@@ -23,32 +24,36 @@ export class RolePermissionsComponent {
 
     }
 
-    assignBlankPermissions(role: Role): Role {
-        role.permissions = [];
-        for (let permission of permissions) {
-            role.permissions.push({
-                permissionName: permission.name as string,
-                enabled: false
-            });
-        }
-        return role;
-    }
-
     async ngOnInit() {
         const siteID = this.activatedRoute.snapshot.params['siteID'];
         const roleID = this.activatedRoute.snapshot.params['roleID'];
         this.role.siteID = siteID;
-        this.role = this.assignBlankPermissions(this.role);
         if (roleID && roleID != 'new') {
             this.role = await this.xapiService.getRole(roleID);
             if (!this.role) {
                 this.role = new Role();
-                this.role = this.assignBlankPermissions(this.role);
             }
         }
+        this.initPermsRef()
+    }
+
+    initPermsRef() {
+        this.permissions.forEach((perm) => {
+            if (this.role.permissions.includes(perm.name as string)) {
+                this.permsCheckBoxRef.push(true);
+            } else {
+                this.permsCheckBoxRef.push(false);
+            }
+        });
     }
 
     async saveClicked() {
+        this.role.permissions.length = 0;
+        for (let i = 0; i < this.permsCheckBoxRef.length; i++) {
+            if (this.permsCheckBoxRef[i]) {
+                this.role.permissions.push(this.permissions[i].name!)
+            }
+        }
         await this.xapiService.saveRole(this.role!);
         this.router.navigateByUrl('/roles/roles-list');
       }

@@ -12,7 +12,7 @@
     <tr>
         <td>Role Permissions</td>
         <td *ngFor="let permission of permissions; let idx=index" style="display: block">
-            <input type="checkbox" [(ngModel)]='role.permissions[idx].enabled'>
+            <input type="checkbox" [(ngModel)]='permsCheckBoxRef[idx]'>
             <span title="{{permissions[idx].description}}">{{ permission.name }}</span>
         </td>
     </tr>

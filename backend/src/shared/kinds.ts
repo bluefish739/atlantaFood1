@@ -43,10 +43,7 @@ export class Role {
     siteID: string | undefined;
     name: string | undefined;
     description: string | undefined;
-    permissions: {
-        permissionName: string,
-        enabled: boolean
-    }[] = [];
+    permissions: string[] = [];
 }
 
 export class User {
