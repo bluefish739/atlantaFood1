@@ -25,7 +25,7 @@
                     <tr>
                         <td *ngFor="let role of siteRoles; let idx=index" style="display: block">
                             <span>{{ role.name }}</span>
-                            <input type="checkbox" (click)="toggleRoleStatus(role.id!)" [(checked)]="rolesCheckBoxRef[idx]">
+                            <input type="checkbox" [(ngModel)]="rolesCheckBoxRef[idx]">
                         </td>
                     </tr>
                 </table>

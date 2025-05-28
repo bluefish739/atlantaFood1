@@ -33,10 +33,10 @@ export class UserDetailsComponent {
         }
         this.user.siteID = siteID;
         this.siteRoles = await this.xapiService.getSiteRoles(this.user.siteID as string);
-        this.updateRolesRef();
+        this.initRolesRef();
     }
 
-    updateRolesRef() {
+    initRolesRef() {
         this.rolesCheckBoxRef.length = 0;
         this.siteRoles.forEach((role) => {
             if (this.user.roles.includes(role.id as string)) {
@@ -49,19 +49,15 @@ export class UserDetailsComponent {
 
     toggleRolesView() {
         this.rolesViewActive = !this.rolesViewActive;
-        this.updateRolesRef();
-    }
-
-    toggleRoleStatus(id: string) {
-        let roleIdx: number = this.user.roles.indexOf(id);
-        if (roleIdx > -1) {
-            this.user.roles.splice(roleIdx, 1);
-        } else {
-            this.user.roles.push(id);
-        }
     }
 
     async saveClicked() {
+        this.user.roles.length = 0;
+        for (let i = 0; i < this.rolesCheckBoxRef.length; i++) {
+            if (this.rolesCheckBoxRef[i]) {
+                this.user.roles.push(this.siteRoles[i].id!)
+            }
+        }
         await this.xapiService.saveUser(this.user!);
         this.router.navigateByUrl("/users/list")
     }
