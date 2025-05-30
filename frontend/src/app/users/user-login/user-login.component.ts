@@ -22,8 +22,16 @@ export class UserLoginComponent {
     async ngOnInit() {
     }
 
+    setCookie(name: string, value: string, minutesToLive: number) {
+        const date = new Date();
+        date.setTime(date.getTime() + minutesToLive * 60 * 1000);
+        let expires = `expires=${date.toUTCString()}`
+        document.cookie = `${name}=${value}; ${expires}; path=/`
+    }
+
     async submitCreds() {
-        console.log(this.username);
-        console.log(this.password)
+        this.setCookie("username", this.username, 60);
+        this.setCookie("password", this.password, 60);
+        console.log(document.cookie);
     }
 }
