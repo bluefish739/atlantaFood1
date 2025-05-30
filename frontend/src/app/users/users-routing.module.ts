@@ -3,6 +3,10 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
     {
+        path: 'login',
+        loadComponent: () => import('./user-login/user-login.component').then(c => c.UserLoginComponent)
+    },
+    {
         path: 'list',
         loadComponent: () => import('./users-list/users-list.component').then(c => c.UserListComponent)
     },
