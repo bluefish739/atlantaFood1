@@ -2,6 +2,7 @@ import { User } from "../shared/kinds";
 import { generateId } from "../shared/idutilities";
 import { datastore } from "./data-store-factory";
 import { PropertyFilter } from "@google-cloud/datastore";
+import { RoleDAO } from "./role-dao";
 
 export class UserDAO {
     static USER_KIND = "User";
@@ -51,5 +52,24 @@ export class UserDAO {
         const data = await query.run();
         const sessionActive = (data[0][0] === null ? false : true);
         return sessionActive;
+    }
+
+    public async hasPermission(permission: string, sessionID: string) {
+        const sessionQuery = datastore.createQuery(UserDAO.USER_KIND)
+            .filter(new PropertyFilter('sessionID', '=', sessionID));
+        const data = await sessionQuery.run();
+        const user = data[0][0] as User;
+        for (let roleID of user.roles) {
+            const roleQuery = datastore.createQuery(RoleDAO.ROLE_KIND)
+                .filter(new PropertyFilter('roleID', '=', roleID));
+            const rolesData = await roleQuery.run();
+            const userRoles = rolesData[0];
+            let roleGrantsPerm: boolean = false;
+            userRoles.forEach((rolePermission) => {
+                if (rolePermission === permission) roleGrantsPerm = true;
+            });
+            if (roleGrantsPerm) return true;
+        }
+        return false;
     }
 }
