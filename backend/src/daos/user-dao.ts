@@ -38,11 +38,18 @@ export class UserDAO {
 
     public async verifyUser(username: string, password: string) {
         const query = datastore.createQuery(UserDAO.USER_KIND)
-            .filter(new PropertyFilter('userName', '=', username))
+            .filter(new PropertyFilter('username', '=', username))
             .filter(new PropertyFilter('password', '=', password));
         const data = await query.run();
         const user = data[0][0];
-
         return user as User;
+    }
+
+    public async isSessionActive(sessionID: string) {
+        const query = datastore.createQuery(UserDAO.USER_KIND)
+            .filter(new PropertyFilter('sessionID', '=', sessionID));
+        const data = await query.run();
+        const sessionActive = (data[0][0] === null ? false : true);
+        return sessionActive;
     }
 }

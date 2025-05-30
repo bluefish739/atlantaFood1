@@ -19,13 +19,20 @@ export class UserListComponent {
     private router: Router
   ) {
   }
-  
+
   async ngOnInit() {
-    let sessionValid = await sessionAuthenticator.isSessionVerified();
-    if (!sessionValid) {
+    let sessionID = await sessionAuthenticator.getSessionID();
+    if (sessionID === null) {
       alert("Your session has expired! Please log in again.");
       this.router.navigateByUrl('users/login');
+      return;
     }
-    this.users = await this.xapiService.getAllSiteUsers(this.siteID);
+    let sessionActive = await this.xapiService.verifySessionID(sessionID);
+    if (!sessionActive) {
+      alert("Your session has expired! Please log in again.");
+      this.router.navigateByUrl('users/login');
+      return;
+    }
+    this.users = await this.xapiService.getAllSiteUsers(this.siteID, sessionID);
   }
 }

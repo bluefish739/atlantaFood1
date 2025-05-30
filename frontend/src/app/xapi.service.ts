@@ -98,8 +98,8 @@ export class XapiService {
     return await firstValueFrom(this.http.post<Role>(`/xapi/roles/role`, role));
   }
 
-  public async getAllSiteUsers(siteID: string) {
-    return await firstValueFrom(this.http.get<User[]>(`/xapi/users/` + siteID + `/list-users`));
+  public async getAllSiteUsers(siteID: string, sessionID: string) {
+    return await firstValueFrom(this.http.get<User[]>(`/xapi/users/` + siteID + `/list-users/` + sessionID));
   }
 
   public async saveUser(user: User) {
@@ -112,5 +112,9 @@ export class XapiService {
 
   public async submitCreds(username: string, password: string) {
     return await firstValueFrom(this.http.get<String>(`/xapi/users/login/` + username + `/` + password))
+  }
+
+  public async verifySessionID(sessionID: string) {
+    return await firstValueFrom(this.http.get<Boolean>(`/xapi/users/verify-session/` + sessionID));
   }
 }

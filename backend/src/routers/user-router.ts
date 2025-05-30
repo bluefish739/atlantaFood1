@@ -64,7 +64,7 @@ export class UserRouter extends BaseRouter {
       const username = req.params.username as string;
       const password = req.params.password as string;
       const user = await userDAO.verifyUser(username, password);
-      if (user == null) {
+      if (user === null) {
         this.sendSuccessfulResponse(res, "Invalid Credentials");
         return;
       }
@@ -76,12 +76,23 @@ export class UserRouter extends BaseRouter {
     }
   }
 
+  async verifySession(req: Request, res: Response) {
+    try {
+      const sessionID = req.params.sessionID as string;
+      const sessionActive: boolean = await userDAO.isSessionActive(sessionID);
+      this.sendSuccessfulResponse(res, sessionActive);
+    } catch (error: any) {
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
+    }
+  }
+
   static buildRouter(): Router {
     const userRouter = new UserRouter();
     return express.Router()
       .post('/user', authenticator, userRouter.saveUser.bind(userRouter))
-      .get('/:siteID/list-users', authenticator, userRouter.getAllSiteUsers.bind(userRouter))
+      .get('/:siteID/list-users/:sessionID', authenticator, userRouter.getAllSiteUsers.bind(userRouter))
       .get('/user/:userId', authenticator, userRouter.getUser.bind(userRouter))
-      .get('/login/:username/:password', authenticator, userRouter.verifyCreds.bind(userRouter));
+      .get('/login/:username/:password', authenticator, userRouter.verifyCreds.bind(userRouter))
+      .get('/verify-session/:sessionID', authenticator, userRouter.verifySession.bind(userRouter));
   }
 }
