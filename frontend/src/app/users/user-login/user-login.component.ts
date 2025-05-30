@@ -31,12 +31,14 @@ export class UserLoginComponent {
     }
 
     async submitCreds() {
-        let user: String | User = await this.xapiService.submitCreds(this.username, this.password);
-        if (user == "Invalid Credentials") {
+        let sessionID: String = await this.xapiService.submitCreds(this.username, this.password);
+        if (sessionID == "Invalid Credentials") {
             alert("Credentials invalid, please try again.");
             this.username = "";
             this.password = "";
+            return;
         }
-        console.log(user);
+        this.setCookie("sessionID", sessionID as string, 60);
+        this.router.navigateByUrl("/users/list")
     }
 }

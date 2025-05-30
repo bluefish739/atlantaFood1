@@ -111,6 +111,6 @@ export class XapiService {
   }
 
   public async submitCreds(username: string, password: string) {
-    return await firstValueFrom(this.http.get<String | User>(`/xapi/users/login/` + username + `/` + password))
+    return await firstValueFrom(this.http.get<String>(`/xapi/users/login/` + username + `/` + password))
   }
 }

@@ -70,7 +70,7 @@ export class UserRouter extends BaseRouter {
       }
       user.sessionID = generateId();
       await userDAO.saveUser(user);
-      this.sendSuccessfulResponse(res, user);
+      this.sendSuccessfulResponse(res, user.sessionID);
     } catch (error: any) {
       this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
