@@ -57,5 +57,7 @@ export class User {
     lastName: string | undefined;
     siteID: string | undefined;
     phoneNumber: string | undefined;
+    password: string | undefined;
+    tokenID: string | undefined;
     roles: string[] = [];
 }
