@@ -4,6 +4,7 @@ import { authenticator } from "../shared/authentication";
 import { User } from "../shared/kinds";
 import { userDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
+import { generateId } from "../shared/idutilities";
 
 export class UserRouter extends BaseRouter {
   async saveUser(req: Request, res: Response) {
@@ -59,7 +60,20 @@ export class UserRouter extends BaseRouter {
   }
 
   async verifyCreds(req: Request, res: Response) {
-    this.sendSuccessfulResponse(res, "seems legit");
+    try {
+      const username = req.params.username as string;
+      const password = req.params.password as string;
+      const user = await userDAO.verifyUser(username, password);
+      if (user == null) {
+        this.sendSuccessfulResponse(res, "Invalid Credentials");
+        return;
+      }
+      user.sessionID = generateId();
+      await userDAO.saveUser(user);
+      this.sendSuccessfulResponse(res, user);
+    } catch (error: any) {
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
+    }
   }
 
   static buildRouter(): Router {

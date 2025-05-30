@@ -35,4 +35,14 @@ export class UserDAO {
         const user = data[0];
         return user;
     }
+
+    public async verifyUser(username: string, password: string) {
+        const query = datastore.createQuery(UserDAO.USER_KIND)
+            .filter(new PropertyFilter('userName', '=', username))
+            .filter(new PropertyFilter('password', '=', password));
+        const data = await query.run();
+        const user = data[0][0];
+
+        return user as User;
+    }
 }

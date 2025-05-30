@@ -3,6 +3,7 @@ import { XapiService } from '../../xapi.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { User } from '../../kinds';
 
 @Component({
     selector: 'users-user-login',
@@ -30,6 +31,12 @@ export class UserLoginComponent {
     }
 
     async submitCreds() {
-        console.log(await this.xapiService.submitCreds(this.username, this.password));
+        let user: String | User = await this.xapiService.submitCreds(this.username, this.password);
+        if (user == "Invalid Credentials") {
+            alert("Credentials invalid, please try again.");
+            this.username = "";
+            this.password = "";
+        }
+        console.log(user);
     }
 }

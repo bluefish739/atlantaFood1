@@ -54,6 +54,6 @@ export class User {
     siteID: string | undefined;
     phoneNumber: string | undefined;
     password: string | undefined;
-    tokenID: string | undefined;
+    sessionID: string | undefined;
     roles: string[] = [];
 }
