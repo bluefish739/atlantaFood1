@@ -33,6 +33,6 @@ export class UserListComponent {
       this.router.navigateByUrl('users/login');
       return;
     }
-    this.users = await this.xapiService.getAllSiteUsers(this.siteID, sessionID);
+    this.users = await this.xapiService.getAllSiteUsers(this.siteID);
   }
 }

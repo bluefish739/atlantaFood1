@@ -37,25 +37,15 @@ export class XapiService {
   public async saveStudent(student: Student) {
     return await firstValueFrom(this.http.post<Student>(`/xapi/students/student`, student));
   }
-
+  //============================================================================================
+  // Store API Requests
+  //============================================================================================
   public async getStore(id: string) {
     return await firstValueFrom(this.http.get<Store>(`/xapi/stores/store/` + id));
   }
 
   public async saveStore(store: Store) {
     return await firstValueFrom(this.http.post<Store>(`/xapi/stores/store`, store));
-  }
-
-  public async getAllCharities() {
-    return await firstValueFrom(this.http.get<Charity[]>(`/xapi/charities/all`));
-  }
-
-  public async saveCharity(charity: Charity) {
-    return await firstValueFrom(this.http.post<Charity>(`/xapi/charities/charity`, charity));
-  }
-
-  public async getCharity(id: string) {
-    return await firstValueFrom(this.http.get<Charity>(`/xapi/charities/charity/` + id));
   }
 
   public async saveStoreLocation(storeLocation: StoreLocation) {
@@ -73,6 +63,20 @@ export class XapiService {
   public async getStoreLocation(id: string) {
     return await firstValueFrom(this.http.get<StoreLocation>(`/xapi/store-locations/location/` + id));
   }
+  //============================================================================================
+  // Charity API Requests
+  //============================================================================================
+  public async getAllCharities() {
+    return await firstValueFrom(this.http.get<Charity[]>(`/xapi/charities/all`));
+  }
+
+  public async saveCharity(charity: Charity) {
+    return await firstValueFrom(this.http.post<Charity>(`/xapi/charities/charity`, charity));
+  }
+
+  public async getCharity(id: string) {
+    return await firstValueFrom(this.http.get<Charity>(`/xapi/charities/charity/` + id));
+  }
 
   public async getCharityLocations(charityID: string) {
     return await firstValueFrom(this.http.get<CharityLocation[]>(`/xapi/charities/` + charityID + `/locations`));
@@ -85,7 +89,9 @@ export class XapiService {
   public async getCharityLocation(id: string) {
     return await firstValueFrom(this.http.get<CharityLocation>(`/xapi/charity-locations/location/` + id));
   }
-
+  //============================================================================================
+  // Role API Requests
+  //============================================================================================
   public async getSiteRoles(siteID: string) {
     return firstValueFrom(this.http.get<Role[]>(`/xapi/roles/` + siteID + `/list-roles`))
   }
@@ -97,9 +103,11 @@ export class XapiService {
   public async saveRole(role: Role) {
     return await firstValueFrom(this.http.post<Role>(`/xapi/roles/role`, role));
   }
-
-  public async getAllSiteUsers(siteID: string, sessionID: string) {
-    return await firstValueFrom(this.http.get<User[]>(`/xapi/users/` + siteID + `/list-users/` + sessionID));
+  //============================================================================================
+  // User/Credentials API Requests
+  //============================================================================================
+  public async getAllSiteUsers(siteID: string) {
+    return await firstValueFrom(this.http.get<User[]>(`/xapi/users/` + siteID + `/list-users`));
   }
 
   public async saveUser(user: User) {

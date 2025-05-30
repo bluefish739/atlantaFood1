@@ -90,7 +90,7 @@ export class UserRouter extends BaseRouter {
     const userRouter = new UserRouter();
     return express.Router()
       .post('/user', authenticator, userRouter.saveUser.bind(userRouter))
-      .get('/:siteID/list-users/:sessionID', authenticator, userRouter.getAllSiteUsers.bind(userRouter))
+      .get('/:siteID/list-users', authenticator, userRouter.getAllSiteUsers.bind(userRouter))
       .get('/user/:userId', authenticator, userRouter.getUser.bind(userRouter))
       .get('/login/:username/:password', authenticator, userRouter.verifyCreds.bind(userRouter))
       .get('/verify-session/:sessionID', authenticator, userRouter.verifySession.bind(userRouter));
