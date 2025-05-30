@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { XapiService } from '../../xapi.service';
 import { User } from '../../kinds';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { sessionAuthenticator } from '../../utilities/session-authentication';
 
 @Component({
   selector: 'users-user-list',
@@ -13,11 +14,18 @@ import { RouterModule } from '@angular/router';
 export class UserListComponent {
   users!: User[];
   siteID = "e878dc70-f213-11ef-9653-8d47654d5c1c";
-  constructor(private xapiService: XapiService) {
-
+  constructor(
+    private xapiService: XapiService,
+    private router: Router
+  ) {
   }
   
   async ngOnInit() {
+    let sessionValid = await sessionAuthenticator.isSessionVerified();
+    if (!sessionValid) {
+      alert("Your session has expired! Please log in again.");
+      this.router.navigateByUrl('users/login');
+    }
     this.users = await this.xapiService.getAllSiteUsers(this.siteID);
   }
 }
