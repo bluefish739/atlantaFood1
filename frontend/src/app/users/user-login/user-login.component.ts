@@ -30,8 +30,6 @@ export class UserLoginComponent {
     }
 
     async submitCreds() {
-        this.setCookie("username", this.username, 60);
-        this.setCookie("password", this.password, 60);
-        console.log(document.cookie);
+        console.log(await this.xapiService.submitCreds(this.username, this.password));
     }
 }

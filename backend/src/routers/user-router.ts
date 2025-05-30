@@ -58,11 +58,16 @@ export class UserRouter extends BaseRouter {
     }
   }
 
+  async verifyCreds(req: Request, res: Response) {
+    this.sendSuccessfulResponse(res, "seems legit");
+  }
+
   static buildRouter(): Router {
     const userRouter = new UserRouter();
     return express.Router()
       .post('/user', authenticator, userRouter.saveUser.bind(userRouter))
       .get('/:siteID/list-users', authenticator, userRouter.getAllSiteUsers.bind(userRouter))
-      .get('/user/:userId', authenticator, userRouter.getUser.bind(userRouter));
+      .get('/user/:userId', authenticator, userRouter.getUser.bind(userRouter))
+      .get('/login/:username/:password', authenticator, userRouter.verifyCreds.bind(userRouter));
   }
 }
