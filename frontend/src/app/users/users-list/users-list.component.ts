@@ -3,10 +3,11 @@ import { XapiService } from '../../xapi.service';
 import { User } from '../../kinds';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { SignOutButtonComponent } from '../../../shared-components/sign-out-component/sign-out.component';
 
 @Component({
   selector: 'users-user-list',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, SignOutButtonComponent],
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.scss'
 })
