@@ -32,6 +32,7 @@ export class UserRouter extends BaseRouter {
   }
 
   async getAllSiteUsers(req: Request, res: Response) {
+    logger.log(req.headers.cookie);
     const siteID = req.params.siteID as string;
     try {
       const users = await userDAO.getAllUsers(siteID);

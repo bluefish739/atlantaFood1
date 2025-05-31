@@ -1,4 +1,4 @@
-import { HttpClient, HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpHandlerFn, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Student, Store, Charity, StoreLocation, CharityLocation, Role, User } from './kinds';
 import { first, firstValueFrom, Observable } from 'rxjs';
@@ -106,8 +106,11 @@ export class XapiService {
   //============================================================================================
   // User/Credentials API Requests
   //============================================================================================
-  public async getAllSiteUsers(siteID: string) {
-    return await firstValueFrom(this.http.get<User[]>(`/xapi/users/` + siteID + `/list-users`));
+  public async getAllSiteUsers(siteID: string, sessionID: string) {
+    const headers = new HttpHeaders({
+      'sessionID': sessionID
+    });
+    return await firstValueFrom(this.http.get<User[]>(`/xapi/users/` + siteID + `/list-users`, { headers }));
   }
 
   public async saveUser(user: User) {
