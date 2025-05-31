@@ -43,6 +43,9 @@ export class UserDAO {
             .filter(new PropertyFilter('password', '=', password));
         const data = await query.run();
         const user = data[0][0];
+        if (user === undefined) {
+            return undefined;
+        }
         return user as User;
     }
 

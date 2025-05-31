@@ -64,7 +64,7 @@ export class UserRouter extends BaseRouter {
       const username = req.params.username as string;
       const password = req.params.password as string;
       const user = await userDAO.verifyUser(username, password);
-      if (user === null) {
+      if (user === undefined) {
         this.sendSuccessfulResponse(res, "Invalid Credentials");
         return;
       }
