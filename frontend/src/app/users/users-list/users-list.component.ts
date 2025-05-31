@@ -3,7 +3,6 @@ import { XapiService } from '../../xapi.service';
 import { User } from '../../kinds';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { sessionAuthenticator } from '../../utilities/session-authentication';
 
 @Component({
   selector: 'users-user-list',

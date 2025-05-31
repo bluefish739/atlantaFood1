@@ -24,92 +24,167 @@ export class XapiService {
   // Student API Requests
   //============================================================================================
   public async getAllStudents() {
-    return await firstValueFrom(this.http.get<Student[]>(`/xapi/students/all`));
+    const sessionID = sessionAuthenticator.getCookie("sessionID");
+    const headers = new HttpHeaders({
+      'Authentication': sessionID
+    });
+    return await firstValueFrom(this.http.get<Student[]>(`/xapi/students/all`, { headers }));
   }
 
   public async getAllStores() {
-    return await firstValueFrom(this.http.get<Store[]>(`/xapi/stores/all`));
+    const sessionID = sessionAuthenticator.getCookie("sessionID");
+    const headers = new HttpHeaders({
+      'Authentication': sessionID
+    });
+    return await firstValueFrom(this.http.get<Store[]>(`/xapi/stores/all`, { headers }));
   }
 
   public async getStudent(id: string) {
-    return await firstValueFrom(this.http.get<Student>(`/xapi/students/student/` + id));
+    const sessionID = sessionAuthenticator.getCookie("sessionID");
+    const headers = new HttpHeaders({
+      'Authentication': sessionID
+    });
+    return await firstValueFrom(this.http.get<Student>(`/xapi/students/student/` + id, { headers }));
   }
 
   public async saveStudent(student: Student) {
-    return await firstValueFrom(this.http.post<Student>(`/xapi/students/student`, student));
+    const sessionID = sessionAuthenticator.getCookie("sessionID");
+    const headers = new HttpHeaders({
+      'Authentication': sessionID
+    });
+    return await firstValueFrom(this.http.post<Student>(`/xapi/students/student`, student, { headers }));
   }
   //============================================================================================
   // Store API Requests
   //============================================================================================
   public async getStore(id: string) {
-    return await firstValueFrom(this.http.get<Store>(`/xapi/stores/store/` + id));
+    const sessionID = sessionAuthenticator.getCookie("sessionID");
+    const headers = new HttpHeaders({
+      'Authentication': sessionID
+    });
+    return await firstValueFrom(this.http.get<Store>(`/xapi/stores/store/` + id, { headers }));
   }
 
   public async saveStore(store: Store) {
-    return await firstValueFrom(this.http.post<Store>(`/xapi/stores/store`, store));
+    const sessionID = sessionAuthenticator.getCookie("sessionID");
+    const headers = new HttpHeaders({
+      'Authentication': sessionID
+    });
+    return await firstValueFrom(this.http.post<Store>(`/xapi/stores/store`, store, { headers }));
   }
 
   public async saveStoreLocation(storeLocation: StoreLocation) {
-    return await firstValueFrom(this.http.post<StoreLocation>(`/xapi/store-locations/location`, storeLocation));
+    const sessionID = sessionAuthenticator.getCookie("sessionID");
+    const headers = new HttpHeaders({
+      'Authentication': sessionID
+    });
+    return await firstValueFrom(this.http.post<StoreLocation>(`/xapi/store-locations/location`, storeLocation, { headers }));
   }
 
   public async getAllStoreLocations() {
-    return await firstValueFrom(this.http.get<StoreLocation[]>(`/xapi/store-locations/all`));
+    const sessionID = sessionAuthenticator.getCookie("sessionID");
+    const headers = new HttpHeaders({
+      'Authentication': sessionID
+    });
+    return await firstValueFrom(this.http.get<StoreLocation[]>(`/xapi/store-locations/all`, { headers }));
   }
 
   public async getStoreLocations(storeID: string) {
-    return await firstValueFrom(this.http.get<StoreLocation[]>(`/xapi/stores/` + storeID + `/locations`));
+    const sessionID = sessionAuthenticator.getCookie("sessionID");
+    const headers = new HttpHeaders({
+      'Authentication': sessionID
+    });
+    return await firstValueFrom(this.http.get<StoreLocation[]>(`/xapi/stores/` + storeID + `/locations`, { headers }));
   }
 
   public async getStoreLocation(id: string) {
-    return await firstValueFrom(this.http.get<StoreLocation>(`/xapi/store-locations/location/` + id));
+    const sessionID = sessionAuthenticator.getCookie("sessionID");
+    const headers = new HttpHeaders({
+      'Authentication': sessionID
+    });
+    return await firstValueFrom(this.http.get<StoreLocation>(`/xapi/store-locations/location/` + id, { headers }));
   }
   //============================================================================================
   // Charity API Requests
   //============================================================================================
   public async getAllCharities() {
-    return await firstValueFrom(this.http.get<Charity[]>(`/xapi/charities/all`));
+    const sessionID = sessionAuthenticator.getCookie("sessionID");
+    const headers = new HttpHeaders({
+      'Authentication': sessionID
+    });
+    return await firstValueFrom(this.http.get<Charity[]>(`/xapi/charities/all`, { headers }));
   }
 
   public async saveCharity(charity: Charity) {
-    return await firstValueFrom(this.http.post<Charity>(`/xapi/charities/charity`, charity));
+    const sessionID = sessionAuthenticator.getCookie("sessionID");
+    const headers = new HttpHeaders({
+      'Authentication': sessionID
+    });
+    return await firstValueFrom(this.http.post<Charity>(`/xapi/charities/charity`, charity, { headers }));
   }
 
   public async getCharity(id: string) {
-    return await firstValueFrom(this.http.get<Charity>(`/xapi/charities/charity/` + id));
+    const sessionID = sessionAuthenticator.getCookie("sessionID");
+    const headers = new HttpHeaders({
+      'Authentication': sessionID
+    });
+    return await firstValueFrom(this.http.get<Charity>(`/xapi/charities/charity/` + id, { headers }));
   }
 
   public async getCharityLocations(charityID: string) {
-    return await firstValueFrom(this.http.get<CharityLocation[]>(`/xapi/charities/` + charityID + `/locations`));
+    const sessionID = sessionAuthenticator.getCookie("sessionID");
+    const headers = new HttpHeaders({
+      'Authentication': sessionID
+    });
+    return await firstValueFrom(this.http.get<CharityLocation[]>(`/xapi/charities/` + charityID + `/locations`, { headers }));
   }
 
   public async saveCharityLocation(charityLocation: CharityLocation) {
-    return await firstValueFrom(this.http.post<CharityLocation>(`/xapi/charity-locations/location`, charityLocation));
+    const sessionID = sessionAuthenticator.getCookie("sessionID");
+    const headers = new HttpHeaders({
+      'Authentication': sessionID
+    });
+    return await firstValueFrom(this.http.post<CharityLocation>(`/xapi/charity-locations/location`, charityLocation, { headers }));
   }
 
   public async getCharityLocation(id: string) {
-    return await firstValueFrom(this.http.get<CharityLocation>(`/xapi/charity-locations/location/` + id));
+    const sessionID = sessionAuthenticator.getCookie("sessionID");
+    const headers = new HttpHeaders({
+      'Authentication': sessionID
+    });
+    return await firstValueFrom(this.http.get<CharityLocation>(`/xapi/charity-locations/location/` + id, { headers }));
   }
   //============================================================================================
   // Role API Requests
   //============================================================================================
   public async getSiteRoles(siteID: string) {
-    return firstValueFrom(this.http.get<Role[]>(`/xapi/roles/` + siteID + `/list-roles`))
+    const sessionID = sessionAuthenticator.getCookie("sessionID");
+    const headers = new HttpHeaders({
+      'Authentication': sessionID
+    });
+    return await firstValueFrom(this.http.get<Role[]>(`/xapi/roles/` + siteID + `/list-roles`, { headers }))
   }
 
   public async getRole(roleID: string) {
-    return await firstValueFrom(this.http.get<Role>(`/xapi/roles/role/` + roleID))
+    const sessionID = sessionAuthenticator.getCookie("sessionID");
+    const headers = new HttpHeaders({
+      'Authentication': sessionID
+    });
+    return await firstValueFrom(this.http.get<Role>(`/xapi/roles/role/` + roleID, { headers }))
   }
 
   public async saveRole(role: Role) {
-    return await firstValueFrom(this.http.post<Role>(`/xapi/roles/role`, role));
+    const sessionID = sessionAuthenticator.getCookie("sessionID");
+    const headers = new HttpHeaders({
+      'Authentication': sessionID
+    });
+    return await firstValueFrom(this.http.post<Role>(`/xapi/roles/role`, role, { headers }));
   }
   //============================================================================================
   // User/Credentials API Requests
   //============================================================================================
   public async getAllSiteUsers(siteID: string) {
-    //const sessionID = sessionAuthenticator.getCookie("sessionID");
-    const sessionID = "aoih";
+    const sessionID = sessionAuthenticator.getCookie("sessionID");
     const headers = new HttpHeaders({
       'Authentication': sessionID
     });
@@ -117,18 +192,34 @@ export class XapiService {
   }
 
   public async saveUser(user: User) {
-    return await firstValueFrom(this.http.post<User>(`/xapi/users/user`, user));
+    const sessionID = sessionAuthenticator.getCookie("sessionID");
+    const headers = new HttpHeaders({
+      'Authentication': sessionID
+    });
+    return await firstValueFrom(this.http.post<User>(`/xapi/users/user`, user, { headers }));
   }
 
   public async getUser(userID: string) {
-    return await firstValueFrom(this.http.get<User>(`/xapi/users/user/` + userID))
+    const sessionID = sessionAuthenticator.getCookie("sessionID");
+    const headers = new HttpHeaders({
+      'Authentication': sessionID
+    });
+    return await firstValueFrom(this.http.get<User>(`/xapi/users/user/` + userID, { headers }))
   }
 
   public async submitCreds(username: string, password: string) {
-    return await firstValueFrom(this.http.get<string>(`/xapi/users/login/` + username + `/` + password))
+    const sessionID = sessionAuthenticator.getCookie("sessionID");
+    const headers = new HttpHeaders({
+      'Authentication': sessionID
+    });
+    return await firstValueFrom(this.http.get<string>(`/xapi/users/login/` + username + `/` + password, { headers }))
   }
 
-  public async verifySessionID(sessionID: string) {
-    return await firstValueFrom(this.http.get<Boolean>(`/xapi/users/verify-session/` + sessionID));
+  public async verifySessionID() {
+    const sessionID = sessionAuthenticator.getCookie("sessionID");
+    const headers = new HttpHeaders({
+      'Authentication': sessionID
+    });
+    return await firstValueFrom(this.http.get<boolean>(`/xapi/users/verify-session/`, { headers }));
   }
 }
