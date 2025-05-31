@@ -24,14 +24,14 @@ export class UserLoginComponent {
     }
 
     async submitCreds() {
-        let sessionID: String = await this.xapiService.submitCreds(this.username, this.password);
+        const sessionID = await this.xapiService.submitCreds(this.username, this.password);
         if (sessionID == "Invalid Credentials") {
             alert("Credentials invalid, please try again.");
             this.username = "";
             this.password = "";
             return;
         }
-        sessionAuthenticator.setCookie("sessionID", sessionID as string, 60);
+        sessionAuthenticator.setCookie("sessionID", sessionID, 60);
         this.router.navigateByUrl("/users/list")
     }
 }

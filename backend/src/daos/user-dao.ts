@@ -49,12 +49,15 @@ export class UserDAO {
         return user as User;
     }
 
-    public async isSessionActive(sessionID: string) {
+    public async getUserBySessionID(sessionID: string) {
         const query = datastore.createQuery(UserDAO.USER_KIND)
             .filter(new PropertyFilter('sessionID', '=', sessionID));
         const data = await query.run();
-        const sessionActive = (data[0][0] === null ? false : true);
-        return sessionActive;
+        const users = data[0];
+        if (users.length > 0) {
+            return users[0];
+        }
+        return null;
     }
 
     public async hasPermission(permission: string, sessionID: string) {
@@ -66,9 +69,9 @@ export class UserDAO {
             const roleQuery = datastore.createQuery(RoleDAO.ROLE_KIND)
                 .filter(new PropertyFilter('roleID', '=', roleID));
             const rolesData = await roleQuery.run();
-            const userRoles = rolesData[0];
+            const rolePermissions = rolesData[0];
             let roleGrantsPerm: boolean = false;
-            userRoles.forEach((rolePermission) => {
+            rolePermissions.forEach((rolePermission) => {
                 if (rolePermission === permission) roleGrantsPerm = true;
             });
             if (roleGrantsPerm) return true;

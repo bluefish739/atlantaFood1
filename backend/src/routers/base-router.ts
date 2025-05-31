@@ -13,6 +13,10 @@ export class BaseRouter {
         this.sendResponse(res, resObj, 500);
     }
 
+    sendSessionErrorResponse(res: Response, resObj: any) {
+        this.sendResponse(res, resObj, 401);
+    }
+
     sendClientErrorResponse(res: Response, resObj: any, statusCode: number) {
         this.sendResponse(res, resObj, statusCode);
     }

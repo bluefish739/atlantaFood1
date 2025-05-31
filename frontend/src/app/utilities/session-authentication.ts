@@ -10,14 +10,13 @@ class SessionAuthenticator {
     public getCookie(name: string) {
         const cDecoded = decodeURIComponent(document.cookie);
         const cArray = cDecoded.split(";");
-        let result: string | null = null;
+        let result = "";
         cArray.forEach((element: string) => {
             if (element.indexOf(name) == 0) {
                 result = element.substring(name.length + 1);
                 return;
             }
         });
-        if (result !== null) result = result as string;
         return result;
     }
 

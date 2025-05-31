@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Student, Store, Charity, StoreLocation, CharityLocation, Role, User } from './kinds';
 import { first, firstValueFrom, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
+import { sessionAuthenticator } from './utilities/session-authentication';
 
 export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
   const authToken = inject(AuthService).getToken();
@@ -106,9 +107,11 @@ export class XapiService {
   //============================================================================================
   // User/Credentials API Requests
   //============================================================================================
-  public async getAllSiteUsers(siteID: string, sessionID: string) {
+  public async getAllSiteUsers(siteID: string) {
+    //const sessionID = sessionAuthenticator.getCookie("sessionID");
+    const sessionID = "aoih";
     const headers = new HttpHeaders({
-      'sessionID': sessionID
+      'Authentication': sessionID
     });
     return await firstValueFrom(this.http.get<User[]>(`/xapi/users/` + siteID + `/list-users`, { headers }));
   }
@@ -122,7 +125,7 @@ export class XapiService {
   }
 
   public async submitCreds(username: string, password: string) {
-    return await firstValueFrom(this.http.get<String>(`/xapi/users/login/` + username + `/` + password))
+    return await firstValueFrom(this.http.get<string>(`/xapi/users/login/` + username + `/` + password))
   }
 
   public async verifySessionID(sessionID: string) {

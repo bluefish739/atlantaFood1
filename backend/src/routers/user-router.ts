@@ -32,7 +32,12 @@ export class UserRouter extends BaseRouter {
   }
 
   async getAllSiteUsers(req: Request, res: Response) {
-    logger.log(req.headers.cookie);
+    const authentication = req.headers.authentication as string;
+    const user = await userDAO.getUserBySessionID(authentication);
+    if (!user) {
+      this.sendSessionErrorResponse(res, { success: false, message: "Invalid session" });
+      return;
+    }
     const siteID = req.params.siteID as string;
     try {
       const users = await userDAO.getAllUsers(siteID);
@@ -79,9 +84,10 @@ export class UserRouter extends BaseRouter {
 
   async verifySession(req: Request, res: Response) {
     try {
-      const sessionID = req.params.sessionID as string;
-      const sessionActive: boolean = await userDAO.isSessionActive(sessionID);
-      this.sendSuccessfulResponse(res, sessionActive);
+      //const sessionID = req.params.sessionID as string;
+      //const sessionActive: boolean = await userDAO.isSessionActive(sessionID);
+      //this.sendSuccessfulResponse(res, sessionActive);
+
     } catch (error: any) {
       this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
