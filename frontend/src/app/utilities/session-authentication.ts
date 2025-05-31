@@ -1,5 +1,12 @@
 
 class SessionAuthenticator {
+    public setCookie(name: string, value: string, minutesToLive: number) {
+        const date = new Date();
+        date.setTime(date.getTime() + minutesToLive * 60 * 1000);
+        let expires = `expires=${date.toUTCString()}`
+        document.cookie = `${name}=${value}; ${expires}; path=/`
+    }
+
     public getCookie(name: string) {
         const cDecoded = decodeURIComponent(document.cookie);
         const cArray = cDecoded.split(";");
@@ -12,6 +19,10 @@ class SessionAuthenticator {
         });
         if (result !== null) result = result as string;
         return result;
+    }
+
+    public async deleteCookie(name: string) {
+        this.setCookie(name, "", 0);
     }
 
     public async getSessionID() {

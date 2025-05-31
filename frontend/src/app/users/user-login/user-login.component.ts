@@ -3,7 +3,7 @@ import { XapiService } from '../../xapi.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { User } from '../../kinds';
+import { sessionAuthenticator } from '../../utilities/session-authentication';
 
 @Component({
     selector: 'users-user-login',
@@ -23,13 +23,6 @@ export class UserLoginComponent {
     async ngOnInit() {
     }
 
-    setCookie(name: string, value: string, minutesToLive: number) {
-        const date = new Date();
-        date.setTime(date.getTime() + minutesToLive * 60 * 1000);
-        let expires = `expires=${date.toUTCString()}`
-        document.cookie = `${name}=${value}; ${expires}; path=/`
-    }
-
     async submitCreds() {
         let sessionID: String = await this.xapiService.submitCreds(this.username, this.password);
         if (sessionID == "Invalid Credentials") {
@@ -38,7 +31,7 @@ export class UserLoginComponent {
             this.password = "";
             return;
         }
-        this.setCookie("sessionID", sessionID as string, 60);
+        sessionAuthenticator.setCookie("sessionID", sessionID as string, 60);
         this.router.navigateByUrl("/users/list")
     }
 }
