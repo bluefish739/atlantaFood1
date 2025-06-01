@@ -8,6 +8,7 @@ import { generateId } from "../shared/idutilities";
 
 export class UserRouter extends BaseRouter {
   async saveUser(req: Request, res: Response) {
+    this.verifySession(req, res);
     const user = req.body as User;
     try {
       if (!user) {
@@ -32,12 +33,15 @@ export class UserRouter extends BaseRouter {
   }
 
   async getAllSiteUsers(req: Request, res: Response) {
+    this.verifySession(req, res);
+    /*
     const authentication = req.headers.authentication as string;
     const user = await userDAO.getUserBySessionID(authentication);
     if (!user) {
       this.sendSessionErrorResponse(res, { success: false, message: "Invalid session" });
       return;
     }
+      */
     const siteID = req.params.siteID as string;
     try {
       const users = await userDAO.getAllUsers(siteID);
@@ -48,6 +52,7 @@ export class UserRouter extends BaseRouter {
   }
 
   async getUser(req: Request, res: Response) {
+    this.verifySession(req, res);
     try {
       const userId = req.params.userId as string;
       if (!userId) {
@@ -82,14 +87,9 @@ export class UserRouter extends BaseRouter {
     }
   }
 
-  async verifySession(req: Request, res: Response) {
+  async validateSessionOnPageLoad(req: Request, res: Response) {
+    this.verifySession(req, res);
     try {
-      const authentication = req.headers.authentication as string;
-      const user = await userDAO.getUserBySessionID(authentication);
-      if (!user) {
-        this.sendSessionErrorResponse(res, { success: false, message: "Invalid session" });
-        return;
-      }
       this.sendSuccessfulResponse(res, true)
     } catch (error: any) {
       this.sendServerErrorResponse(res, { success: false, message: error.message });
@@ -103,6 +103,6 @@ export class UserRouter extends BaseRouter {
       .get('/:siteID/list-users', authenticator, userRouter.getAllSiteUsers.bind(userRouter))
       .get('/user/:userId', authenticator, userRouter.getUser.bind(userRouter))
       .get('/login/:username/:password', authenticator, userRouter.verifyCreds.bind(userRouter))
-      .get('/verify-session', authenticator, userRouter.verifySession.bind(userRouter));
+      .get('/validate-session-on-page-load', authenticator, userRouter.validateSessionOnPageLoad.bind(userRouter));
   }
 }

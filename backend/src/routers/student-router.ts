@@ -7,6 +7,7 @@ import { BaseRouter } from "./base-router";
 
 export class StudentRouter extends BaseRouter {
   async addSampleStudent(req: Request, res: Response) {
+    this.verifySession(req, res);
     try {
       let student = new Student();
       student.name = "John Doe";
@@ -23,6 +24,7 @@ export class StudentRouter extends BaseRouter {
   }
 
   async addStudent(req: Request, res: Response) {
+    this.verifySession(req, res);
     const student = req.body as Student;
     try {
       if (!student) {
@@ -48,6 +50,7 @@ export class StudentRouter extends BaseRouter {
   }
 
   async getAllStudents(req: Request, res: Response) {
+    this.verifySession(req, res);
     try {
       const students = await studentDAO.getAllStudents();
       this.sendSuccessfulResponse(res, students);
@@ -57,6 +60,7 @@ export class StudentRouter extends BaseRouter {
   }
 
   async getStudent(req: Request, res: Response) {
+    this.verifySession(req, res);
     try {
       const studentId = req.params.studentId as string;
       if (!studentId) {

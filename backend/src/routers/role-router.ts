@@ -7,6 +7,7 @@ import { BaseRouter } from "./base-router";
 
 export class RoleRouter extends BaseRouter {
     async saveRole(req: Request, res: Response) {
+        this.verifySession(req, res);
         const role = req.body as Role;
         try {
             if (!role) {
@@ -31,6 +32,7 @@ export class RoleRouter extends BaseRouter {
     }
 
     async getRole(req: Request, res: Response) {
+        this.verifySession(req, res);
         try {
             const roleID = req.params.roleID as string;
             if (!roleID) {
@@ -49,6 +51,7 @@ export class RoleRouter extends BaseRouter {
     }
 
     async getRolesBySiteID(req: Request, res: Response) {
+        this.verifySession(req, res);
         try {
             const siteID = req.params.siteID as string;
             if (!siteID) {

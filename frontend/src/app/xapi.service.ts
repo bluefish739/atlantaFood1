@@ -215,11 +215,11 @@ export class XapiService {
     return await firstValueFrom(this.http.get<string>(`/xapi/users/login/` + username + `/` + password, { headers }))
   }
 
-  public async verifySessionID() {
+  public async validateSession() {
     const sessionID = sessionAuthenticator.getCookie("sessionID");
     const headers = new HttpHeaders({
       'Authentication': sessionID
     });
-    return await firstValueFrom(this.http.get<boolean>(`/xapi/users/verify-session/`, { headers }));
+    return await firstValueFrom(this.http.get<boolean>(`/xapi/users/validate-session-on-page-load/`, { headers }));
   }
 }
