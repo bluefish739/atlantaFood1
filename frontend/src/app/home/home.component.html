@@ -1,10 +1,10 @@
-<div>Welcome to Project X</div>
+<div>Welcome to AFS</div>
 
 <div *ngIf="authService.getToken()">
     Already signed in. <button (click)="logoutClicked()">Sign Out</button>
 </div>
 <div *ngIf="!authService.getToken()">
-    <a [routerLink]="['/login']">Sign in</a>
+    <a [routerLink]="['/users/login']">Sign in</a>
 </div>
 
 <ul>
