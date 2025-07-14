@@ -34,7 +34,7 @@ export class UserRouter extends BaseRouter {
 
   async getAllSiteUsers(req: Request, res: Response) {
     this.verifySession(req, res);
-    //const user = req.params.user;
+    //const user = JSON.parse(req.params.user);
     const siteID = req.params.siteID;
     try {
       const users = await userDAO.getAllUsers(siteID);

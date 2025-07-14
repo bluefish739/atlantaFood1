@@ -28,7 +28,7 @@ export class RoleDAO {
     public async getRole(roleID: string) {
         const entityKey = datastore.key([RoleDAO.ROLE_KIND, roleID])
         const data = await datastore.get(entityKey);
-        const role = data[0];
+        const role = data[0] as Role;
         return role;
     }
 }

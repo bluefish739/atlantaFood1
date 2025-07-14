@@ -2,26 +2,38 @@
 import { Request, Response, NextFunction } from "express";
 import * as logger from "firebase-functions/logger";
 import admin from 'firebase-admin';
-import { userDAO } from "../daos/dao-factory";
+import { roleDAO, userDAO } from "../daos/dao-factory";
 import { User } from "./kinds";
 //import { BaseRouter } from "../routers/base-router";
 
 admin.initializeApp();
-export function buildSecurityChecker(permissionList: string[]) {
+export function buildSecurityChecker(requiredPermissionsList: string[]) {
     return async (req: Request, res: Response, next: NextFunction) => {
         const authentication = req.headers.authentication as string;
         const user = await userDAO.getUserBySessionID(authentication) as User;
-        /*
         if (!user) {
-            BaseRouter.sendSessionErrorResponse(res, { success: false, message: "Invalid session" });
+            //BaseRouter.sendSessionErrorResponse(res, { success: false, message: "Invalid session" });
             return;
         }
-            */
+
+        let userPermissions = new Set();
+        user.roles.forEach(async roleID => {
+            const role = await roleDAO.getRole(roleID);
+            role.permissions.forEach(permission => {
+                userPermissions.add(permission)
+            });
+        });
+
+        requiredPermissionsList.forEach(permission => {
+            if (!userPermissions.has(permission)) {
+                //BaseRouterBaseRouter.sendSessionErrorResponse(res, { success: false, message: "Does not have permission" });
+            }
+        });
         //after confirming user logged in
-        //now check if user has permissionList\
+        //now check if user has requiredPermissionsList
         //send(401)
         const userData = JSON.stringify(user);
-        req.params['User'] = userData;
+        req.params['user'] = userData;
         next();
     };
 }
