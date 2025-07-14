@@ -34,15 +34,8 @@ export class UserRouter extends BaseRouter {
 
   async getAllSiteUsers(req: Request, res: Response) {
     this.verifySession(req, res);
-    /*
-    const authentication = req.headers.authentication as string;
-    const user = await userDAO.getUserBySessionID(authentication);
-    if (!user) {
-      this.sendSessionErrorResponse(res, { success: false, message: "Invalid session" });
-      return;
-    }
-      */
-    const siteID = req.params.siteID as string;
+    //const user = req.params.user;
+    const siteID = req.params.siteID;
     try {
       const users = await userDAO.getAllUsers(siteID);
       this.sendSuccessfulResponse(res, users);
@@ -98,6 +91,7 @@ export class UserRouter extends BaseRouter {
 
   static buildRouter(): Router {
     const userRouter = new UserRouter();
+    //.post('/user', buildAuthenticator([]), userRouter.saveUser.bind(userRouter))
     return express.Router()
       .post('/user', authenticator, userRouter.saveUser.bind(userRouter))
       .get('/:siteID/list-users', authenticator, userRouter.getAllSiteUsers.bind(userRouter))

@@ -2,9 +2,29 @@
 import { Request, Response, NextFunction } from "express";
 import * as logger from "firebase-functions/logger";
 import admin from 'firebase-admin';
+import { userDAO } from "../daos/dao-factory";
+import { User } from "./kinds";
+//import { BaseRouter } from "../routers/base-router";
 
 admin.initializeApp();
-
+export function buildSecurityChecker(permissionList: string[]) {
+    return async (req: Request, res: Response, next: NextFunction) => {
+        const authentication = req.headers.authentication as string;
+        const user = await userDAO.getUserBySessionID(authentication) as User;
+        /*
+        if (!user) {
+            BaseRouter.sendSessionErrorResponse(res, { success: false, message: "Invalid session" });
+            return;
+        }
+            */
+        //after confirming user logged in
+        //now check if user has permissionList\
+        //send(401)
+        const userData = JSON.stringify(user);
+        req.params['User'] = userData;
+        next();
+    };
+}
 export const authenticator = async (req: Request, res: Response, next: NextFunction) => {
     logger.log("Verifying authentication token...");
     const authorization = req.headers.authorization;
