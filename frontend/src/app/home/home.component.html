@@ -2,14 +2,14 @@
 
 <div>Welcome to AFS</div>
 
-<div *ngIf="authService.getToken()">
-    Already signed in. <button (click)="logoutClicked()">Sign Out</button>
-</div>
-<div *ngIf="!authService.getToken()">
-</div>
-
-<ul>
-    <li><a [routerLink]="['/students/list']">Student Manager</a></li>
-</ul>
-
+<img src="https://localfoodbank.org/wp-content/uploads/2023/06/food-donation-1.jpg" class="slideShowImage" />
+<section id="partners-section">
+    <h2>Our Partners</h2>
+    <p>Working together to transform Atlanta's food insecurity landscape</p>
+    <div id="carousel">
+        <div class="featured-partner-container"></div>
+        <div class="featured-partner-container"></div>
+        <div class="featured-partner-container"></div>
+    </div>
+</section>
 <page-footer></page-footer>
