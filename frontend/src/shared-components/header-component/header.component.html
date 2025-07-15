@@ -1,4 +1,5 @@
 <div id="header">
     <h1 id="title">AFS</h1>
-    <a id="signIn" [routerLink]="['/users/login']">Sign in</a>
+    <a *ngIf="!loggedIn" id="signIn" [routerLink]="['/users/login']">Sign in</a>
+    <sign-out-button *ngIf="loggedIn"></sign-out-button>
 </div>
