@@ -1,21 +1,21 @@
-body {
+#main {
+    $section-main-background-color: rgb(122, 255, 204);
+    width: 100vw;
+    height: 100vh;
     display: flex;
     flex-direction: column;
 
+    .horizontally-centered-section {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin: 0px 10vh;
+    }
+
     #partners-section {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        margin: 0px 10vh;
+        background-color: $section-main-background-color;
     }
-
-    #involvement-section {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        margin: 0px 10vh;
-    }
-
+     
     .slideShowImage {
         width: 100%;
         max-height: 33vh;
