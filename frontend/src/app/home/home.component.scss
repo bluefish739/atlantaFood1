@@ -4,7 +4,16 @@ body {
 
     #partners-section {
         display: flex;
+        flex-direction: row;
         justify-content: center;
+        margin: 0px 10vh;
+    }
+
+    #involvement-section {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin: 0px 10vh;
     }
 
     .slideShowImage {
