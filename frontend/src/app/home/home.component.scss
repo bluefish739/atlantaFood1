@@ -1,46 +1,41 @@
-header {
-    background-color: #A8D5BA;
-    /* Light green */
-    padding: 1rem 0;
-    text-align: center;
-}
-
-header h1 {
-    margin: 0;
-    font-size: 2.5rem;
-    color: #2E7D32;
-    /* Darker green for contrast */
-}
 
 nav {
-    background-color: #E8F5E9;
+    background-color: #d9eedb;
     /* Very light green */
     padding: 1rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
 
-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-}
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        align-items: baseline;
 
-nav ul li {
-    margin: 0 1.5rem;
-}
+        li {
+            margin: 0 1.5rem;
+            a {
+                text-decoration: none;
+                color: #2E7D32;
+                font-weight: bold;
+                font-size: 1.1rem;
+            } a:hover {
+                color: #1B5E20;
+                /* Even darker green on hover */
+            }
+        }
 
-nav ul li a {
-    text-decoration: none;
-    color: #2E7D32;
-    font-weight: bold;
-    font-size: 1.1rem;
-}
+        #organization-title {
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
 
-nav ul li a:hover {
-    color: #1B5E20;
-    /* Even darker green on hover */
+        #login-item {
+            flex-grow: 8;
+            a {
+                float: right;
+            }
+        }
+    }
 }
 
 .hero {

@@ -1,13 +1,12 @@
-<header>
-    <h1>Food Network Non-Profit</h1>
-</header>
+
 <nav>
     <ul>
-        <li><a href="#home">Home</a></li>
-        <li><a href="#about">About Us</a></li>
-        <li><a href="#impact">Our Impact</a></li>
-        <li><a href="#donate">Donate</a></li>
-        <li><a href="#contact">Contact</a></li>
+        <li id="organization-title" class="nav-link"><a [routerLink]="['']"><i>AFS</i></a></li>
+        <li class="nav-link"><a href="#about">About Us</a></li>
+        <li class="nav-link"><a href="#impact">Our Impact</a></li>
+        <li class="nav-link"><a href="#donate">Donate</a></li>
+        <li class="nav-link"><a href="#contact">Contact</a></li>
+        <li id="login-item" class="nav-link"><a [routerLink]="['/users/login']">Log In</a></li>
     </ul>
 </nav>
 <section class="hero">
@@ -47,5 +46,5 @@
     </table>
 </section>
 <footer>
-    <p>&copy; 2025 Food Network Non-Profit. All rights reserved.</p>
+    <p>&copy; 2025 Atlanta Food System. All rights reserved.</p>
 </footer>
