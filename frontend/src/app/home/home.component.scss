@@ -1,23 +1,152 @@
-#main {
-    $section-main-background-color: rgb(122, 255, 204);
-    width: 100vw;
-    height: 100vh;
+header {
+    background-color: #A8D5BA;
+    /* Light green */
+    padding: 1rem 0;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    color: #2E7D32;
+    /* Darker green for contrast */
+}
+
+nav {
+    background-color: #E8F5E9;
+    /* Very light green */
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+}
 
-    .horizontally-centered-section {
-        display: flex;
+nav ul li {
+    margin: 0 1.5rem;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #2E7D32;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+nav ul li a:hover {
+    color: #1B5E20;
+    /* Even darker green on hover */
+}
+
+.hero {
+    background-color: #F1F8E9;
+    /* Pale green background */
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.hero h2 {
+    font-size: 2rem;
+    color: #2E7D32;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 1rem auto;
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background-color: #2E7D32;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-top: 1rem;
+}
+
+.cta-button:hover {
+    background-color: #1B5E20;
+}
+
+.mission {
+    padding: 2rem;
+    text-align: center;
+    background-color: white;
+}
+
+.mission h2 {
+    color: #2E7D32;
+    font-size: 1.8rem;
+}
+
+.mission p {
+    max-width: 800px;
+    margin: 1rem auto;
+    font-size: 1.1rem;
+}
+
+footer {
+    background-color: #A8D5BA;
+    text-align: center;
+    padding: 1rem;
+    color: #2E7D32;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    margin-top: auto;
+}
+
+@media (max-width: 768px) {
+    nav ul {
         flex-direction: column;
-        justify-content: center;
-        margin: 0px 10vh;
+        align-items: center;
     }
 
-    #partners-section {
-        background-color: $section-main-background-color;
+    nav ul li {
+        margin: 0.5rem 0;
     }
-     
-    .slideShowImage {
-        width: 100%;
-        max-height: 33vh;
+
+    .hero h2 {
+        font-size: 1.5rem;
     }
+
+    .hero p {
+        font-size: 1rem;
+    }
+}
+
+.partners {
+  padding: 2rem;
+  text-align: center;
+  background-color: #F1F8E9; /* Pale green background */
+}
+.partners h2 {
+  color: #2E7D32;
+  font-size: 1.8rem;
+}
+.partners table {
+  width: 80%;
+  margin: 1rem auto;
+  border-collapse: collapse;
+}
+.partners th, .partners td {
+  padding: 0.8rem;
+  border: 1px solid #A8D5BA;
+  text-align: left;
+}
+.partners th {
+  background-color: #A8D5BA;
+  color: #2E7D32;
+  font-weight: bold;
+}
+.partners td {
+  background-color: white;
 }
