@@ -4,15 +4,15 @@ import * as logger from "firebase-functions/logger";
 import admin from 'firebase-admin';
 import { roleDAO, userDAO } from "../daos/dao-factory";
 import { User } from "./kinds";
-//import { BaseRouter } from "../routers/base-router";
+import { sendResponse } from "../utility-functions";
 
 admin.initializeApp();
-export function buildSecurityChecker(requiredPermissionsList: string[]) {
+export function securityCheckpoint(requiredPermissionsList: string[]) {
     return async (req: Request, res: Response, next: NextFunction) => {
         const authentication = req.headers.authentication as string;
         const user = await userDAO.getUserBySessionID(authentication) as User;
         if (!user) {
-            //BaseRouter.sendSessionErrorResponse(res, { success: false, message: "Invalid session" });
+            sendResponse(res, { success: false, message: "Invalid session" }, 401);
             return;
         }
 
@@ -26,16 +26,14 @@ export function buildSecurityChecker(requiredPermissionsList: string[]) {
 
         requiredPermissionsList.forEach(permission => {
             if (!userPermissions.has(permission)) {
-                //BaseRouterBaseRouter.sendSessionErrorResponse(res, { success: false, message: "Does not have permission" });
+                sendResponse(res, { success: false, message: "Lacks permission" }, 401);
+                return;
             }
         });
-        //after confirming user logged in
-        //now check if user has requiredPermissionsList
-        //send(401)
         const userData = JSON.stringify(user);
         req.params['user'] = userData;
         next();
-    };
+    }
 }
 export const authenticator = async (req: Request, res: Response, next: NextFunction) => {
     logger.log("Verifying authentication token...");

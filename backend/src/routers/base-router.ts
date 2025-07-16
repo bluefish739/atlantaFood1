@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { userDAO } from "../daos/dao-factory";
+import { sendResponse } from "../utility-functions";
 
 export class BaseRouter {
     async verifySession(req: Request, res: Response) {
@@ -11,23 +12,19 @@ export class BaseRouter {
         }
     }
 
-    sendResponse(res: Response, resObj: any, statusCode: number) {
-        res.status(statusCode).json(resObj);
-    }
-
     sendSuccessfulResponse(res: Response, resObj: any) {
-        this.sendResponse(res, resObj, 200);
+        sendResponse(res, resObj, 200);
     }
 
     sendServerErrorResponse(res: Response, resObj: any) {
-        this.sendResponse(res, resObj, 500);
+        sendResponse(res, resObj, 500);
     }
 
     sendSessionErrorResponse(res: Response, resObj: any) {
-        this.sendResponse(res, resObj, 401);
+        sendResponse(res, resObj, 401);
     }
 
     sendClientErrorResponse(res: Response, resObj: any, statusCode: number) {
-        this.sendResponse(res, resObj, statusCode);
+        sendResponse(res, resObj, statusCode);
     }
 }
