@@ -7,6 +7,10 @@ const routes: Routes = [
         loadComponent: () => import('./user-login/user-login.component').then(c => c.UserLoginComponent)
     },
     {
+        path: 'signup',
+        loadComponent: () => import('./user-signup/user-signup.component').then(c => c.UserSignupComponent)
+    },
+    {
         path: 'list',
         loadComponent: () => import('./users-list/users-list.component').then(c => c.UserListComponent)
     },

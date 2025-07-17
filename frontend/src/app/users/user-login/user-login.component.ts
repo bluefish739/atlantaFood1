@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { XapiService } from '../../xapi.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { sessionAuthenticator } from '../../utilities/session-authentication';
 
 @Component({
     selector: 'users-user-login',
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, RouterLink],
     templateUrl: './user-login.component.html',
     styleUrl: './user-login.component.scss'
 })

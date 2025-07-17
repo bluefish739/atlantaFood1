@@ -1,4 +1,4 @@
-
+<h1>Log In</h1>
 <table>
     <tr>
         <td>Username:</td>
@@ -14,4 +14,5 @@
     </tr>
 </table>
 <small id="login-warning" *ngIf="failedLoginAttempted">Incorrect login information. Please try again.</small><br>
-<button (click)="submitCreds()">Enter</button>
+<button (click)="submitCreds()">Enter</button><br>
+<a [routerLink]="['/users/signup']">Don't have an account? Sign up</a>
