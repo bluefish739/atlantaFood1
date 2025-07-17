@@ -14,6 +14,7 @@ import { sessionAuthenticator } from '../../utilities/session-authentication';
 export class UserLoginComponent {
     username = "";
     password = "";
+    failedLoginAttempted = false;
     constructor(private xapiService: XapiService,
         private activatedRoute: ActivatedRoute,
         private router: Router
@@ -26,7 +27,7 @@ export class UserLoginComponent {
     async submitCreds() {
         const sessionID = await this.xapiService.submitCreds(this.username, this.password);
         if (sessionID == "Invalid Credentials") {
-            alert("Credentials invalid, please try again.");
+            this.failedLoginAttempted = true;
             this.username = "";
             this.password = "";
             return;

@@ -13,4 +13,5 @@
         </td>
     </tr>
 </table>
+<small id="login-warning" *ngIf="failedLoginAttempted">Incorrect login information. Please try again.</small><br>
 <button (click)="submitCreds()">Enter</button>
