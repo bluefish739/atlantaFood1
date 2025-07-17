@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { SignOutButtonComponent } from '../sign-out-component/sign-out.component';
+//import { SignOutButtonComponent } from '../sign-out-component/sign-out.component';
 
 @Component({
     selector: 'page-header',
-    imports: [CommonModule, RouterModule, SignOutButtonComponent],
+    imports: [CommonModule, RouterModule],
     templateUrl: './header.component.html',
     styleUrl: './header.component.scss'
 })

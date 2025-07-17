@@ -1,5 +1,10 @@
-<div id="header">
-    <h1 id="title">AFS</h1>
-    <a *ngIf="!loggedIn" id="signIn" [routerLink]="['/users/login']">Sign in</a>
-    <sign-out-button *ngIf="loggedIn"></sign-out-button>
-</div>
+<nav>
+    <ul>
+        <li id="organization-title" class="nav-link"><a [routerLink]="['']"><i>AFS</i></a></li>
+        <li class="nav-link"><a href="#about">About Us</a></li>
+        <li class="nav-link"><a href="#impact">Our Impact</a></li>
+        <li class="nav-link"><a href="#donate">Donate</a></li>
+        <li class="nav-link"><a href="#contact">Contact</a></li>
+        <li id="login-item" class="nav-link"><a [routerLink]="['/users/login']">Log In</a></li>
+    </ul>
+</nav>
