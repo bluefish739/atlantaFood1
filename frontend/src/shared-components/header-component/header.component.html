@@ -5,6 +5,7 @@
         <li class="nav-link"><a href="#impact">Our Impact</a></li>
         <li class="nav-link"><a href="#donate">Donate</a></li>
         <li class="nav-link"><a href="#contact">Contact</a></li>
-        <li id="login-item" class="nav-link"><a [routerLink]="['/users/login']">Log In</a></li>
+        <li *ngIf="!loggedIn" class="account-item nav-link"><a [routerLink]="['/users/login']">Log In</a></li>
+        <li *ngIf="loggedIn" class="account-item nav-link"><a [routerLink]="['/users/login']">My Dashboard</a></li>
     </ul>
 </nav>
