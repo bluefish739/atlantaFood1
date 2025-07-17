@@ -26,7 +26,7 @@ export class UserDetailsComponent {
         const id = this.activatedRoute.snapshot.params['id'];
         const siteID = this.activatedRoute.snapshot.params['siteID'];
         if (id && id != 'new') {
-            this.user = await this.xapiService.getUser(id);
+            this.user = await this.xapiService.getUserByID(id);
             if (!this.user) {
                 this.user = new User();
             }

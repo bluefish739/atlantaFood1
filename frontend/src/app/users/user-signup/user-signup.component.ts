@@ -23,4 +23,11 @@ export class UserSignupComponent {
 
     async ngOnInit() {
     }
+
+    async signUp() {
+        if (await this.xapiService.getUserByID(this.username) == null) {
+            // Username already taken, prevent sign up
+            return;
+        }
+    }
 }

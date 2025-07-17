@@ -144,7 +144,7 @@ export class XapiService {
     return await firstValueFrom(this.http.post<User>(`/xapi/users/user`, user, { headers }));
   }
 
-  public async getUser(userID: string) {
+  public async getUserByID(userID: string) {
     const headers = this.buildAuthenticationHeader();
     return await firstValueFrom(this.http.get<User>(`/xapi/users/user/` + userID, { headers }))
   }
