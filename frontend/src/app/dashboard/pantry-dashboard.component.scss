@@ -1,0 +1,63 @@
+.dashboard-section {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.dashboard-section h2 {
+    color: #2E7D32;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+.dashboard-section h3 {
+    color: #2E7D32;
+    font-size: 1.4rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.inventory-table,
+.messages {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.inventory-table th,
+.inventory-table td,
+.messages th,
+.messages td {
+    padding: 0.8rem;
+    border: 1px solid #A8D5BA;
+    text-align: left;
+}
+
+.inventory-table th,
+.messages th {
+    background-color: #A8D5BA;
+    color: #2E7D32;
+    font-weight: bold;
+}
+
+.inventory-table td,
+.messages td {
+    background-color: white;
+}
+
+@media (max-width: 768px) {
+
+
+    .dashboard-section {
+        padding: 1.5rem;
+    }
+
+    .inventory-table th,
+    .inventory-table td,
+    .messages th,
+    .messages td {
+        font-size: 0.9rem;
+        padding: 0.5rem;
+    }
+}

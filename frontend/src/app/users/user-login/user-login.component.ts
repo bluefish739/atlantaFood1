@@ -33,6 +33,6 @@ export class UserLoginComponent {
             return;
         }
         sessionAuthenticator.setCookie("sessionID", sessionID, 60);
-        this.router.navigateByUrl("/users/list")
+        this.router.navigateByUrl("/dashboard");
     }
 }
