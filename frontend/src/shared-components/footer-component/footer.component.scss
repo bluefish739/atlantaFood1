@@ -6,6 +6,8 @@ $primary-light-green: #d9eedb;
     background-color: $primary-light-green;
     margin-top: auto;
     display: flex;
+    position: fixed;
+    bottom: 0px;
     justify-content: space-evenly;
     align-items: center;
 

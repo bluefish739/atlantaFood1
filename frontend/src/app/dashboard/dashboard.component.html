@@ -12,10 +12,10 @@
     </ul>
 </nav>
 <section class="dashboard-container">
-    <admin-dashboard></admin-dashboard>
-    <pantry-dashboard></pantry-dashboard>
-    <store-dashboard></store-dashboard>
-    <volunteer-dashboard></volunteer-dashboard>
+    <admin-dashboard [ngClass]="{'visible-dashboard': userType === 'admin'}"></admin-dashboard>
+    <pantry-dashboard [ngClass]="{'visible-dashboard': userType === 'pantry'}"></pantry-dashboard>
+    <store-dashboard [ngClass]="{'visible-dashboard': userType === 'store'}"></store-dashboard>
+    <volunteer-dashboard [ngClass]="{'visible-dashboard': userType === 'volunteer'}"></volunteer-dashboard>
 </section>
 <footer>
     <p>© 2025 Food Network Non-Profit. All rights reserved.</p>

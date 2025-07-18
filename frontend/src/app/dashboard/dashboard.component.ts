@@ -16,6 +16,8 @@ import { AdminDashboardComponent } from './admin-dashboard.component';
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent {
+  userType = "";
   constructor(public authService: AuthService) {
+    this.userType = "store";
   }
 }

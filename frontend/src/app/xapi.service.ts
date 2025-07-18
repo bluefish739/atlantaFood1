@@ -156,6 +156,6 @@ export class XapiService {
 
   public async validateSession() {
     const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<boolean>(`/xapi/users/validate-session-on-page-load/`, { headers }));
+    return await firstValueFrom(this.http.get<boolean>(`/xapi/users/validate-session`, { headers }));
   }
 }

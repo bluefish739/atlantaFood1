@@ -45,7 +45,6 @@ export class UserRouter extends BaseRouter {
   }
 
   async getUser(req: Request, res: Response) {
-    this.verifySession(req, res);
     try {
       const userId = req.params.userId as string;
       if (!userId) {
@@ -80,10 +79,24 @@ export class UserRouter extends BaseRouter {
     }
   }
 
-  async validateSessionOnPageLoad(req: Request, res: Response) {
-    this.verifySession(req, res);
+  async validateSession(req: Request, res: Response) {
     try {
-      this.sendSuccessfulResponse(res, true)
+      /*
+      if (sessionID == "") {
+        this.sendServerErrorResponse(res, false);
+        return;
+      }
+      if (await userDAO.getUserBySessionID(sessionID) == null) {
+        this.sendServerErrorResponse(res, false);
+        return;
+      }
+      this.sendSuccessfulResponse(res, true);
+      */
+     if (await this.verifySession2(req, res)) {
+      this.sendSuccessfulResponse(res, true);
+     } else {
+      this.sendServerErrorResponse(res, false);
+     }
     } catch (error: any) {
       this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
@@ -96,6 +109,6 @@ export class UserRouter extends BaseRouter {
       .get('/:siteID/list-users', authenticator, userRouter.getAllSiteUsers.bind(userRouter))
       .get('/user/:userId', authenticator, userRouter.getUser.bind(userRouter))
       .get('/login/:username/:password', authenticator, userRouter.verifyCreds.bind(userRouter))
-      .get('/validate-session-on-page-load', authenticator, userRouter.validateSessionOnPageLoad.bind(userRouter));
+      .get('/validate-session', authenticator, userRouter.validateSession.bind(userRouter));
   }
 }
