@@ -1,4 +1,4 @@
-<h1>Log In</h1>
+<!--<h1>Log In</h1>
 <table>
     <tr>
         <td>Username:</td>
@@ -16,3 +16,21 @@
 <small id="login-warning" *ngIf="failedLoginAttempted">Incorrect login information. Please try again.</small><br>
 <button (click)="submitCreds()">Enter</button><br>
 <a [routerLink]="['/users/signup']">Don't have an account? Sign up</a>
+-->
+<section class="login-container">
+    <form class="login-form" action="/login" method="POST">
+        <h2>Login</h2>
+        <div class="error-message" id="errorMessage" [class.show]="failedLoginAttempted">
+            Invalid username or password. Please try again.
+        </div>
+        <label for="username">Username</label>
+        <input [(ngModel)]="username" type="text" id="username" name="username" required
+            placeholder="Enter your username">
+        <label for="password">Password</label>
+        <input [(ngModel)]="password" type="password" id="password" name="password" required
+            placeholder="Enter your password">
+        <button (click)="submitCreds()" type="submit">Sign In</button>
+        <a href="#forgot-password" class="forgot-password">Forgot Password?</a>
+        <a [routerLink]="['/users/signup']" class="signup-link">Don't have an account? Sign Up</a>
+    </form>
+</section>
