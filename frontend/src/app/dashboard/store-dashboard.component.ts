@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { CommonModule } from '@angular/common';
+import { XapiService } from '../xapi.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'store-dashboard',
@@ -11,6 +13,18 @@ import { CommonModule } from '@angular/common';
   styleUrl: './store-dashboard.component.scss'
 })
 export class StoreDashboardComponent {
-  constructor(public authService: AuthService) {
+  constructor(
+    public authService: AuthService,
+    private xapiService: XapiService,
+    private router: Router
+  ) {
+  }
+
+  navigateToInventoryDetails() {
+    this.router.navigateByUrl('/stores/inventory/details');
+  }
+
+  navigateToInventoryUpdates() {
+    this.router.navigateByUrl('/stores/inventory/updates');
   }
 }

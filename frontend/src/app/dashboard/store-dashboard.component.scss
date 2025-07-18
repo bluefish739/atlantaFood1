@@ -46,9 +46,22 @@
     background-color: white;
 }
 
+.inventory-actions-table {
+    display: flex;
+    flex-direction: row;
+    column-gap: 10rem;
+    row-gap: 10rem;
+}
+
+.inventory-action {
+    height: 3rem;
+    border: 1px solid black;
+    background-color: #2E7D32;
+    color: white;
+    cursor: pointer;
+}
+
 @media (max-width: 768px) {
-
-
     .dashboard-section {
         padding: 1.5rem;
     }

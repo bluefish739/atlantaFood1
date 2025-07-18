@@ -17,6 +17,14 @@ const routes: Routes = [
     {
         path: 'location-details/:storeID/:locationID',
         loadComponent: () => import('./store-details/location-details.component').then(c => c.LocationDetailsComponent)
+    },
+    {
+        path: 'inventory/details',
+        loadComponent: () => import('./store-inventory/inventory-details/store-inventory-details.component').then(c => c.StoreInventoryDetailsComponent)
+    },
+    {
+        path: 'inventory/updates',
+        loadComponent: () => import('./store-inventory/inventory-updates/store-inventory-updates.component').then(c => c.StoreInventoryUpdatesComponent)
     }
 ];
 
