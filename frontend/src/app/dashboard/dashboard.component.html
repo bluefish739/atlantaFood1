@@ -7,8 +7,8 @@
         <li><a href="inventory.html">Inventory</a></li>
         <li><a href="messages.html">Messages</a></li>
         <li><a href="transport.html">Transport</a></li>
-        <li><a href="admin.html">Admin Panel</a></li>
-        <li><a href="logout.html">Logout</a></li>
+        <li><a [routerLink]="['../users/list']">Site Users</a></li>
+        <li><a (click)="signOut()">Logout</a></li>
     </ul>
 </nav>
 <section class="dashboard-container">

@@ -1,8 +1,6 @@
 <page-header></page-header>
 
 <h1>Users at Site</h1>
-<sign-out-button></sign-out-button>
-
 <table *ngIf="users">
     <tr><th></th><th>First Name</th><th>Last Name</th></tr>
     <tr *ngFor="let user of users; let idx=index">
