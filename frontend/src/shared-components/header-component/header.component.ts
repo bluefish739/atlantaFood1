@@ -21,10 +21,15 @@ export class HeaderComponent {
     }
 
     async ngOnInit() {
-        console.log(await this.xapiService.validateSession());
-        if (await this.xapiService.validateSession()) {
+        /*
+        console.log("made it here1")
+        let user = await this.xapiService.verifyUserBySession() as User;
+        console.log("made it here2")
+        console.log(user);
+        if (user) {
             this.loggedIn = true;
             // Get user somehow
         }
+            */
     }
 }

@@ -154,8 +154,8 @@ export class XapiService {
     return await firstValueFrom(this.http.get<string>(`/xapi/users/login/` + username + `/` + password, { headers }))
   }
 
-  public async validateSession() {
+  public async verifyUserBySession() {
     const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<boolean>(`/xapi/users/validate-session`, { headers }));
+    return await firstValueFrom(this.http.get<User>(`/xapi/users/verify-user-by-session`, { headers }));
   }
 }
