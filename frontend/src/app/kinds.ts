@@ -72,3 +72,7 @@ export class FoodCategory {
     foodCateogryID: string | undefined;
     name: string | undefined;
 }
+
+export class VerificationResponse {
+   hasSession: boolean | undefined;
+}

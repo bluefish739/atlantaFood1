@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent, HttpHandlerFn, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Student, Store, Charity, StoreLocation, CharityLocation, Role, User } from './kinds';
+import { Student, Store, Charity, StoreLocation, CharityLocation, Role, User, VerificationResponse } from './kinds';
 import { first, firstValueFrom, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { sessionAuthenticator } from './utilities/session-authentication';
@@ -156,6 +156,6 @@ export class XapiService {
 
   public async verifyUserBySession() {
     const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<User>(`/xapi/users/verify-user-by-session`, { headers }));
+    return await firstValueFrom(this.http.get<VerificationResponse>(`/xapi/users/verify-user-by-session`, { headers }));
   }
 }
