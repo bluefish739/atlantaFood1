@@ -1,0 +1,138 @@
+@use 'sass:color';
+
+.signup-container {
+    flex: 1;
+    /* Take up remaining space to push footer down */
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.signup-section {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 2rem;
+}
+
+.signup-section h2 {
+    color: #2E7D32;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    color: #2E7D32;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #A8D5BA;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #2E7D32;
+    box-shadow: 0 0 5px rgba(46, 125, 50, 0.3);
+}
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.radio-group label {
+    color: #333;
+    font-weight: normal;
+}
+
+button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background-color: #2E7D32;
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+button:hover {
+    background-color: #1B5E20;
+}
+
+button:disabled {
+    background-color: #B0BEC5;
+    cursor: not-allowed;
+}
+
+.cancel-button {
+    display: block;
+    text-align: center;
+    color: #2E7D32;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.cancel-button:hover {
+    color: #1B5E20;
+}
+
+.message {
+    display: none;
+    padding: 0.8rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.message.error {
+    background-color: #FFEBEE;
+    color: #D32F2F;
+}
+
+.message.show {
+    display: block;
+}
+
+.error {
+    color: #D32F2F;
+    font-size: 0.9rem;
+    margin-top: 0.3rem;
+}
+
+@media (max-width: 768px) {
+    .signup-container {
+        padding: 1rem;
+    }
+
+    .signup-section {
+        padding: 1.5rem;
+    }
+
+    .signup-section h2 {
+        font-size: 1.5rem;
+    }
+}

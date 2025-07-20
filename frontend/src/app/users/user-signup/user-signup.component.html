@@ -1,16 +1,41 @@
-<h1>Get Started With Your Account</h1>
-<table>
-    <tr>
-        <td>Username:</td>
-        <td>
-            <input [(ngModel)]="username">
-        </td>
-    </tr>
-    <tr>
-        <td>Password:</td>
-        <td>
-            <input [(ngModel)]="password">
-        </td>
-    </tr>
-</table>
-<button (click)="signUp()">Sign Up</button>
+<section class="signup-container">
+    <div class="signup-section">
+      <h2>Sign Up</h2>
+      <div class="message error" [class.show]="errorMessage" aria-live="polite">
+        {{ errorMessage }}
+      </div>
+      <form #signupForm="ngForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" [(ngModel)]="signupData.username" required pattern="[a-zA-Z0-9]{4,}" #username="ngModel" placeholder="Enter your username">
+          <div class="error" *ngIf="username.touched && username.invalid">
+            Username must be at least 4 characters (letters or numbers only).
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" [(ngModel)]="signupData.password" required minlength="6" #password="ngModel" placeholder="Enter your password">
+          <div class="error" *ngIf="password.touched && password.invalid">
+            Password must be at least 6 characters long.
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" [(ngModel)]="signupData.confirmPassword" required #confirmPassword="ngModel" placeholder="Confirm your password">
+        </div>
+        <div class="form-group">
+          <label>User Type</label>
+          <div class="radio-group">
+            <label><input type="radio" name="userType" value="pantryEmployee" [(ngModel)]="signupData.userType" required> Pantry Employee</label>
+            <label><input type="radio" name="userType" value="storeEmployee" [(ngModel)]="signupData.userType" required> Store Employee</label>
+            <label><input type="radio" name="userType" value="volunteerDriver" [(ngModel)]="signupData.userType" required> Volunteer Driver</label>
+          </div>
+          <div class="error" *ngIf="signupForm.submitted && !signupData.userType">
+            Please select a user type.
+          </div>
+        </div>
+        <button type="submit" [disabled]="!signupForm.valid">Sign Up</button>
+        <a routerLink="/users/login" class="cancel-button">Cancel</a>
+      </form>
+    </div>
+  </section>

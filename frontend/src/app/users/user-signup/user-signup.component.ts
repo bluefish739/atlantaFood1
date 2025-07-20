@@ -1,33 +1,54 @@
 import { Component } from '@angular/core';
-import { XapiService } from '../../xapi.service';
-import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
-import { sessionAuthenticator } from '../../utilities/session-authentication';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-    selector: 'users-user-signup',
-    imports: [CommonModule, FormsModule],
+    selector: 'app-signup',
+    imports: [CommonModule, FormsModule, RouterLink],
     templateUrl: './user-signup.component.html',
-    styleUrl: './user-signup.component.scss'
+    styleUrls: ['./user-signup.component.scss']
 })
 export class UserSignupComponent {
-    username = "";
-    password = "";
-    failedLoginAttempted = false;
-    constructor(private xapiService: XapiService,
-        private activatedRoute: ActivatedRoute,
-        private router: Router
-    ) {
-    }
+    signupData = {
+        username: '',
+        password: '',
+        confirmPassword: '',
+        userType: ''
+    };
+    errorMessage: string = '';
 
-    async ngOnInit() {
-    }
+    constructor(private http: HttpClient, private router: Router) { }
 
-    async signUp() {
-        if (await this.xapiService.getUserByID(this.username) == null) {
-            // Username already taken, prevent sign up
+    onSubmit() {
+        // Validate passwords match
+        if (this.signupData.password !== this.signupData.confirmPassword) {
+            this.errorMessage = 'Passwords do not match. Please try again.';
             return;
         }
+
+        // Validate user type is selected
+        if (!this.signupData.userType) {
+            this.errorMessage = 'Please select a user type.';
+            return;
+        }
+
+        // Prepare data for API
+        const payload = {
+            username: this.signupData.username,
+            password: this.signupData.password,
+            userType: this.signupData.userType
+        };
+
+        // Submit to API
+        this.http.post('/api/signup', payload).subscribe({
+            next: () => {
+                this.router.navigate(['/login']);
+            },
+            error: (err) => {
+                this.errorMessage = err.error?.message || 'Failed to sign up. Please try again.';
+            }
+        });
     }
 }
