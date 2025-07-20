@@ -28,6 +28,7 @@ export class DashboardComponent {
 
   signOut() {
     sessionAuthenticator.deleteCookie("sessionID");
-    this.router.navigateByUrl("users/login");
+    // Send user back to home page
+    this.router.navigateByUrl("");
   }
 }

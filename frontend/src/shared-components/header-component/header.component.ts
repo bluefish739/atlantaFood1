@@ -21,7 +21,7 @@ export class HeaderComponent {
     }
 
     async ngOnInit() {
-        /*
+        
         console.log("made it here1")
         let user = await this.xapiService.verifyUserBySession() as User;
         console.log("made it here2")
@@ -30,6 +30,5 @@ export class HeaderComponent {
             this.loggedIn = true;
             // Get user somehow
         }
-            */
     }
 }

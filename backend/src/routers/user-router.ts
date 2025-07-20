@@ -81,9 +81,9 @@ export class UserRouter extends BaseRouter {
     try {
       let user = await this.getUserBySession(req, res);
       if (user) {
-        this.sendSuccessfulResponse(res, user as User);
+        this.sendSuccessfulResponse(res, {hasSession: true});
       } else {
-        this.sendServerErrorResponse(res, {});
+        this.sendSuccessfulResponse(res, {hasSession: false});
       }
     } catch (error: any) {
       this.sendServerErrorResponse(res, { success: false, message: error.message });
