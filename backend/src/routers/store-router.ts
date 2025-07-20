@@ -15,7 +15,7 @@ export class StoreRouter extends BaseRouter {
 
       store = await storeDAO.saveStore(store);
       logger.log("A new sample store added successfully! id=" + store.id);
-      this.sendSuccessfulResponse(res, store);
+      this.sendNormalResponse(res, store);
     } catch (error: any) {
       logger.log("Failed to add a new sample store", error);
       this.sendServerErrorResponse(res, { success: false, message: error.message });
@@ -29,7 +29,7 @@ export class StoreRouter extends BaseRouter {
       for (let store of stores) {
         store.locations = locations.filter((location) => location.storeID == store.id);
       }
-      this.sendSuccessfulResponse(res, stores);
+      this.sendNormalResponse(res, stores);
     } catch (error: any) {
       this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
@@ -47,7 +47,7 @@ export class StoreRouter extends BaseRouter {
         this.sendClientErrorResponse(res, { success: false, message: "Store not found " + storeId }, 404);
         return;
       }
-      this.sendSuccessfulResponse(res, store);
+      this.sendNormalResponse(res, store);
     } catch (error: any) {
       this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
@@ -70,7 +70,7 @@ export class StoreRouter extends BaseRouter {
       }
       const id = await storeDAO.saveStore(store);
       logger.log("Store added successfully! id=" + id);
-      this.sendSuccessfulResponse(res, store);
+      this.sendNormalResponse(res, store);
     } catch (error: any) {
       logger.log("Failed to add a store", error);
       this.sendServerErrorResponse(res, { success: false, message: error.message });
@@ -83,7 +83,7 @@ export class StoreRouter extends BaseRouter {
     try {
       const locations = await storeLocationDAO.getStoreLocationsByStoreID(storeID);
       logger.log("Successfully retrieved all store locations!");
-      this.sendSuccessfulResponse(res, locations);
+      this.sendNormalResponse(res, locations);
     } catch (error: any) {
       logger.log("Failed to retrieve store locations", error);
       this.sendServerErrorResponse(res, { success: false, message: error.message });

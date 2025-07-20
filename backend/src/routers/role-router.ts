@@ -23,7 +23,7 @@ export class RoleRouter extends BaseRouter {
             }
             const id = await roleDAO.saveRole(role);
             logger.log("Role saved successfully! id=" + id);
-            this.sendSuccessfulResponse(res, role);
+            this.sendNormalResponse(res, role);
         } catch (error: any) {
             logger.log("Failed to save a role", error);
             this.sendServerErrorResponse(res, { success: false, message: error.message });
@@ -42,7 +42,7 @@ export class RoleRouter extends BaseRouter {
                 this.sendClientErrorResponse(res, { success: false, message: "Role not found " + roleID }, 404);
                 return;
             }
-            this.sendSuccessfulResponse(res, role);
+            this.sendNormalResponse(res, role);
         } catch (error: any) {
             this.sendServerErrorResponse(res, { success: false, message: error.message });
         }
@@ -56,7 +56,7 @@ export class RoleRouter extends BaseRouter {
                 return;
             }
             const roles = await roleDAO.getAllRolesBySiteID(siteID);
-            this.sendSuccessfulResponse(res, roles);
+            this.sendNormalResponse(res, roles);
         } catch (error: any) {
             this.sendServerErrorResponse(res, { success: false, message: error.message });
         }

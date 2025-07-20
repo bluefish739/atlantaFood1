@@ -24,7 +24,7 @@ export class UserRouter extends BaseRouter {
       }
       const id = await userDAO.saveUser(user);
       logger.log("User added successfully! id=" + id);
-      this.sendSuccessfulResponse(res, user);
+      this.sendNormalResponse(res, user);
     } catch (error: any) {
       logger.log("Failed to add a user", error);
       this.sendServerErrorResponse(res, { success: false, message: error.message });
@@ -36,7 +36,7 @@ export class UserRouter extends BaseRouter {
     const siteID = req.params.siteID;
     try {
       const users = await userDAO.getAllUsers(siteID);
-      this.sendSuccessfulResponse(res, users);
+      this.sendNormalResponse(res, users);
     } catch (error: any) {
       this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
@@ -54,7 +54,7 @@ export class UserRouter extends BaseRouter {
         this.sendClientErrorResponse(res, { success: false, message: "User not found " + userId }, 404);
         return;
       }
-      this.sendSuccessfulResponse(res, user);
+      this.sendNormalResponse(res, user);
     } catch (error: any) {
       this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
@@ -66,12 +66,12 @@ export class UserRouter extends BaseRouter {
       const password = req.params.password as string;
       const user = await userDAO.verifyUser(username, password);
       if (user === undefined) {
-        this.sendSuccessfulResponse(res, "Invalid Credentials");
+        this.sendNormalResponse(res, "Invalid Credentials");
         return;
       }
       user.sessionID = generateId();
       await userDAO.saveUser(user);
-      this.sendSuccessfulResponse(res, user.sessionID);
+      this.sendNormalResponse(res, user.sessionID);
     } catch (error: any) {
       this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
@@ -81,9 +81,9 @@ export class UserRouter extends BaseRouter {
     try {
       let user = await this.getUserBySession(req, res);
       if (user) {
-        this.sendSuccessfulResponse(res, { hasSession: true });
+        this.sendNormalResponse(res, { hasSession: true });
       } else {
-        this.sendSuccessfulResponse(res, { hasSession: false });
+        this.sendNormalResponse(res, { hasSession: false });
       }
     } catch (error: any) {
       this.sendServerErrorResponse(res, { success: false, message: error.message });
@@ -124,7 +124,7 @@ export class UserRouter extends BaseRouter {
 
       if (!this.checkDuplicatedUsername(signupData.username!)) {
         logger.log("Username already taken, please choose another", signupData);
-        this.sendSuccessfulResponse(res, { success: false, message: "Username already taken, please choose another" });
+        this.sendNormalResponse(res, { success: false, message: "Username already taken, please choose another" });
         return;
       }
 
@@ -134,7 +134,7 @@ export class UserRouter extends BaseRouter {
       user.userType = signupData.userType;
       const id = await userDAO.saveUser(user);
       logger.log("User added successfully! id=" + id);
-      this.sendSuccessfulResponse(res, { success: true, message: "" });
+      this.sendNormalResponse(res, { success: true, message: "" });
     } catch (error: any) {
       logger.log("Failed to add a user", error);
       this.sendServerErrorResponse(res, { success: false, message: error.message });

@@ -15,7 +15,7 @@ export class StudentRouter extends BaseRouter {
 
       student = await studentDAO.saveStudent(student);
       logger.log("A new sample student added successfully! id=" + student.id);
-      this.sendSuccessfulResponse(res, student);
+      this.sendNormalResponse(res, student);
     } catch (error: any) {
       logger.log("Failed to add a new sample student", error);
       this.sendServerErrorResponse(res, { success: false, message: error.message });
@@ -40,7 +40,7 @@ export class StudentRouter extends BaseRouter {
       student.updatedAt = new Date();
       const id = await studentDAO.saveStudent(student);
       logger.log("Student added successfully! id=" + id);
-      this.sendSuccessfulResponse(res, student);
+      this.sendNormalResponse(res, student);
     } catch (error: any) {
       logger.log("Failed to add a student", error);
       this.sendServerErrorResponse(res, { success: false, message: error.message });
@@ -50,7 +50,7 @@ export class StudentRouter extends BaseRouter {
   async getAllStudents(req: Request, res: Response) {
     try {
       const students = await studentDAO.getAllStudents();
-      this.sendSuccessfulResponse(res, students);
+      this.sendNormalResponse(res, students);
     } catch (error: any) {
       this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
@@ -68,7 +68,7 @@ export class StudentRouter extends BaseRouter {
         this.sendClientErrorResponse(res, { success: false, message: "Student not found " + studentId }, 404);
         return;
       }
-      this.sendSuccessfulResponse(res, student);
+      this.sendNormalResponse(res, student);
     } catch (error: any) {
       this.sendServerErrorResponse(res, { success: false, message: error.message });
     }

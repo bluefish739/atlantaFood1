@@ -9,7 +9,7 @@ export class BaseRouter {
         return user;
     }
 
-    sendSuccessfulResponse(res: Response, resObj: any) {
+    sendNormalResponse(res: Response, resObj: any) {
         sendResponse(res, resObj, 200);
     }
 

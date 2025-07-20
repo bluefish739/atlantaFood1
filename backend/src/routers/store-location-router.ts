@@ -24,7 +24,7 @@ export class StoreLocationRouter extends BaseRouter {
 
       location = await storeLocationDAO.saveLocation(location);
       logger.log("A new sample location added successfully! id=" + location.id);
-      this.sendSuccessfulResponse(res, location);
+      this.sendNormalResponse(res, location);
     } catch (error: any) {
       logger.log("Failed to add a new sample location", error);
       this.sendServerErrorResponse(res, { success: false, message: error.message });
@@ -48,7 +48,7 @@ export class StoreLocationRouter extends BaseRouter {
       }
       const id = await storeLocationDAO.saveLocation(storeLocation);
       logger.log("Store location added successfully! id=" + id);
-      this.sendSuccessfulResponse(res, storeLocation);
+      this.sendNormalResponse(res, storeLocation);
     } catch (error: any) {
       logger.log("Failed to add a store location", error);
       this.sendServerErrorResponse(res, { success: false, message: error.message });
@@ -59,7 +59,7 @@ export class StoreLocationRouter extends BaseRouter {
     try {
       const locations = await storeLocationDAO.getAllLocations();
       logger.log("Successfully retrieved all store locations!");
-      this.sendSuccessfulResponse(res, locations);
+      this.sendNormalResponse(res, locations);
     } catch (error: any) {
       logger.log("Failed to retrieve store locations")
       this.sendServerErrorResponse(res, { success: false, message: error.message });
@@ -78,7 +78,7 @@ export class StoreLocationRouter extends BaseRouter {
         this.sendClientErrorResponse(res, { success: false, message: "Location not found " + locationID }, 404);
         return;
       }
-      this.sendSuccessfulResponse(res, location);
+      this.sendNormalResponse(res, location);
     } catch (error: any) {
       this.sendServerErrorResponse(res, { success: false, message: error.message });
     }

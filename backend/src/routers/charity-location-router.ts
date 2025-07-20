@@ -24,7 +24,7 @@ export class CharityLocationRouter extends BaseRouter {
 
       location = await charityLocationDAO.saveLocation(location);
       logger.log("A new sample location added successfully! id=" + location.id);
-      this.sendSuccessfulResponse(res, location);
+      this.sendNormalResponse(res, location);
     } catch (error: any) {
       logger.log("Failed to add a new sample location", error);
       this.sendServerErrorResponse(res, { success: false, message: error.message });
@@ -48,7 +48,7 @@ export class CharityLocationRouter extends BaseRouter {
       }
       const id = await charityLocationDAO.saveLocation(charityLocation);
       logger.log("Charity location added successfully! id=" + id);
-      this.sendSuccessfulResponse(res, charityLocation);
+      this.sendNormalResponse(res, charityLocation);
     } catch (error: any) {
       logger.log("Failed to add a charity location", error);
       this.sendServerErrorResponse(res, { success: false, message: error.message });
@@ -59,7 +59,7 @@ export class CharityLocationRouter extends BaseRouter {
     try {
       const locations = await charityLocationDAO.getAllLocations();
       logger.log("Successfully retrieved all charity locations!");
-      this.sendSuccessfulResponse(res, locations);
+      this.sendNormalResponse(res, locations);
     } catch (error: any) {
       logger.log("Failed to retrieve charity locations")
       this.sendServerErrorResponse(res, { success: false, message: error.message });
@@ -78,7 +78,7 @@ export class CharityLocationRouter extends BaseRouter {
         this.sendClientErrorResponse(res, { success: false, message: "Location not found " + locationID }, 404);
         return;
       }
-      this.sendSuccessfulResponse(res, location);
+      this.sendNormalResponse(res, location);
     } catch (error: any) {
       this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
