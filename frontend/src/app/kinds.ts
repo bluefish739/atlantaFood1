@@ -76,3 +76,14 @@ export class FoodCategory {
 export class VerificationResponse {
    hasSession: boolean | undefined;
 }
+
+export class SignupData {
+    username: string | undefined;
+    password: string | undefined;
+    userType: string | undefined;
+}
+
+export class SignupResponse {
+    success: boolean | undefined;
+    message: string | undefined;
+}

@@ -56,6 +56,8 @@ export class User {
     password: string | undefined;
     sessionID: string | undefined;
     roles: string[] = [];
+    // userType can be one of four strings: pantry, store, and volunteer, and admin
+    userType: string | undefined;
 }
 
 export class Food {
@@ -67,4 +69,15 @@ export class Food {
 export class FoodCategory {
     foodCateogryID: string | undefined;
     name: string | undefined;
+}
+
+export class SignupData {
+    username: string | undefined;
+    password: string | undefined;
+    userType: string | undefined;
+}
+
+export class SignupResponse {
+    success: boolean | undefined;
+    message: string | undefined;
 }

@@ -21,6 +21,10 @@ export class BaseRouter {
         sendResponse(res, resObj, 401);
     }
 
+    sendBadRequestResponse(res: Response, resObj: any) {
+        sendResponse(res, resObj, 400);
+    }
+
     sendClientErrorResponse(res: Response, resObj: any, statusCode: number) {
         sendResponse(res, resObj, statusCode);
     }

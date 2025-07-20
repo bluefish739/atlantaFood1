@@ -1,7 +1,7 @@
 import express, { Request, Response, Router } from "express";
 import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
-import { User } from "../shared/kinds";
+import { SignupData, User } from "../shared/kinds";
 import { userDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
 import { generateId } from "../shared/idutilities";
@@ -81,11 +81,62 @@ export class UserRouter extends BaseRouter {
     try {
       let user = await this.getUserBySession(req, res);
       if (user) {
-        this.sendSuccessfulResponse(res, {hasSession: true});
+        this.sendSuccessfulResponse(res, { hasSession: true });
       } else {
-        this.sendSuccessfulResponse(res, {hasSession: false});
+        this.sendSuccessfulResponse(res, { hasSession: false });
       }
     } catch (error: any) {
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
+    }
+  }
+
+  private validateSignupData(signupData: SignupData) {
+    if (!(signupData.username && signupData.password && signupData.userType)) {
+      logger.log("Signup data incomplete");
+      return false;
+    }
+
+    //TO DO: Add extra checks for
+    //usertype is an allowed value, password and username are of valid form
+    //separate function to politely let user know of user duplication
+    return true;
+  }
+
+  private checkDuplicatedUsername(username: string) {
+    //TO DO: add logic to actually check for duplicated usernames
+    return true;
+  }
+
+  async signupUser(req: Request, res: Response) {
+    const signupData = req.body as SignupData;
+    try {
+      if (!signupData) {
+        logger.log("Signup data is not provided", signupData);
+        this.sendBadRequestResponse(res, { success: false, message: "Signup data is not provided" });
+        return;
+      }
+      
+      if (!this.validateSignupData(signupData)) {
+        logger.log("Signup data incomplete", signupData);
+        this.sendBadRequestResponse(res, { success: false, message: "Signup data incomplete" });
+        return;
+      }
+
+      if (!this.checkDuplicatedUsername(signupData.username!)) {
+        logger.log("Username already taken, please choose another", signupData);
+        this.sendSuccessfulResponse(res, { success: false, message: "Username already taken, please choose another" });
+        return;
+      }
+
+      const user = new User;
+      user.username = signupData.username;
+      user.password = signupData.password;
+      user.userType = signupData.userType;
+      const id = await userDAO.saveUser(user);
+      logger.log("User added successfully! id=" + id);
+      this.sendSuccessfulResponse(res, { success: true, message: "" });
+    } catch (error: any) {
+      logger.log("Failed to add a user", error);
       this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
@@ -97,6 +148,7 @@ export class UserRouter extends BaseRouter {
       .get('/:siteID/list-users', authenticator([]), userRouter.getAllSiteUsers.bind(userRouter))
       .get('/user/:userId', authenticator([]), userRouter.getUser.bind(userRouter))
       .get('/login/:username/:password', userRouter.verifyCreds.bind(userRouter))
-      .get('/verify-user-by-session', userRouter.verifyUserBySession.bind(userRouter));
+      .get('/verify-user-by-session', userRouter.verifyUserBySession.bind(userRouter))
+      .post('/signup', userRouter.signupUser.bind(userRouter));
   }
 }
