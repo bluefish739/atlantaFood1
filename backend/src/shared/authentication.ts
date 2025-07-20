@@ -31,7 +31,7 @@ export function securityCheckpoint(requiredPermissionsList: string[]) {
             }
         });
         const userData = JSON.stringify(user);
-        req.params['user'] = userData;
+        req.headers['user'] = userData;
         next();
     }
 }

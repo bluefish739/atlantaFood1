@@ -61,4 +61,10 @@ export class UserDetailsComponent {
         await this.xapiService.saveUser(this.user!);
         this.router.navigateByUrl("/users/list")
     }
+
+    async createAdmin() {
+        this.user.siteID = "afs-admin-team";
+        await this.xapiService.saveUser(this.user!);
+        this.router.navigateByUrl("/users/list")
+    }
 }

@@ -105,7 +105,7 @@ export class UserRouter extends BaseRouter {
   static buildRouter(): Router {
     const userRouter = new UserRouter();
     return express.Router()
-      .post('/user', securityCheckpoint(["Creative Mode"]), userRouter.saveUser.bind(userRouter))
+      .post('/user', securityCheckpoint([]), userRouter.saveUser.bind(userRouter))
       .get('/:siteID/list-users', authenticator, userRouter.getAllSiteUsers.bind(userRouter))
       .get('/user/:userId', authenticator, userRouter.getUser.bind(userRouter))
       .get('/login/:username/:password', authenticator, userRouter.verifyCreds.bind(userRouter))
