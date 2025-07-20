@@ -12,7 +12,7 @@ import { User } from '../../app/kinds';
     styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-    loggedIn = false;
+    loggedInState = "";
     user!: User;
     constructor(
         private xapiService: XapiService,
@@ -24,9 +24,9 @@ export class HeaderComponent {
         let verificationResponse = await this.xapiService.verifyUserBySession();
         console.log("Response from backend for verify user by session:", verificationResponse);
         if (verificationResponse?.hasSession) {
-            this.loggedIn = true;
+            this.loggedInState = "logged in";
         } else {
-            this.loggedIn = false;
+            this.loggedInState = "logged out";
         }
     }
 }
