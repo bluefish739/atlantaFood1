@@ -13,7 +13,6 @@ export class StoreLocationRouter extends BaseRouter {
   }
 
   async addSampleLocation(req: Request, res: Response) {
-    this.verifySession(req, res);
     try {
       let location = new StoreLocation();
       location.storeID = (await this.getRandomStore()).id;
@@ -33,7 +32,6 @@ export class StoreLocationRouter extends BaseRouter {
   }
 
   async saveLocation(req: Request, res: Response) {
-    this.verifySession(req, res);
     const storeLocation = req.body as StoreLocation;
     try {
       if (!storeLocation) {
@@ -58,7 +56,6 @@ export class StoreLocationRouter extends BaseRouter {
   }
 
   async getAllLocations(req: Request, res: Response) {
-    this.verifySession(req, res);
     try {
       const locations = await storeLocationDAO.getAllLocations();
       logger.log("Successfully retrieved all store locations!");
@@ -70,7 +67,6 @@ export class StoreLocationRouter extends BaseRouter {
   }
 
   async getLocation(req: Request, res: Response) {
-    this.verifySession(req, res);
     try {
       const locationID = req.params.locationID as string;
       if (!locationID) {
@@ -91,9 +87,9 @@ export class StoreLocationRouter extends BaseRouter {
   static buildRouter() {
     const locationRouter = new StoreLocationRouter();
     return express.Router()
-      .get('/add-sample-location', authenticator, locationRouter.addSampleLocation.bind(locationRouter))
-      .post('/location', authenticator, locationRouter.saveLocation.bind(locationRouter))
-      .get('/all', authenticator, locationRouter.getAllLocations.bind(locationRouter))
-      .get('/location/:locationID', authenticator, locationRouter.getLocation.bind(locationRouter));
+      .get('/add-sample-location', authenticator([]), locationRouter.addSampleLocation.bind(locationRouter))
+      .post('/location', authenticator([]), locationRouter.saveLocation.bind(locationRouter))
+      .get('/all', authenticator([]), locationRouter.getAllLocations.bind(locationRouter))
+      .get('/location/:locationID', authenticator([]), locationRouter.getLocation.bind(locationRouter));
   }
 }

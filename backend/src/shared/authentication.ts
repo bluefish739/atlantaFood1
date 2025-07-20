@@ -1,13 +1,12 @@
 
 import { Request, Response, NextFunction } from "express";
-import * as logger from "firebase-functions/logger";
 import admin from 'firebase-admin';
 import { roleDAO, userDAO } from "../daos/dao-factory";
 import { User } from "./kinds";
 import { sendResponse } from "../utility-functions";
 
 admin.initializeApp();
-export function securityCheckpoint(requiredPermissionsList: string[]) {
+export function authenticator(requiredPermissionsList: string[]) {
     return async (req: Request, res: Response, next: NextFunction) => {
         const authentication = req.headers.authentication as string;
         const user = await userDAO.getUserBySessionID(authentication) as User;
@@ -35,6 +34,8 @@ export function securityCheckpoint(requiredPermissionsList: string[]) {
         next();
     }
 }
+
+/*
 export const authenticator = async (req: Request, res: Response, next: NextFunction) => {
     logger.log("Verifying authentication token...");
     const authorization = req.headers.authorization;
@@ -57,3 +58,4 @@ export const authenticator = async (req: Request, res: Response, next: NextFunct
 
     next();
 };
+*/

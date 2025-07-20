@@ -13,7 +13,6 @@ export class CharityLocationRouter extends BaseRouter {
   }
 
   async addSampleLocation(req: Request, res: Response) {
-    this.verifySession(req, res);
     try {
       let location = new CharityLocation();
       location.charityID = (await this.getRandomCharity()).id;
@@ -33,7 +32,6 @@ export class CharityLocationRouter extends BaseRouter {
   }
 
   async saveLocation(req: Request, res: Response) {
-    this.verifySession(req, res);
     const charityLocation = req.body as CharityLocation;
     try {
       if (!charityLocation) {
@@ -58,7 +56,6 @@ export class CharityLocationRouter extends BaseRouter {
   }
 
   async getAllLocations(req: Request, res: Response) {
-    this.verifySession(req, res);
     try {
       const locations = await charityLocationDAO.getAllLocations();
       logger.log("Successfully retrieved all charity locations!");
@@ -70,7 +67,6 @@ export class CharityLocationRouter extends BaseRouter {
   }
 
   async getLocation(req: Request, res: Response) {
-    this.verifySession(req, res);
     try {
       const locationID = req.params.locationID as string;
       if (!locationID) {
@@ -91,9 +87,9 @@ export class CharityLocationRouter extends BaseRouter {
   static buildRouter() {
     const locationRouter = new CharityLocationRouter();
     return express.Router()
-      .get('/add-sample-location', authenticator, locationRouter.addSampleLocation.bind(locationRouter))
-      .post('/location', authenticator, locationRouter.saveLocation.bind(locationRouter))
-      .get('/all', authenticator, locationRouter.getAllLocations.bind(locationRouter))
-      .get('/location/:locationID', authenticator, locationRouter.getLocation.bind(locationRouter));
+      .get('/add-sample-location', authenticator([]), locationRouter.addSampleLocation.bind(locationRouter))
+      .post('/location', authenticator([]), locationRouter.saveLocation.bind(locationRouter))
+      .get('/all', authenticator([]), locationRouter.getAllLocations.bind(locationRouter))
+      .get('/location/:locationID', authenticator([]), locationRouter.getLocation.bind(locationRouter));
   }
 }

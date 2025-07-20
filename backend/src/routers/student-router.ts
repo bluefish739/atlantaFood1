@@ -7,7 +7,6 @@ import { BaseRouter } from "./base-router";
 
 export class StudentRouter extends BaseRouter {
   async addSampleStudent(req: Request, res: Response) {
-    this.verifySession(req, res);
     try {
       let student = new Student();
       student.name = "John Doe";
@@ -24,7 +23,6 @@ export class StudentRouter extends BaseRouter {
   }
 
   async addStudent(req: Request, res: Response) {
-    this.verifySession(req, res);
     const student = req.body as Student;
     try {
       if (!student) {
@@ -50,7 +48,6 @@ export class StudentRouter extends BaseRouter {
   }
 
   async getAllStudents(req: Request, res: Response) {
-    this.verifySession(req, res);
     try {
       const students = await studentDAO.getAllStudents();
       this.sendSuccessfulResponse(res, students);
@@ -60,7 +57,6 @@ export class StudentRouter extends BaseRouter {
   }
 
   async getStudent(req: Request, res: Response) {
-    this.verifySession(req, res);
     try {
       const studentId = req.params.studentId as string;
       if (!studentId) {
@@ -81,9 +77,9 @@ export class StudentRouter extends BaseRouter {
   static buildRouter(): Router {
     const studentRouter = new StudentRouter();
     return express.Router()
-      .get('/add-sample-student', authenticator, studentRouter.addSampleStudent.bind(studentRouter))
-      .post('/student', authenticator, studentRouter.addStudent.bind(studentRouter))
-      .get('/all', authenticator, studentRouter.getAllStudents.bind(studentRouter))
-      .get('/student/:studentId', authenticator, studentRouter.getStudent.bind(studentRouter));
+      .get('/add-sample-student', authenticator([]), studentRouter.addSampleStudent.bind(studentRouter))
+      .post('/student', authenticator([]), studentRouter.addStudent.bind(studentRouter))
+      .get('/all', authenticator([]), studentRouter.getAllStudents.bind(studentRouter))
+      .get('/student/:studentId', authenticator([]), studentRouter.getStudent.bind(studentRouter));
   }
 }

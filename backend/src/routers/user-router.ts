@@ -1,6 +1,6 @@
 import express, { Request, Response, Router } from "express";
 import * as logger from "firebase-functions/logger";
-import { authenticator, securityCheckpoint } from "../shared/authentication";
+import { authenticator } from "../shared/authentication";
 import { User } from "../shared/kinds";
 import { userDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
@@ -8,7 +8,6 @@ import { generateId } from "../shared/idutilities";
 
 export class UserRouter extends BaseRouter {
   async saveUser(req: Request, res: Response) {
-    this.verifySession(req, res);
     const user = req.body as User;
     try {
       if (!user) {
@@ -33,7 +32,6 @@ export class UserRouter extends BaseRouter {
   }
 
   async getAllSiteUsers(req: Request, res: Response) {
-    this.verifySession(req, res);
     //const user = JSON.parse(req.params.user);
     const siteID = req.params.siteID;
     try {
@@ -79,24 +77,14 @@ export class UserRouter extends BaseRouter {
     }
   }
 
-  async validateSession(req: Request, res: Response) {
+  async verifyUserBySession(req: Request, res: Response) {
     try {
-      /*
-      if (sessionID == "") {
-        this.sendServerErrorResponse(res, false);
-        return;
+      let user = await this.getUserBySession(req, res);
+      if (user) {
+        this.sendSuccessfulResponse(res, user as User);
+      } else {
+        this.sendServerErrorResponse(res, {});
       }
-      if (await userDAO.getUserBySessionID(sessionID) == null) {
-        this.sendServerErrorResponse(res, false);
-        return;
-      }
-      this.sendSuccessfulResponse(res, true);
-      */
-     if (await this.verifySession2(req, res)) {
-      this.sendSuccessfulResponse(res, true);
-     } else {
-      this.sendServerErrorResponse(res, false);
-     }
     } catch (error: any) {
       this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
@@ -105,10 +93,10 @@ export class UserRouter extends BaseRouter {
   static buildRouter(): Router {
     const userRouter = new UserRouter();
     return express.Router()
-      .post('/user', securityCheckpoint([]), userRouter.saveUser.bind(userRouter))
-      .get('/:siteID/list-users', authenticator, userRouter.getAllSiteUsers.bind(userRouter))
-      .get('/user/:userId', authenticator, userRouter.getUser.bind(userRouter))
-      .get('/login/:username/:password', authenticator, userRouter.verifyCreds.bind(userRouter))
-      .get('/validate-session', authenticator, userRouter.validateSession.bind(userRouter));
+      .post('/user', authenticator([]), userRouter.saveUser.bind(userRouter))
+      .get('/:siteID/list-users', authenticator([]), userRouter.getAllSiteUsers.bind(userRouter))
+      .get('/user/:userId', authenticator([]), userRouter.getUser.bind(userRouter))
+      .get('/login/:username/:password', userRouter.verifyCreds.bind(userRouter))
+      .get('/verify-user-by-session', userRouter.verifyUserBySession.bind(userRouter));
   }
 }

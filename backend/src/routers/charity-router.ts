@@ -7,7 +7,6 @@ import { BaseRouter } from "./base-router";
 
 export class CharityRouter extends BaseRouter {
   async addSampleCharity(req: Request, res: Response) {
-    this.verifySession(req, res);
     try {
       let charity = new Charity();
       charity.name = "Atlanta Community Food Bank";
@@ -24,7 +23,6 @@ export class CharityRouter extends BaseRouter {
   }
 
   async getAllCharities(req: Request, res: Response) {
-    this.verifySession(req, res);
     try {
       const charities = await charityDAO.getAllCharities();
       const locations = await charityLocationDAO.getAllLocations();
@@ -40,7 +38,6 @@ export class CharityRouter extends BaseRouter {
   }
 
   async getCharity(req: Request, res: Response) {
-    this.verifySession(req, res);
     try {
       const charityID = req.params.charityID as string;
       if (!charityID) {
@@ -60,7 +57,6 @@ export class CharityRouter extends BaseRouter {
   }
 
   async saveCharity(req: Request, res: Response) {
-    this.verifySession(req, res);
     const charity = req.body as Charity;
     try {
       if (!charity) {
@@ -85,7 +81,6 @@ export class CharityRouter extends BaseRouter {
   }
 
   async getCharityLocations(req: Request, res: Response) {
-    this.verifySession(req, res);
     const charityID = req.params.charityID as string;
         logger.log(`getCharityLocations charityID as: ` + charityID);
         try {
@@ -101,10 +96,10 @@ export class CharityRouter extends BaseRouter {
   static buildRouter() {
     const charityRouter = new CharityRouter();
     return express.Router()
-      .get("/add-sample-charity", authenticator, charityRouter.addSampleCharity.bind(charityRouter))
-      .get("/all", authenticator, charityRouter.getAllCharities.bind(charityRouter))
-      .get("/charity/:charityID", authenticator, charityRouter.getCharity.bind(charityRouter))
-      .get("/:charityID/locations", authenticator, charityRouter.getCharityLocations.bind(charityRouter))
-      .post('/charity', authenticator, charityRouter.saveCharity.bind(charityRouter));
+      .get("/add-sample-charity", authenticator([]), charityRouter.addSampleCharity.bind(charityRouter))
+      .get("/all", authenticator([]), charityRouter.getAllCharities.bind(charityRouter))
+      .get("/charity/:charityID", authenticator([]), charityRouter.getCharity.bind(charityRouter))
+      .get("/:charityID/locations", authenticator([]), charityRouter.getCharityLocations.bind(charityRouter))
+      .post('/charity', authenticator([]), charityRouter.saveCharity.bind(charityRouter));
   }
 }

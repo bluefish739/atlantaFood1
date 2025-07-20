@@ -7,7 +7,6 @@ import { BaseRouter } from "./base-router";
 
 export class StoreRouter extends BaseRouter {
   async addSampleStore(req: Request, res: Response) {
-    this.verifySession(req, res);
     try {
       let store = new Store();
       store.name = "Kroger";
@@ -24,7 +23,6 @@ export class StoreRouter extends BaseRouter {
   }
 
   async getAllStores(req: Request, res: Response) {
-    this.verifySession(req, res);
     try {
       const stores = await storeDAO.getAllStores();
       const locations = await storeLocationDAO.getAllLocations();
@@ -38,7 +36,6 @@ export class StoreRouter extends BaseRouter {
   }
 
   async getStore(req: Request, res: Response) {
-    this.verifySession(req, res);
     try {
       const storeId = req.params.storeId as string;
       if (!storeId) {
@@ -57,7 +54,6 @@ export class StoreRouter extends BaseRouter {
   }
 
   async addStore(req: Request, res: Response) {
-    this.verifySession(req, res);
     const store = req.body as Store;
     try {
       if (!store) {
@@ -82,7 +78,6 @@ export class StoreRouter extends BaseRouter {
   }
 
   async getStoreLocations(req: Request, res: Response) {
-    this.verifySession(req, res);
     const storeID = req.params.storeID as string;
     logger.log(`getStoreLocations storeID as: ` + storeID);
     try {
@@ -98,10 +93,10 @@ export class StoreRouter extends BaseRouter {
   static buildRouter(): Router {
     const storeRouter = new StoreRouter();
     return express.Router()
-      .get('/add-sample-store', authenticator, storeRouter.addSampleStore.bind(storeRouter))
-      .get('/all', authenticator, storeRouter.getAllStores.bind(storeRouter))
-      .get('/store/:storeId', authenticator, storeRouter.getStore.bind(storeRouter))
-      .get('/:storeID/locations', authenticator, storeRouter.getStoreLocations.bind(storeRouter))
-      .post('/store', authenticator, storeRouter.addStore.bind(storeRouter));
+      .get('/add-sample-store', authenticator([]), storeRouter.addSampleStore.bind(storeRouter))
+      .get('/all', authenticator([]), storeRouter.getAllStores.bind(storeRouter))
+      .get('/store/:storeId', authenticator([]), storeRouter.getStore.bind(storeRouter))
+      .get('/:storeID/locations', authenticator([]), storeRouter.getStoreLocations.bind(storeRouter))
+      .post('/store', authenticator([]), storeRouter.addStore.bind(storeRouter));
   }
 }

@@ -3,19 +3,10 @@ import { userDAO } from "../daos/dao-factory";
 import { sendResponse } from "../utility-functions";
 
 export class BaseRouter {
-    async verifySession(req: Request, res: Response) {
-        if (!(await this.verifySession2(req, res))) {
-            this.sendSessionErrorResponse(res, { success: false, message: "Invalid session" });
-        }
-    }
-    
-    async verifySession2(req: Request, res: Response) {
+    async getUserBySession(req: Request, res: Response) {
         const authentication = req.headers.authentication as string;
         const user = await userDAO.getUserBySessionID(authentication);
-        if (!user) {
-            return false;
-        }
-        return true;
+        return user;
     }
 
     sendSuccessfulResponse(res: Response, resObj: any) {

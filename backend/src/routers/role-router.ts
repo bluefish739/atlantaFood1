@@ -7,7 +7,6 @@ import { BaseRouter } from "./base-router";
 
 export class RoleRouter extends BaseRouter {
     async saveRole(req: Request, res: Response) {
-        this.verifySession(req, res);
         const role = req.body as Role;
         try {
             if (!role) {
@@ -32,7 +31,6 @@ export class RoleRouter extends BaseRouter {
     }
 
     async getRole(req: Request, res: Response) {
-        this.verifySession(req, res);
         try {
             const roleID = req.params.roleID as string;
             if (!roleID) {
@@ -51,7 +49,6 @@ export class RoleRouter extends BaseRouter {
     }
 
     async getRolesBySiteID(req: Request, res: Response) {
-        this.verifySession(req, res);
         try {
             const siteID = req.params.siteID as string;
             if (!siteID) {
@@ -68,8 +65,8 @@ export class RoleRouter extends BaseRouter {
     static buildRouter() {
         const roleRouter = new RoleRouter();
         return express.Router()
-            .post('/role', authenticator, roleRouter.saveRole.bind(roleRouter))
-            .get('/role/:roleID', authenticator, roleRouter.getRole.bind(roleRouter))
-            .get('/:siteID/list-roles', authenticator, roleRouter.getRolesBySiteID.bind(roleRouter));
+            .post('/role', authenticator([]), roleRouter.saveRole.bind(roleRouter))
+            .get('/role/:roleID', authenticator([]), roleRouter.getRole.bind(roleRouter))
+            .get('/:siteID/list-roles', authenticator([]), roleRouter.getRolesBySiteID.bind(roleRouter));
     }
 }
