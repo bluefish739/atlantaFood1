@@ -57,3 +57,14 @@ export class User {
     sessionID: string | undefined;
     roles: string[] = [];
 }
+
+export class Food {
+    foodID: string | undefined;
+    name: string | undefined;
+    categories: string[] = [];
+}
+
+export class FoodCategory {
+    foodCateogryID: string | undefined;
+    name: string | undefined;
+}
