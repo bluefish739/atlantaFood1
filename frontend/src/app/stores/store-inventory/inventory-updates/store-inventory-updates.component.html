@@ -1,45 +1,44 @@
 <section class="inventory-update-container">
     <div class="inventory-update-section">
       <h2>Update Inventory</h2>
-      <div class="message" [class.show]="message" [ngClass]="{'success': isSuccessMessage, 'error': !isSuccessMessage}" aria-live="polite">
-        {{ message }}
+      <div class="message" aria-live="polite">
       </div>
-      <form #inventoryUpdateForm="ngForm" (ngSubmit)="onSubmit()">
+      <form #inventoryUpdateForm="ngForm">
         <div class="form-group">
           <label for="updateDateTime">Date and Time of Update</label>
-          <input type="datetime-local" id="updateDateTime" name="updateDateTime" [(ngModel)]="update.dateTime" required>
+          <input type="datetime-local" id="updateDateTime" name="updateDateTime" required>
         </div>
         <div class="form-group">
           <label for="foodType">Food Type</label>
-          <input type="text" id="foodType" name="foodType" [(ngModel)]="update.foodType" required placeholder="e.g., Canned Beans, Apples">
+          <input type="text" id="foodType" name="foodType" required placeholder="e.g., Canned Beans, Apples">
         </div>
         <div class="form-group">
           <label for="quantity">Quantity</label>
-          <input type="number" id="quantity" name="quantity" [(ngModel)]="update.quantity" required placeholder="e.g., 100">
-          <select id="quantityUnit" name="quantityUnit" [(ngModel)]="update.quantityUnit" required>
+          <input type="number" id="quantity" name="quantity" required placeholder="e.g., 100">
+          <select id="quantityUnit" name="quantityUnit" required>
             <option value="units">Units</option>
             <option value="lbs">Pounds (lbs)</option>
           </select>
         </div>
         <div class="form-group">
           <label for="action">Action</label>
-          <select id="action" name="action" [(ngModel)]="update.action" required>
+          <select id="action" name="action" required>
             <option value="add">Add to Inventory</option>
             <option value="subtract">Subtract from Inventory</option>
           </select>
         </div>
-        <div class="form-group" *ngIf="userType === 'storeEmployee'">
+        <div class="form-group">
           <label for="pantry">Receiving Pantry</label>
-          <select id="pantry" name="pantry" [(ngModel)]="update.pantry">
+          <select id="pantry" name="pantry">
             <option value="">Select a pantry</option>
-            <option *ngFor="let pantry of pantries" [value]="pantry.id">{{ pantry.name }}</option>
+            <option>pantry name</option>
           </select>
         </div>
         <div class="form-group">
           <label for="employees">Associated Employees</label>
-          <input type="text" id="employees" name="employees" [(ngModel)]="update.employees" required placeholder="e.g., John Doe, Jane Smith">
+          <input type="text" id="employees" name="employees" required placeholder="e.g., John Doe, Jane Smith">
         </div>
-        <button type="submit" [disabled]="!inventoryUpdateForm.valid">Submit Update</button>
+        <button type="submit">Submit Update</button>
       </form>
     </div>
   </section>
