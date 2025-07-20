@@ -1,22 +1,4 @@
-<!--<h1>Log In</h1>
-<table>
-    <tr>
-        <td>Username:</td>
-        <td>
-            <input [(ngModel)]="username">
-        </td>
-    </tr>
-    <tr>
-        <td>Password:</td>
-        <td>
-            <input [(ngModel)]="password">
-        </td>
-    </tr>
-</table>
-<small id="login-warning" *ngIf="failedLoginAttempted">Incorrect login information. Please try again.</small><br>
-<button (click)="submitCreds()">Enter</button><br>
-<a [routerLink]="['/users/signup']">Don't have an account? Sign up</a>
--->
+
 <section class="login-container">
     <form class="login-form" action="/login" method="POST">
         <h2>Login</h2>
