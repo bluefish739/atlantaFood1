@@ -1,0 +1,75 @@
+.inventory-container {
+    flex: 1;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .inventory-section {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+  }
+  .inventory-section h2 {
+    color: #2E7D32;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+  .filter-section {
+    margin-bottom: 1.5rem;
+  }
+  .filter-section label {
+    color: #2E7D32;
+    font-weight: bold;
+    margin-right: 1rem;
+    font-size: 1.1rem;
+  }
+  .filter-section input {
+    padding: 0.5rem;
+    border: 1px solid #A8D5BA;
+    border-radius: 4px;
+    font-size: 1rem;
+    width: 200px;
+  }
+  .filter-section input:focus {
+    outline: none;
+    border-color: #2E7D32;
+    box-shadow: 0 0 5px rgba(46, 125, 50, 0.3);
+  }
+  .inventory-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .inventory-table th, .inventory-table td {
+    padding: 0.8rem;
+    border: 1px solid #A8D5BA;
+    text-align: left;
+  }
+  .inventory-table th {
+    background-color: #A8D5BA;
+    color: #2E7D32;
+    font-weight: bold;
+  }
+  .inventory-table td {
+    background-color: white;
+  }
+  .inventory-table tr.hidden {
+    display: none;
+  }
+  @media (max-width: 768px) {
+    .inventory-container {
+      padding: 1rem;
+    }
+    .inventory-section {
+      padding: 1.5rem;
+    }
+    .inventory-table th, .inventory-table td {
+      font-size: 0.9rem;
+      padding: 0.5rem;
+    }
+    .filter-section input {
+      width: 100%;
+      max-width: none;
+    }
+  }

@@ -1,1 +1,51 @@
-<h1>These are your stores inventory details!</h1>
+<section class="inventory-container">
+    <div class="inventory-section">
+      <h2>Inventory</h2>
+      <div class="filter-section">
+        <label for="tagFilter">Filter by Tag:</label>
+        <input type="text" id="tagFilter" placeholder="e.g., Canned, Fresh, Dairy">
+      </div>
+      <table class="inventory-table" id="inventoryTable">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Details</th>
+            <th>Tags</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-tags="Canned Non-Perishable">
+            <td>Canned Beans</td>
+            <td>200 units</td>
+            <td>Expires: 2025-12-31 (Store) / Source: Green Valley Grocers (Pantry)</td>
+            <td>Canned, Non-Perishable</td>
+          </tr>
+          <tr data-tags="Fresh Produce">
+            <td>Apples</td>
+            <td>150 lbs</td>
+            <td>Expires: 2025-07-30 (Store) / Source: FreshMart (Pantry)</td>
+            <td>Fresh, Produce</td>
+          </tr>
+          <tr data-tags="Dairy Perishable">
+            <td>Milk</td>
+            <td>50 units</td>
+            <td>Expires: 2025-07-25 (Store) / Source: Community Co-op (Pantry)</td>
+            <td>Dairy, Perishable</td>
+          </tr>
+          <tr data-tags="Canned Non-Perishable">
+            <td>Canned Soup</td>
+            <td>100 units</td>
+            <td>Expires: 2026-01-15 (Store) / Source: Harvest Supermarkets (Pantry)</td>
+            <td>Canned, Non-Perishable</td>
+          </tr>
+          <tr data-tags="Fresh Produce">
+            <td>Carrots</td>
+            <td>80 lbs</td>
+            <td>Expires: 2025-08-10 (Store) / Source: FreshMart (Pantry)</td>
+            <td>Fresh, Produce</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
