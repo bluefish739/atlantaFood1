@@ -26,9 +26,9 @@
         <div class="form-group">
           <label>User Type</label>
           <div class="radio-group">
-            <label><input type="radio" name="userType" value="pantryEmployee" [(ngModel)]="signupData.userType" required> Pantry Employee</label>
-            <label><input type="radio" name="userType" value="storeEmployee" [(ngModel)]="signupData.userType" required> Store Employee</label>
-            <label><input type="radio" name="userType" value="volunteerDriver" [(ngModel)]="signupData.userType" required> Volunteer Driver</label>
+            <label><input type="radio" name="userType" value="Pantry" [(ngModel)]="signupData.userType" required> Pantry Employee</label>
+            <label><input type="radio" name="userType" value="Store" [(ngModel)]="signupData.userType" required> Store Employee</label>
+            <label><input type="radio" name="userType" value="Volunteer" [(ngModel)]="signupData.userType" required> Volunteer Driver</label>
           </div>
           <div class="error" *ngIf="signupForm.submitted && !signupData.userType">
             Please select a user type.

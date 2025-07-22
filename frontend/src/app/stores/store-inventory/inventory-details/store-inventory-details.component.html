@@ -15,35 +15,13 @@
           </tr>
         </thead>
         <tbody>
-          <tr data-tags="Canned Non-Perishable">
-            <td>Canned Beans</td>
-            <td>200 units</td>
-            <td>Expires: 2025-12-31 (Store) / Source: Green Valley Grocers (Pantry)</td>
-            <td>Canned, Non-Perishable</td>
-          </tr>
-          <tr data-tags="Fresh Produce">
-            <td>Apples</td>
-            <td>150 lbs</td>
-            <td>Expires: 2025-07-30 (Store) / Source: FreshMart (Pantry)</td>
-            <td>Fresh, Produce</td>
-          </tr>
-          <tr data-tags="Dairy Perishable">
-            <td>Milk</td>
-            <td>50 units</td>
-            <td>Expires: 2025-07-25 (Store) / Source: Community Co-op (Pantry)</td>
-            <td>Dairy, Perishable</td>
-          </tr>
-          <tr data-tags="Canned Non-Perishable">
-            <td>Canned Soup</td>
-            <td>100 units</td>
-            <td>Expires: 2026-01-15 (Store) / Source: Harvest Supermarkets (Pantry)</td>
-            <td>Canned, Non-Perishable</td>
-          </tr>
-          <tr data-tags="Fresh Produce">
-            <td>Carrots</td>
-            <td>80 lbs</td>
-            <td>Expires: 2025-08-10 (Store) / Source: FreshMart (Pantry)</td>
-            <td>Fresh, Produce</td>
+          <tr *ngFor="let entry of inventoryData; let idx=index">
+            <td>{{ entry.foodName }}</td>
+            <td>{{ entry.units }}</td>
+            <td>{{ entry.expirationDate }} / {{ entry.source }}</td>
+            <td>
+              <span *ngFor="let tag of entry.tags; let idx2=index">{{ tag }}, </span>
+            </td>
           </tr>
         </tbody>
       </table>

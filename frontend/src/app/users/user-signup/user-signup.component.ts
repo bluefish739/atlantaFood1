@@ -26,26 +26,23 @@ export class UserSignupComponent {
     ) { }
 
     async onSubmit() {
-        // Validate passwords match
         if (this.signupData.password !== this.signupData.confirmPassword) {
             this.errorMessage = 'Passwords do not match. Please try again.';
             return;
         }
 
-        // Validate user type is selected
         if (!this.signupData.userType) {
             this.errorMessage = 'Please select a user type.';
             return;
         }
-
-        // Prepare data for API
+        
+        // fix userType
         const payload: SignupData = {
             username: this.signupData.username,
             password: this.signupData.password,
-            userType: this.signupData.userType
+            userType: "Store"
         };
 
-        // Submit to API
         const signupResponse = await this.xapiService.signupUser(payload);
         if (signupResponse?.success) {
             this.router.navigateByUrl("");

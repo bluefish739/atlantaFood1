@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { InventoryEntry } from '../../../kinds';
 
 @Component({
   selector: 'store-inventory-details',
@@ -10,6 +11,20 @@ import { CommonModule } from '@angular/common';
   styleUrl: './store-inventory-details.component.scss'
 })
 export class StoreInventoryDetailsComponent {
+  // Get store from user somehow
+  // inventory = Store.inventory;
+
+  // Placeholder inventory data
+  inventoryData: InventoryEntry[] = [
+    {
+      foodName: "Tomato",
+      units: 47,
+      expirationDate: "06-07-25",
+      source: undefined,
+      tags: ["Fresh", "Produce"]
+    }
+  ]
   constructor() {
+    // Generate inventoryData from store.inventory
   }
 }
