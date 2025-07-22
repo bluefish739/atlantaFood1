@@ -91,7 +91,7 @@ export class VerificationResponse {
 export class SignupData {
     username: string | undefined;
     password: string | undefined;
-    userType: string | undefined;
+    userType: "Store" | "Pantry" | "Volunteer" | "Admin" | undefined;
 }
 
 export class SignupResponse {
