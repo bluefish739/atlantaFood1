@@ -1,10 +1,11 @@
-import { Role } from "../shared/kinds";
+import { Role, UserRole } from "../shared/kinds";
 import { generateId } from "../shared/idutilities";
 import { datastore } from "./data-store-factory";
 import { PropertyFilter } from "@google-cloud/datastore";
 
 export class RoleDAO {
     static ROLE_KIND = "Role";
+    static USER_ROLE_KIND = "UserRole"
 
     public async getAllRolesBySiteID(siteID: string) {
         const query = datastore.createQuery(RoleDAO.ROLE_KIND)
@@ -23,6 +24,16 @@ export class RoleDAO {
         }
         await datastore.save(entity);
         return role;
+    }
+
+    public async saveUserRole(userRole: UserRole) {
+        const entityKey = datastore.key([RoleDAO.USER_ROLE_KIND, userRole.userID! + "|" + userRole.roleID!]);
+        const entity = {
+            key: entityKey,
+            data: userRole
+        }
+        await datastore.save(entity);
+        return userRole;
     }
 
     public async getRole(roleID: string) {

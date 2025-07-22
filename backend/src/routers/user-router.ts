@@ -1,8 +1,8 @@
 import express, { Request, Response, Router } from "express";
 import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
-import { SignupData, User } from "../shared/kinds";
-import { userDAO } from "../daos/dao-factory";
+import { Charity, CharityEmployee, Role, SignupData, Store, StoreEmployee, User, UserRole } from "../shared/kinds";
+import { charityDAO, roleDAO, storeDAO, userDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
 import { generateId } from "../shared/idutilities";
 
@@ -145,11 +145,61 @@ export class UserRouter extends BaseRouter {
       user.userType = signupData.userType;
       const id = await userDAO.saveUser(user);
       logger.log("User added successfully! id=" + id);
+      const organizationID = generateId();
+
+      if (user.userType == "Store") {
+        this.createNewStore(user.userID!, organizationID);
+      } else if (user.userType == "Pantry") {
+        this.createNewCharity(user.userID!, organizationID);
+      } else if (user.userType == "Volunteer") {
+        this.createNewVolunteer(organizationID);
+      }
       this.sendNormalResponse(res, { success: true, message: "" });
     } catch (error: any) {
       logger.log("Failed to add a user", error);
       this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
+  }
+
+  private async createNewStore(userID: string, organizationID: string) {
+    const store = new Store();
+    store.id = organizationID;
+    storeDAO.saveStore(store);
+
+    const storeEmployee = new StoreEmployee();
+    storeEmployee.userID = userID;
+    storeEmployee.organizationID = organizationID;
+    userDAO.saveStoreEmployee(storeEmployee);
+  }
+
+  private async createNewCharity(userID: string, organizationID: string) {
+    const charity = new Charity();
+    charity.id = organizationID;
+    charityDAO.saveCharity(charity);
+    logger.log("Created charity: ", charity);
+
+    const charityEmployee = new CharityEmployee();
+    charityEmployee.userID = userID;
+    charityEmployee.organizationID = organizationID;
+    userDAO.saveCharityEmployee(charityEmployee);
+    logger.log("Created charity employee: ", charityEmployee);
+
+    const adminRole = new Role();
+    adminRole.name = "ORGANIZATION_ADMIN";
+    adminRole.organizationID = organizationID;
+    adminRole.description = "Administrator";
+    roleDAO.saveRole(adminRole);
+    logger.log("Created admin role: ", adminRole);
+
+    const userRole = new UserRole();
+    userRole.userID = userID;
+    userRole.roleID = adminRole.id;
+    roleDAO.saveUserRole(userRole);
+    logger.log("Created user role: ", userRole);
+  }
+
+  private createNewVolunteer(organizationID: string) {
+    throw new Error("Function not implemented.");
   }
 
   static buildRouter(): Router {

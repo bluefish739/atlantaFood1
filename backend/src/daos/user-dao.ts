@@ -1,4 +1,4 @@
-import { Role, User } from "../shared/kinds";
+import { CharityEmployee, Role, StoreEmployee, User } from "../shared/kinds";
 import { generateId } from "../shared/idutilities";
 import { datastore } from "./data-store-factory";
 import { PropertyFilter } from "@google-cloud/datastore";
@@ -6,6 +6,8 @@ import { RoleDAO } from "./role-dao";
 
 export class UserDAO {
     static USER_KIND = "User";
+    static STORE_EMPLOYEE_KIND = "StoreEmployee";
+    static CHARITY_EMPLOYEE_KIND = "CharityEmployee";
 
     public async getAllUsers(siteID: string) {
         const query = datastore.createQuery(UserDAO.USER_KIND)
@@ -80,5 +82,27 @@ export class UserDAO {
             return true;
         }
         return false;
+    }
+
+    public async saveStoreEmployee(employee: StoreEmployee) {
+        const entityKey = datastore.key([UserDAO.STORE_EMPLOYEE_KIND, employee.userID!]);
+        const entity = {
+            key: entityKey,
+            data: employee
+        };
+
+        await datastore.save(entity);
+        return employee;
+    }
+
+    public async saveCharityEmployee(employee: CharityEmployee) {
+        const entityKey = datastore.key([UserDAO.CHARITY_EMPLOYEE_KIND, employee.userID!]);
+        const entity = {
+            key: entityKey,
+            data: employee
+        };
+
+        await datastore.save(entity);
+        return employee;
     }
 }

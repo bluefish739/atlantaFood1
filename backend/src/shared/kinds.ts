@@ -50,7 +50,7 @@ export class CharityLocation {
 
 export class Role {
     id: string | undefined;
-    siteID: string | undefined;
+    organizationID: string | undefined;
     name: string | undefined;
     description: string | undefined;
     permissions: string[] = [];
@@ -97,4 +97,19 @@ export class InventoryEntry {
     expirationDate: string | undefined;
     source: string | undefined;
     tags: string[] = [];
+}
+
+export class StoreEmployee {
+    userID: string | undefined;
+    organizationID: string | undefined;
+}
+
+export class CharityEmployee {
+    userID: string | undefined;
+    organizationID: string | undefined;
+}
+
+export class UserRole {
+    userID: string | undefined;
+    roleID: string | undefined;
 }
