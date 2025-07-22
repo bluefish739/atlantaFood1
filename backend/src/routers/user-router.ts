@@ -96,9 +96,22 @@ export class UserRouter extends BaseRouter {
       return false;
     }
 
-    //TO DO: Add extra checks for
-    //usertype is an allowed value, password and username are of valid form
-    //separate function to politely let user know of user duplication
+    const usernameRegex: RegExp = /[a-zA-Z0-9]{4,}/;
+    if (!usernameRegex.test(signupData.username)) {
+      logger.log("Signup data invalid");
+      return false;
+    }
+
+    if (signupData.password.length < 6) {
+      logger.log("Signup data invalid");
+      return false;
+    }
+
+    if (!["Store", "Pantry", "Volunteer"].includes(signupData.userType)) {
+      logger.log("Signup data invalid");
+      return false;
+    }
+
     return true;
   }
 
