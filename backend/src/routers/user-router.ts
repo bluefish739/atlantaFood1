@@ -32,7 +32,6 @@ export class UserRouter extends BaseRouter {
   }
 
   async getAllSiteUsers(req: Request, res: Response) {
-    //const user = JSON.parse(req.params.user);
     const siteID = req.params.siteID;
     try {
       const users = await userDAO.getAllUsers(siteID);
@@ -127,7 +126,7 @@ export class UserRouter extends BaseRouter {
         this.sendBadRequestResponse(res, { success: false, message: "Signup data is not provided" });
         return;
       }
-      
+
       if (!this.validateSignupData(signupData)) {
         logger.log("Signup data incomplete", signupData);
         this.sendBadRequestResponse(res, { success: false, message: "Signup data incomplete" });
