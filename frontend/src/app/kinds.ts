@@ -85,7 +85,7 @@ export class FoodCategory {
 }
 
 export class VerificationResponse {
-   hasSession: boolean | undefined;
+    hasSession: boolean | undefined;
 }
 
 export class SignupData {
@@ -97,4 +97,12 @@ export class SignupData {
 export class SignupResponse {
     success: boolean | undefined;
     message: string | undefined;
+}
+
+export class InventoryEntry {
+    foodName: string | undefined;
+    units: number | undefined;
+    expirationDate: string | undefined;
+    source: string | undefined;
+    tags: string[] = [];
 }
