@@ -64,8 +64,7 @@ export class User {
     password: string | undefined;
     sessionID: string | undefined;
     roles: string[] = [];
-    // userType can be one of four strings: pantry, store, and volunteer, and admin
-    userType: string | undefined;
+    userType: "Store" | "Pantry" | "Volunteer" | "Admin" | undefined;
 }
 
 export class Food {

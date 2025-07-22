@@ -68,6 +68,7 @@ export class User {
     password: string | undefined;
     tokenID: string | undefined;
     roles: string[] = [];
+    userType: "Store" | "Pantry" | "Volunteer" | "Admin" | undefined;
 }
 
 export class Food {
