@@ -20,6 +20,10 @@ export class StoreLocation {
     streetName: string | undefined;
     streetNumber: number | undefined;
     storeID: string | undefined;
+    inventory: {
+        foodID: string;
+        units: number;
+    }[] = [];
 }
 
 export class Charity {
@@ -35,6 +39,10 @@ export class CharityLocation {
     streetName: string | undefined;
     streetNumber: number | undefined;
     charityID: string | undefined;
+    inventory: {
+        foodID: string;
+        units: number;
+    }[] = [];
 }
 
 export class Role {
