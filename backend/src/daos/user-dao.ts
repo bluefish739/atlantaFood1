@@ -70,4 +70,15 @@ export class UserDAO {
         }
         return false;
     }
+
+    public async usernameTaken(username: string) {
+        const query = datastore.createQuery(UserDAO.USER_KIND)
+            .filter(new PropertyFilter('username', '=', username));
+        const data = await query.run();
+        const users = data[0];
+        if (users.length > 0) {
+            return true;
+        }
+        return false;
+    }
 }

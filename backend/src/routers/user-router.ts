@@ -115,9 +115,8 @@ export class UserRouter extends BaseRouter {
     return true;
   }
 
-  private checkDuplicatedUsername(username: string) {
-    //TO DO: add logic to actually check for duplicated usernames
-    return true;
+  private async checkDuplicatedUsername(username: string) {
+    return await userDAO.usernameTaken(username);
   }
 
   async signupUser(req: Request, res: Response) {
@@ -135,7 +134,7 @@ export class UserRouter extends BaseRouter {
         return;
       }
 
-      if (!this.checkDuplicatedUsername(signupData.username!)) {
+      if (await this.checkDuplicatedUsername(signupData.username!)) {
         logger.log("Username already taken, please choose another", signupData);
         this.sendNormalResponse(res, { success: false, message: "Username already taken, please choose another" });
         return;
