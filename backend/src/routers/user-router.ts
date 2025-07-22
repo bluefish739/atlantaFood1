@@ -91,23 +91,23 @@ export class UserRouter extends BaseRouter {
 
   private validateSignupData(signupData: SignupData) {
     if (!(signupData.username && signupData.password && signupData.userType)) {
-      logger.log("Signup data incomplete");
+      logger.log("Signup data incomplete", signupData);
       return false;
     }
 
     const usernameRegex: RegExp = /[a-zA-Z0-9]{4,}/;
     if (!usernameRegex.test(signupData.username)) {
-      logger.log("Signup data invalid");
+      logger.log("Username invalid", signupData);
       return false;
     }
 
     if (signupData.password.length < 6) {
-      logger.log("Signup data invalid");
+      logger.log("Password invalid", signupData);
       return false;
     }
 
     if (!["Store", "Pantry", "Volunteer"].includes(signupData.userType)) {
-      logger.log("Signup data invalid");
+      logger.log("User type invalid", signupData);
       return false;
     }
 
