@@ -35,8 +35,8 @@ export class UserSignupComponent {
             this.errorMessage = 'Please select a user type.';
             return;
         }
-        
-        // fix userType
+
+        // TODO: fix userType to accept this.signupData.userType
         const payload: SignupData = {
             username: this.signupData.username,
             password: this.signupData.password,
@@ -45,7 +45,8 @@ export class UserSignupComponent {
 
         const signupResponse = await this.xapiService.signupUser(payload);
         if (signupResponse?.success) {
-            this.router.navigateByUrl("");
+            await this.xapiService.submitCreds(this.signupData.username, this.signupData.password);
+            this.router.navigateByUrl("/dashboard");
         } else {
             console.log("Sign up response:", signupResponse);
             this.errorMessage = signupResponse.message!;
