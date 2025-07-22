@@ -41,8 +41,10 @@ export class CharityLocation {
     streetNumber: number | undefined;
     charityID: string | undefined;
     inventory: {
-        foodID: string;
-        units: number;
+        foodID: string | undefined;
+        units: number | undefined;
+        expirationDate: string | undefined;
+        source: string | undefined;
     }[] = [];
 }
 
