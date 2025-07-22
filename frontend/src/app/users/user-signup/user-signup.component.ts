@@ -40,7 +40,7 @@ export class UserSignupComponent {
         const payload: SignupData = {
             username: this.signupData.username,
             password: this.signupData.password,
-            userType: "Store"
+            userType: this.signupData.userType as any
         };
 
         const signupResponse = await this.xapiService.signupUser(payload);
