@@ -170,6 +170,19 @@ export class UserRouter extends BaseRouter {
     storeEmployee.userID = userID;
     storeEmployee.organizationID = organizationID;
     userDAO.saveStoreEmployee(storeEmployee);
+
+    const adminRole = new Role();
+    adminRole.name = "ORGANIZATION_ADMIN";
+    adminRole.organizationID = organizationID;
+    adminRole.description = "Administrator";
+    roleDAO.saveRole(adminRole);
+    logger.log("Created admin role: ", adminRole);
+
+    const userRole = new UserRole();
+    userRole.userID = userID;
+    userRole.roleID = adminRole.id;
+    roleDAO.saveUserRole(userRole);
+    logger.log("Created user role: ", userRole);
   }
 
   private async createNewCharity(userID: string, organizationID: string) {
