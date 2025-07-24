@@ -2,7 +2,7 @@ import express, { Request, Response, Router } from "express";
 import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
 import { Charity, CharityEmployee, Role, SignupData, Store, StoreEmployee, TransportVolunteer, User, UserRole, VolunteerOrganization } from "../shared/kinds";
-import { charityDAO, roleDAO, storeDAO, userDAO } from "../daos/dao-factory";
+import { charityDAO, roleDAO, storeDAO, userDAO, volunteerDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
 import { generateId } from "../shared/idutilities";
 
@@ -214,13 +214,13 @@ export class UserRouter extends BaseRouter {
   private createNewVolunteer(userID: string, organizationID: string) {
     const volunteerOrganization = new VolunteerOrganization();
     volunteerOrganization.id = organizationID;
-    //volunteerDAO.saveOrganization(volunteerOrganization);
+    volunteerDAO.saveOrganization(volunteerOrganization);
     logger.log("Created volunteer organization: ", volunteerOrganization);
 
     const volunteer = new TransportVolunteer();
     volunteer.userID = userID;
     volunteer.organizationID = organizationID;
-    //volunteerDAO.saveVolunteer(volunteer);
+    volunteerDAO.saveVolunteer(volunteer);
     logger.log("Created volunteer: ", volunteer);
 
     const adminRole = new Role();
