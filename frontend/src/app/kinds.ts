@@ -102,7 +102,7 @@ export class SignupResponse {
 export class InventoryEntry {
     foodName: string | undefined;
     units: number | undefined;
-    expirationDate: string | undefined;
+    expirationDate: Date | undefined;
     source: string | undefined;
     tags: string[] = [];
 }
