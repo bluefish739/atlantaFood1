@@ -1,7 +1,7 @@
 import express, { Request, Response, Router } from "express";
 import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
-import { Charity, CharityEmployee, Role, SignupData, Store, StoreEmployee, User, UserRole } from "../shared/kinds";
+import { Charity, CharityEmployee, Role, SignupData, Store, StoreEmployee, TransportVolunteer, User, UserRole, VolunteerOrganization } from "../shared/kinds";
 import { charityDAO, roleDAO, storeDAO, userDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
 import { generateId } from "../shared/idutilities";
@@ -152,7 +152,7 @@ export class UserRouter extends BaseRouter {
       } else if (user.userType == "Pantry") {
         this.createNewCharity(user.userID!, organizationID);
       } else if (user.userType == "Volunteer") {
-        this.createNewVolunteer(organizationID);
+        this.createNewVolunteer(user.userID!, organizationID);
       }
       this.sendNormalResponse(res, { success: true, message: "" });
     } catch (error: any) {
@@ -211,8 +211,30 @@ export class UserRouter extends BaseRouter {
     logger.log("Created user role: ", userRole);
   }
 
-  private createNewVolunteer(organizationID: string) {
-    throw new Error("Function not implemented.");
+  private createNewVolunteer(userID: string, organizationID: string) {
+    const volunteerOrganization = new VolunteerOrganization();
+    volunteerOrganization.id = organizationID;
+    //volunteerDAO.saveOrganization(volunteerOrganization);
+    logger.log("Created volunteer organization: ", volunteerOrganization);
+
+    const volunteer = new TransportVolunteer();
+    volunteer.userID = userID;
+    volunteer.organizationID = organizationID;
+    //volunteerDAO.saveVolunteer(volunteer);
+    logger.log("Created volunteer: ", volunteer);
+
+    const adminRole = new Role();
+    adminRole.name = "ORGANIZATION_ADMIN";
+    adminRole.organizationID = organizationID;
+    adminRole.description = "Administrator";
+    roleDAO.saveRole(adminRole);
+    logger.log("Created admin role: ", adminRole);
+
+    const userRole = new UserRole();
+    userRole.userID = userID;
+    userRole.roleID = adminRole.id;
+    roleDAO.saveUserRole(userRole);
+    logger.log("Created user role: ", userRole);
   }
 
   static buildRouter(): Router {

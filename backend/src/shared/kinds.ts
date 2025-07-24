@@ -113,3 +113,13 @@ export class UserRole {
     userID: string | undefined;
     roleID: string | undefined;
 }
+
+export class VolunteerOrganization {
+    id: string | undefined;
+    name: string | undefined;
+}
+
+export class TransportVolunteer {
+    userID: string | undefined;
+    organizationID: string | undefined;
+}
