@@ -1,21 +1,32 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { AuthService } from '../auth.service';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from '../../shared-components/header-component/header.component';
 import { FooterComponent } from '../../shared-components/footer-component/footer.component';
+import { User } from '../kinds';
+import { XapiService } from '../xapi.service';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, RouterModule, HeaderComponent, FooterComponent],
+  imports: [CommonModule, RouterModule, FooterComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
-  constructor(public authService: AuthService) {
+  loggedInState = "";
+  user!: User;
+  constructor(
+    private xapiService: XapiService,
+    private router: Router
+  ) {
   }
 
-  async logoutClicked() {
-    await this.authService.signOut();
+  async ngOnInit() {
+    let verificationResponse = await this.xapiService.verifyUserBySession();
+    console.log("Response from backend for verify user by session:", verificationResponse);
+    if (verificationResponse?.hasSession) {
+      this.loggedInState = "logged in";
+    } else {
+      this.loggedInState = "logged out";
+    }
   }
 }
