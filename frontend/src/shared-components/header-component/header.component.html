@@ -1,11 +1,13 @@
+<header>
+    <h1>Atlanta Food System</h1>
+</header>
 <nav>
     <ul>
-        <li id="organization-title" class="nav-link"><a [routerLink]="['']"><i>AFS</i></a></li>
-        <li class="nav-link"><a href="#about">About Us</a></li>
-        <li class="nav-link"><a href="#impact">Our Impact</a></li>
-        <li class="nav-link"><a href="#donate">Donate</a></li>
-        <li class="nav-link"><a href="#contact">Contact</a></li>
-        <li *ngIf="loggedInState == 'logged out'" class="account-item nav-link"><a [routerLink]="['/users/login']">Log In</a></li>
-        <li *ngIf="loggedInState == 'logged in'" class="account-item nav-link"><a [routerLink]="['/dashboard']">My Dashboard</a></li>
+        <li><a routerLink="/home">Home</a></li>
+        <li><a href="inventory.html">Inventory</a></li>
+        <li><a href="messages.html">Messages</a></li>
+        <li><a href="transport.html">Transport</a></li>
+        <li><a routerLink="../users/list">Site Users</a></li>
+        <li><a (click)="signOut()">Logout</a></li>
     </ul>
 </nav>

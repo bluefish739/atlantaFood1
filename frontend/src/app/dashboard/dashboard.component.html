@@ -1,16 +1,4 @@
-<header>
-    <h1>Food Network Non-Profit</h1>
-</header>
-<nav>
-    <ul>
-        <li><a routerLink="/home">Home</a></li>
-        <li><a href="inventory.html">Inventory</a></li>
-        <li><a href="messages.html">Messages</a></li>
-        <li><a href="transport.html">Transport</a></li>
-        <li><a routerLink="../users/list">Site Users</a></li>
-        <li><a (click)="signOut()">Logout</a></li>
-    </ul>
-</nav>
+<page-header></page-header>
 <section class="dashboard-container">
     <admin-dashboard *ngIf="userType == 'admin'"></admin-dashboard>
     <pantry-dashboard *ngIf="userType == 'pantry'"></pantry-dashboard>

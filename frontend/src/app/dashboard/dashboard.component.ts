@@ -9,11 +9,13 @@ import { PantryDashboardComponent } from './pantry-dashboard.component.';
 import { VolunteerDashboardComponent } from './volunteer-dashboard.component';
 import { AdminDashboardComponent } from './admin-dashboard.component';
 import { sessionAuthenticator } from '../utilities/session-authentication';
+import { HeaderComponent } from '../../shared-components/header-component/header.component';
 
 @Component({
   selector: 'dashboard',
   imports: [RouterModule, FormsModule, CommonModule, StoreDashboardComponent,
-    PantryDashboardComponent, VolunteerDashboardComponent, AdminDashboardComponent],
+    PantryDashboardComponent, VolunteerDashboardComponent, AdminDashboardComponent,
+    HeaderComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })

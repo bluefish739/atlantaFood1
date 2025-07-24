@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-//import { SignOutButtonComponent } from '../sign-out-component/sign-out.component';
-import { XapiService } from '../../app/xapi.service';
-import { User } from '../../app/kinds';
+import { sessionAuthenticator } from '../../app/utilities/session-authentication';
 
 @Component({
     selector: 'page-header',
@@ -12,21 +10,15 @@ import { User } from '../../app/kinds';
     styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-    loggedInState = "";
-    user!: User;
+    userType = "";
     constructor(
-        private xapiService: XapiService,
         private router: Router
     ) {
+        this.userType = "store";
     }
 
-    async ngOnInit() {
-        let verificationResponse = await this.xapiService.verifyUserBySession();
-        console.log("Response from backend for verify user by session:", verificationResponse);
-        if (verificationResponse?.hasSession) {
-            this.loggedInState = "logged in";
-        } else {
-            this.loggedInState = "logged out";
-        }
+    signOut() {
+        sessionAuthenticator.deleteCookie("sessionID");
+        this.router.navigateByUrl("/home");
     }
 }
