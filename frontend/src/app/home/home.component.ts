@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FooterComponent } from '../../shared-components/footer-component/footer.component';
 import { User } from '../kinds';
 import { XapiService } from '../xapi.service';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, RouterModule, FooterComponent],
+  imports: [CommonModule, RouterModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })

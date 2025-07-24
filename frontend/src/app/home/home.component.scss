@@ -102,15 +102,78 @@ nav {
     font-size: 1.1rem;
 }
 
-footer {
-    background-color: #A8D5BA;
+#footer {
+  background-color: #A8D5BA; /* Light green background */
+  color: #2E7D32; /* Darker green text */
+  padding: 2rem;
+  display: flex;
+  justify-content: space-evenly;
+  gap: 2rem;
+  flex-wrap: wrap; /* Allow columns to wrap on smaller screens */
+  margin-top: auto; /* Ensure footer stays at bottom with flex layout */
+}
+
+#footer > div {
+  flex: 1; /* Each div takes equal space */
+  min-width: 200px; /* Minimum width for columns */
+  max-width: 300px; /* Maximum width to prevent over-stretching */
+  text-align: left; /* Align text left for readability */
+}
+
+#footer h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2E7D32;
+  margin-bottom: 1rem;
+}
+
+#footer p {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0 0 1rem 0;
+}
+
+#footer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#footer ul li {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+#footer ul li a {
+  color: #2E7D32;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+#footer ul li a:hover {
+  color: #1B5E20; /* Darker green on hover */
+}
+
+@media (max-width: 768px) {
+  #footer {
+    flex-direction: column; /* Stack columns vertically on mobile */
+    align-items: center; /* Center align for better mobile presentation */
     text-align: center;
-    padding: 1rem;
-    color: #2E7D32;
-    position: relative;
-    bottom: 0;
-    width: 100%;
-    margin-top: auto;
+    padding: 1.5rem;
+  }
+
+  #footer > div {
+    min-width: 100%; /* Full width on mobile */
+    max-width: none;
+  }
+
+  #footer h2 {
+    font-size: 1.3rem;
+  }
+
+  #footer p, #footer ul li {
+    font-size: 0.9rem;
+  }
 }
 
 @media (max-width: 768px) {
