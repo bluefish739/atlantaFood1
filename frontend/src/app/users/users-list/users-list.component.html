@@ -1,6 +1,6 @@
 <page-header></page-header>
 <a [routerLink]="['../../roles/roles-list']">Modify Site Roles</a>
-<h1>Users at Site</h1>
+<h1>Users</h1>
 <table *ngIf="users">
     <tr><th></th><th>First Name</th><th>Last Name</th></tr>
     <tr *ngFor="let user of users; let idx=index">

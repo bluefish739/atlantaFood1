@@ -19,7 +19,7 @@ export class StoreInventoryDetailsComponent {
     {
       foodName: "Tomato",
       units: 47,
-      expirationDate: "06-07-25",
+      expirationDate: new Date("2025-09-09"),
       source: undefined,
       tags: ["Fresh", "Produce"]
     }
