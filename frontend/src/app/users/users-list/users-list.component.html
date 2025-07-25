@@ -1,13 +1,33 @@
 <page-header></page-header>
-<a [routerLink]="['../../roles/roles-list']">Modify Site Roles</a>
-<h1>Users</h1>
-<table *ngIf="users">
-    <tr><th></th><th>First Name</th><th>Last Name</th></tr>
-    <tr *ngFor="let user of users; let idx=index">
-        <td><a [routerLink]="['/users/details', user.userID, siteID]">{{idx+1}}</a></td>
-        <td>{{user.firstName}}</td><td>{{user.lastName}}</td>
-    </tr>
-</table>
-<a [routerLink]="['/users/details', 'new', siteID]">Add User</a>
-
+<section class="users-container">
+    <div class="users-section">
+        <h2>User Manager</h2>
+        <div class="actions">
+            <a routerLink="/users/details/new/{{siteID}}" class="action-button">Add User</a>
+            <a routerLink="/roles/roles-list" class="action-button secondary">Modify Site Roles</a>
+        </div>
+        <table class="users-table" *ngIf="users?.length; else noUsers">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of users; let idx = index">
+                    <td>{{ user.firstName }}</td>
+                    <td>{{ user.lastName }}</td>
+                    <td>
+                        <button class="action-button" [routerLink]="['/users/details', user.userID, siteID]">Modify</button>
+                        <button class="action-button">Remove</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <ng-template #noUsers>
+            <p class="no-users">No users found for this site.</p>
+        </ng-template>
+    </div>
+</section>
 <page-footer></page-footer>

@@ -32,3 +32,5 @@ export class UserListComponent {
     }
   }
 }
+
+//(click)="confirmRemoveUser(user.userID, user.firstName, user.lastName)"
