@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent, HttpHandlerFn, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Student, Store, Charity, StoreLocation, CharityLocation, Role, User, VerificationResponse, SignupData, SignupResponse } from './kinds';
+import { Student, Store, Charity, StoreLocation, CharityLocation, Role, User, VerificationResponse, SignupData, SignupResponse, GeneralConfirmationResponse } from './kinds';
 import { first, firstValueFrom, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { sessionAuthenticator } from './utilities/session-authentication';
@@ -170,6 +170,6 @@ export class XapiService {
       .set('userID', userID)
       .set('siteID', siteID);
       */
-    return await firstValueFrom(this.http.get<VerificationResponse>(`/xapi/users/remove-user/` + userID + "/" + siteID, { headers }));
+    return await firstValueFrom(this.http.get<GeneralConfirmationResponse>(`/xapi/users/remove-user/` + userID + "/" + siteID, { headers }));
   }
 }

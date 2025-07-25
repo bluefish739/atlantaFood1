@@ -242,6 +242,7 @@ export class UserRouter extends BaseRouter {
     const siteID = req.params.siteID;
     try {
       logger.log("Remove user test data retrieved: ", userID, siteID);
+      this.sendNormalResponse(res, { success: true, message: "User successfully removed" })
     } catch (error: any) {
       logger.log("Failed to remove user", error);
       this.sendServerErrorResponse(res, { success: false, message: error.message });

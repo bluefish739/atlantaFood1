@@ -33,7 +33,8 @@ export class UserListComponent {
   }
 
   async removeUser(userID: string) {
-    await this.xapiService.removeUserFromSite(userID, this.siteID);
+    let removalSuccess = (await this.xapiService.removeUserFromSite(userID, this.siteID)).success;
+    console.log(removalSuccess);
   }
 }
 

@@ -106,3 +106,8 @@ export class InventoryEntry {
     source: string | undefined;
     tags: string[] = [];
 }
+
+export class GeneralConfirmationResponse {
+    success: boolean | undefined;
+    message: string | undefined;
+}
