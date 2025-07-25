@@ -1,4 +1,4 @@
-import { HttpClient, HttpEvent, HttpHandlerFn, HttpHeaders, HttpRequest } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpHandlerFn, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Student, Store, Charity, StoreLocation, CharityLocation, Role, User, VerificationResponse, SignupData, SignupResponse } from './kinds';
 import { first, firstValueFrom, Observable } from 'rxjs';
@@ -161,5 +161,15 @@ export class XapiService {
 
   public async signupUser(signupData: SignupData) {
     return await firstValueFrom(this.http.post<SignupResponse>(`/xapi/users/signup`, signupData));
+  }
+
+  public async removeUserFromSite(userID: string, siteID: string) {
+    const headers = this.buildAuthenticationHeader();
+    /*
+    const params = new HttpParams()
+      .set('userID', userID)
+      .set('siteID', siteID);
+      */
+    return await firstValueFrom(this.http.get<VerificationResponse>(`/xapi/users/remove-user/` + userID + "/" + siteID, { headers }));
   }
 }

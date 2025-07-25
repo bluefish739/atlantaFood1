@@ -31,6 +31,10 @@ export class UserListComponent {
       }
     }
   }
+
+  async removeUser(userID: string) {
+    await this.xapiService.removeUserFromSite(userID, this.siteID);
+  }
 }
 
 //(click)="confirmRemoveUser(user.userID, user.firstName, user.lastName)"

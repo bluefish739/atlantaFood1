@@ -237,6 +237,17 @@ export class UserRouter extends BaseRouter {
     logger.log("Created user role: ", userRole);
   }
 
+  async removeUser(req: Request, res: Response) {
+    const userID = req.params.userID;
+    const siteID = req.params.siteID;
+    try {
+      logger.log("Remove user test data retrieved: ", userID, siteID);
+    } catch (error: any) {
+      logger.log("Failed to remove user", error);
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
+    }
+  }
+
   static buildRouter(): Router {
     const userRouter = new UserRouter();
     return express.Router()
@@ -245,6 +256,7 @@ export class UserRouter extends BaseRouter {
       .get('/user/:userId', authenticator([]), userRouter.getUser.bind(userRouter))
       .get('/login/:username/:password', userRouter.verifyCreds.bind(userRouter))
       .get('/verify-user-by-session', userRouter.verifyUserBySession.bind(userRouter))
-      .post('/signup', userRouter.signupUser.bind(userRouter));
+      .post('/signup', userRouter.signupUser.bind(userRouter))
+      .get('/remove-user/:userID/:siteID', authenticator([]), userRouter.removeUser.bind(userRouter));
   }
 }
