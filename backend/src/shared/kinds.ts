@@ -61,11 +61,9 @@ export class User {
     username: string | undefined;
     firstName: string | undefined;
     lastName: string | undefined;
-    organizationID: string | undefined;
     phoneNumber: string | undefined;
     password: string | undefined;
     sessionID: string | undefined;
-    roles: string[] = [];
     userType: "Store" | "Pantry" | "Volunteer" | "Admin" | undefined;
 }
 
@@ -114,6 +112,8 @@ export class UserRole {
     roleID: string | undefined;
 }
 
+export const ADMIN_ROLE_NAME = "ORGANIZATION_ADMIN";
+
 export class VolunteerOrganization {
     id: string | undefined;
     name: string | undefined;
@@ -122,4 +122,9 @@ export class VolunteerOrganization {
 export class TransportVolunteer {
     userID: string | undefined;
     organizationID: string | undefined;
+}
+
+export class Permission {
+    name: string | undefined;
+    description: string | undefined;
 }

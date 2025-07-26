@@ -1,8 +1,7 @@
-import { CharityEmployee, Role, StoreEmployee, TransportVolunteer, User } from "../shared/kinds";
+import { CharityEmployee, StoreEmployee, TransportVolunteer, User } from "../shared/kinds";
 import { generateId } from "../shared/idutilities";
 import { datastore } from "./data-store-factory";
 import { PropertyFilter } from "@google-cloud/datastore";
-import { RoleDAO } from "./role-dao";
 import { VolunteerDAO } from "./volunteer-dao";
 
 export class UserDAO {
@@ -99,17 +98,6 @@ export class UserDAO {
             return users[0];
         }
         return null;
-    }
-
-    public async hasPermission(permission: string, user: User) {
-        for (let roleID of user.roles) {
-            const roleQuery = datastore.createQuery(RoleDAO.ROLE_KIND)
-                .filter(new PropertyFilter('roleID', '=', roleID));
-            const roleData = await roleQuery.run();
-            const role = roleData[0][0] as Role;
-            if (role.permissions.includes(permission)) return true;
-        }
-        return false;
     }
 
     public async usernameTaken(username: string) {

@@ -2,7 +2,7 @@
 import { Request, Response, NextFunction } from "express";
 import admin from 'firebase-admin';
 import { charityDAO, roleDAO, userDAO } from "../daos/dao-factory";
-import { User } from "./kinds";
+import { ADMIN_ROLE_NAME, User } from "./kinds";
 import { sendResponse } from "../utility-functions";
 import * as logger from "firebase-functions/logger";
 
@@ -18,12 +18,18 @@ export function authenticator(requiredPermissionsList: string[]) {
         }
 
         let userPermissions = new Set();
-        user.roles.forEach(async roleID => {
-            const role = await roleDAO.getRole(roleID);
+        const userRoles = await roleDAO.getUserRoles(user.userID!);
+        for (let userRole of userRoles) {
+            const role = await roleDAO.getRole(userRole.roleID!);
+            if (role.name == ADMIN_ROLE_NAME) {
+                userPermissions = new Set(roleDAO.allPermissions.map(permission => permission.name));
+                // Admin role has all permissions, no point to continue
+                break;
+            }
             role.permissions.forEach(permission => {
                 userPermissions.add(permission)
             });
-        });
+        }
 
         requiredPermissionsList.forEach(permission => {
             if (!userPermissions.has(permission)) {

@@ -1,7 +1,7 @@
 import express, { Request, Response, Router } from "express";
 import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
-import { Charity, CharityEmployee, Role, SignupData, Store, StoreEmployee, TransportVolunteer, User, UserRole, VolunteerOrganization } from "../shared/kinds";
+import { ADMIN_ROLE_NAME, Charity, CharityEmployee, Role, SignupData, Store, StoreEmployee, TransportVolunteer, User, UserRole, VolunteerOrganization } from "../shared/kinds";
 import { charityDAO, roleDAO, storeDAO, userDAO, volunteerDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
 import { generateId } from "../shared/idutilities";
@@ -193,7 +193,7 @@ export class UserRouter extends BaseRouter {
     userDAO.saveStoreEmployee(storeEmployee);
 
     const adminRole = new Role();
-    adminRole.name = "ORGANIZATION_ADMIN";
+    adminRole.name = ADMIN_ROLE_NAME;
     adminRole.organizationID = organizationID;
     adminRole.description = "Administrator";
     roleDAO.saveRole(adminRole);
@@ -219,7 +219,7 @@ export class UserRouter extends BaseRouter {
     logger.log("Created charity employee: ", charityEmployee);
 
     const adminRole = new Role();
-    adminRole.name = "ORGANIZATION_ADMIN";
+    adminRole.name = ADMIN_ROLE_NAME;
     adminRole.organizationID = organizationID;
     adminRole.description = "Administrator";
     roleDAO.saveRole(adminRole);
@@ -245,7 +245,7 @@ export class UserRouter extends BaseRouter {
     logger.log("Created volunteer: ", volunteer);
 
     const adminRole = new Role();
-    adminRole.name = "ORGANIZATION_ADMIN";
+    adminRole.name = ADMIN_ROLE_NAME;
     adminRole.organizationID = organizationID;
     adminRole.description = "Administrator";
     roleDAO.saveRole(adminRole);

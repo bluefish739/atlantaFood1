@@ -2,6 +2,7 @@ import { Role, UserRole } from "../shared/kinds";
 import { generateId } from "../shared/idutilities";
 import { datastore } from "./data-store-factory";
 import { PropertyFilter } from "@google-cloud/datastore";
+import { Permission } from "../shared/kinds";
 
 export class RoleDAO {
     static ROLE_KIND = "Role";
@@ -42,4 +43,35 @@ export class RoleDAO {
         const role = data[0] as Role;
         return role;
     }
+
+    public async getUserRoles(userID: string) {
+        const query = datastore.createQuery(RoleDAO.USER_ROLE_KIND)
+            .filter(new PropertyFilter('userID', '=', userID));
+        const data = await query.run();
+        const [userRoles] = data;
+        return userRoles as UserRole[];
+    }
+
+    readonly allPermissions: Permission[] = [
+        {
+            name: "Edit Roles",
+            description: "Enables user to edit and assign roles for other users"
+        },
+        {
+            name: "Update Transaction Logs",
+            description: "Enables user to add, delete, and edit rows to transaction logs"
+        },
+        {
+            name: "Sleeper",
+            description: "Sleeps on the job, occasionally"
+        },
+        {
+            name: "Add Users",
+            description: "Enables user to edit and assign roles for other users"
+        },
+        {
+            name: "Creative Mode",
+            description: "Allows use of flint and steel"
+        }
+    ]
 }
