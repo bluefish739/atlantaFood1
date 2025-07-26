@@ -1,9 +1,13 @@
-import { Charity } from "../shared/kinds";
+import { Charity, CharityEmployee } from "../shared/kinds";
 import { generateId } from "../shared/idutilities";
 import { datastore } from "./data-store-factory";
+import { UserDAO } from "./user-dao";
+import { PropertyFilter } from "@google-cloud/datastore";
+import * as logger from "firebase-functions/logger";
 
 export class CharityDAO {
     static CHARITY_KIND = "Charity";
+    
 
     public async getAllCharities() {
         const query = datastore.createQuery(CharityDAO.CHARITY_KIND);
@@ -28,5 +32,14 @@ export class CharityDAO {
         const data = await datastore.get(entityKey);
         const charity = data[0];
         return charity;
+    }
+
+    public async getEmployeeRecordByUserID(userID: string): Promise<CharityEmployee> {
+        const query = datastore.createQuery(UserDAO.CHARITY_EMPLOYEE_KIND)
+            .filter(new PropertyFilter('userID', '=', userID));
+        const data = await query.run();
+        const record = data[0][0];
+        logger.log("getEmployeeRecordByUserID: querying user by ID = ", userID, data);
+        return record as any as CharityEmployee;
     }
 }

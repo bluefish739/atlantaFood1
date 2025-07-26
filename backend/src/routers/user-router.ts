@@ -32,11 +32,29 @@ export class UserRouter extends BaseRouter {
   }
 
   async getAllSiteUsers(req: Request, res: Response) {
-    const siteID = req.params.siteID;
     try {
-      const users = await userDAO.getAllUsers(siteID);
+      logger.log("getAllSiteUsers: made it to beginning ", req.headers);
+      const organizationID: string = (req as any).organizationID;
+      const user = (req as any).user;
+      const userType = user.userType;
+      let userIDs: string[] | undefined;
+      if (userType == "Store") {
+        userIDs = (await userDAO.getEmployeesOfStoreByOrganizationID(organizationID)).map(v => v.userID!);
+      } else if (userType == "Pantry") {
+        userIDs = (await userDAO.getEmployeesOfPantryByOrganizationID(organizationID)).map(v => v.userID!);
+      } else if (userType == "Volunteer") {
+        userIDs = (await userDAO.getVolunteersByOrganizationID(organizationID)).map(v => v.userID!);
+      } else if (userType == "Admin") {
+        //TODO: Implement this
+        //userIDs = (await userDAO.getAdminsByOrganizationID(organizationID)).map(v => v.userID!);
+      }
+      
+      logger.log("getAllSiteUsers: organizationID from user ", organizationID);
+      const users = userIDs? await userDAO.getUsersByUserIDs(userIDs) : [];
+      logger.log("getAllSiteUsers: made it to send normal response", users);
       this.sendNormalResponse(res, users);
     } catch (error: any) {
+      logger.log("getAllSiteUsers: failed", error)
       this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
@@ -139,6 +157,7 @@ export class UserRouter extends BaseRouter {
         return;
       }
 
+      const organizationID = generateId();
       const user = new User;
       user.username = signupData.username;
       user.password = signupData.password;
@@ -146,7 +165,7 @@ export class UserRouter extends BaseRouter {
       user.sessionID = generateId();
       const id = await userDAO.saveUser(user);
       logger.log("User added successfully! id=" + id);
-      const organizationID = generateId();
+      
 
       if (user.userType == "Store") {
         this.createNewStore(user.userID!, organizationID);
@@ -255,7 +274,7 @@ export class UserRouter extends BaseRouter {
     const userRouter = new UserRouter();
     return express.Router()
       .post('/user', authenticator([]), userRouter.saveUser.bind(userRouter))
-      .get('/:siteID/list-users', authenticator([]), userRouter.getAllSiteUsers.bind(userRouter))
+      .get('/list-users', authenticator([]), userRouter.getAllSiteUsers.bind(userRouter))
       .get('/user/:userId', authenticator([]), userRouter.getUser.bind(userRouter))
       .get('/login/:username/:password', userRouter.verifyCreds.bind(userRouter))
       .get('/verify-user-by-session', userRouter.verifyUserBySession.bind(userRouter))

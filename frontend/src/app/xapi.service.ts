@@ -134,9 +134,9 @@ export class XapiService {
   //============================================================================================
   // User/Credentials API Requests
   //============================================================================================
-  public async getAllSiteUsers(siteID: string) {
+  public async getAllSiteUsers() {
     const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<User[]>(`/xapi/users/` + siteID + `/list-users`, { headers }));
+    return await firstValueFrom(this.http.get<User[]>(`/xapi/users/list-users`, { headers }));
   }
 
   public async saveUser(user: User) {

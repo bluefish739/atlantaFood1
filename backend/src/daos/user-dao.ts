@@ -1,19 +1,58 @@
-import { CharityEmployee, Role, StoreEmployee, User } from "../shared/kinds";
+import { CharityEmployee, Role, StoreEmployee, TransportVolunteer, User } from "../shared/kinds";
 import { generateId } from "../shared/idutilities";
 import { datastore } from "./data-store-factory";
 import { PropertyFilter } from "@google-cloud/datastore";
 import { RoleDAO } from "./role-dao";
+import { VolunteerDAO } from "./volunteer-dao";
 
 export class UserDAO {
     static USER_KIND = "User";
     static STORE_EMPLOYEE_KIND = "StoreEmployee";
     static CHARITY_EMPLOYEE_KIND = "CharityEmployee";
 
+    public async getUsersByUserIDs(userIDs: string[]) {
+        // Construct keys for the given IDs
+        const keys = userIDs.map(id => datastore.key([UserDAO.USER_KIND, id]));
+        // Query Datastore for entities matching the keys
+        const [entities] = await datastore.get(keys);
+
+        // Return the found entities (filter out undefined results if some IDs don't exist)
+        return entities.filter((entity: User) => entity !== undefined);
+    }
+
+    public async getEmployeesOfStoreByOrganizationID(organizationID: string): Promise<StoreEmployee[]> {
+        const query = datastore.createQuery(UserDAO.STORE_EMPLOYEE_KIND)
+            .filter(new PropertyFilter('organizationID', '=', organizationID));
+        const data = await query.run();
+        const users = data[0];
+        return users as StoreEmployee[];
+    }
+
+    public async getAdminsByOrganizationID(organizationID: string) {
+        throw new Error("TODO: Implement this");
+    }
+
+    public async getVolunteersByOrganizationID(organizationID: string) {
+        const query = datastore.createQuery(VolunteerDAO.VOLUNTEER_KIND)
+            .filter(new PropertyFilter('organizationID', '=', organizationID));
+        const data = await query.run();
+        const [users] = data;
+        return users as TransportVolunteer[];
+    }
+
+    public async getEmployeesOfPantryByOrganizationID(organizationID: string) {
+        const query = datastore.createQuery(UserDAO.CHARITY_EMPLOYEE_KIND)
+            .filter(new PropertyFilter('organizationID', '=', organizationID));
+        const data = await query.run();
+        const [users] = data;
+        return users as CharityEmployee[];
+    }
+
     public async getAllUsers(siteID: string) {
         const query = datastore.createQuery(UserDAO.USER_KIND)
             .filter(new PropertyFilter('siteID', '=', siteID));
         const data = await query.run();
-        const users = data[0];
+        const [users] = data;
 
         return users as User[];
     }

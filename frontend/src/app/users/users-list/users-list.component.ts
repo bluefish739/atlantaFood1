@@ -23,7 +23,7 @@ export class UserListComponent {
 
   async ngOnInit() {
     try {
-      this.users = await this.xapiService.getAllSiteUsers(this.siteID);
+      this.users = await this.xapiService.getAllSiteUsers();
     } catch (error: any) {
       if (error.status == 401) {
         console.log("Session missing or expired", error);
