@@ -24,15 +24,15 @@ export class UserDetailsComponent {
 
     async ngOnInit() {
         const id = this.activatedRoute.snapshot.params['id'];
-        const siteID = this.activatedRoute.snapshot.params['siteID'];
+        const organizationID = this.activatedRoute.snapshot.params['organizationID'];
         if (id && id != 'new') {
             this.user = await this.xapiService.getUserByID(id);
             if (!this.user) {
                 this.user = new User();
             }
         }
-        this.user.siteID = siteID;
-        this.siteRoles = await this.xapiService.getSiteRoles(this.user.siteID as string);
+        this.user.organizationID = organizationID;
+        this.siteRoles = await this.xapiService.getSiteRoles(this.user.organizationID as string);
         this.initRolesRef();
     }
 

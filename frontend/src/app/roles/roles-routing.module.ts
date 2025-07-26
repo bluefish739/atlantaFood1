@@ -7,7 +7,7 @@ const routes: Routes = [
         loadComponent: () => import('./roles-list/roles-list.component').then(c => c.RolesListComponent)
     },
     {
-        path: 'role-details/:siteID/:roleID',
+        path: 'role-details/:organizationID/:roleID',
         loadComponent: () => import('./role-details/role-details.component').then(c => c.RolePermissionsComponent)
     }
 ];

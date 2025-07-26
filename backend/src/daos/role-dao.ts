@@ -7,9 +7,9 @@ export class RoleDAO {
     static ROLE_KIND = "Role";
     static USER_ROLE_KIND = "UserRole"
 
-    public async getAllRolesBySiteID(siteID: string) {
+    public async getAllRolesBySiteID(organizationID: string) {
         const query = datastore.createQuery(RoleDAO.ROLE_KIND)
-            .filter(new PropertyFilter('siteID', '=', siteID));;
+            .filter(new PropertyFilter('organizationID', '=', organizationID));;
         const data = await query.run();
         const roles = data[0];
         return roles as Role[];

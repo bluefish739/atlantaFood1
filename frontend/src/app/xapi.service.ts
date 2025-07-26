@@ -117,9 +117,9 @@ export class XapiService {
   //============================================================================================
   // Role API Requests
   //============================================================================================
-  public async getSiteRoles(siteID: string) {
+  public async getSiteRoles(organizationID: string) {
     const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<Role[]>(`/xapi/roles/` + siteID + `/list-roles`, { headers }))
+    return await firstValueFrom(this.http.get<Role[]>(`/xapi/roles/` + organizationID + `/list-roles`, { headers }))
   }
 
   public async getRole(roleID: string) {
@@ -163,12 +163,12 @@ export class XapiService {
     return await firstValueFrom(this.http.post<SignupResponse>(`/xapi/users/signup`, signupData));
   }
 
-  public async removeUserFromSite(userID: string, siteID: string) {
+  public async removeUserFromSite(userID: string, organizationID: string) {
     const headers = this.buildAuthenticationHeader();
     /*
     const params = new HttpParams()
       .set('userID', userID)
-      .set('siteID', siteID);
+      .set('organizationID', organizationID);
       */
     return await firstValueFrom(this.http.delete<GeneralConfirmationResponse>(`/xapi/users/remove-user/` + userID, { headers }));
   }

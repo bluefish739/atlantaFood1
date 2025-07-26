@@ -48,9 +48,9 @@ export class UserDAO {
         return users as CharityEmployee[];
     }
 
-    public async getAllUsers(siteID: string) {
+    public async getAllUsers(organizationID: string) {
         const query = datastore.createQuery(UserDAO.USER_KIND)
-            .filter(new PropertyFilter('siteID', '=', siteID));
+            .filter(new PropertyFilter('organizationID', '=', organizationID));
         const data = await query.run();
         const [users] = data;
 

@@ -61,7 +61,7 @@ export class User {
     username: string | undefined;
     firstName: string | undefined;
     lastName: string | undefined;
-    siteID: string | undefined;
+    organizationID: string | undefined;
     phoneNumber: string | undefined;
     password: string | undefined;
     sessionID: string | undefined;

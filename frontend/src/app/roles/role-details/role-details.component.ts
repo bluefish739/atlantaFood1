@@ -25,9 +25,9 @@ export class RolePermissionsComponent {
     }
 
     async ngOnInit() {
-        const siteID = this.activatedRoute.snapshot.params['siteID'];
+        const organizationID = this.activatedRoute.snapshot.params['organizationID'];
         const roleID = this.activatedRoute.snapshot.params['roleID'];
-        this.role.siteID = siteID;
+        this.role.organizationID = organizationID;
         if (roleID && roleID != 'new') {
             this.role = await this.xapiService.getRole(roleID);
             if (!this.role) {

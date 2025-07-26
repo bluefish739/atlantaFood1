@@ -49,7 +49,7 @@ export class CharityLocation {
 
 export class Role {
     id: string | undefined;
-    siteID: string | undefined;
+    organizationID: string | undefined;
     name: string | undefined;
     description: string | undefined;
     permissions: string[] = [];
@@ -65,7 +65,7 @@ export class User {
     username: string | undefined;
     firstName: string | undefined;
     lastName: string | undefined;
-    siteID: string | undefined;
+    organizationID: string | undefined;
     phoneNumber: string | undefined;
     password: string | undefined;
     tokenID: string | undefined;

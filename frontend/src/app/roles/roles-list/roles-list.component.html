@@ -1,7 +1,7 @@
 <h2><b>Roles:</b></h2>
 <table *ngIf="roles">
     <tr *ngFor="let role of roles; let idx=index">
-        <td><a [routerLink]="['/roles/role-details', role.siteID, role.id]">Modify Role</a></td>
+        <td><a [routerLink]="['/roles/role-details', role.organizationID, role.id]">Modify Role</a></td>
         <td>{{ role.name }}</td>
     </tr>
 </table>

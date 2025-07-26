@@ -14,7 +14,7 @@ import { FooterComponent } from '../../../shared-components/footer-component/foo
 })
 export class UserListComponent {
   users!: User[];
-  siteID = "e878dc70-f213-11ef-9653-8d47654d5c1c";
+  organizationID = "e878dc70-f213-11ef-9653-8d47654d5c1c";
   constructor(
     private xapiService: XapiService,
     private router: Router
@@ -33,7 +33,7 @@ export class UserListComponent {
   }
 
   async removeUser(userID: string) {
-    let removalSuccess = (await this.xapiService.removeUserFromSite(userID, this.siteID)).success;
+    let removalSuccess = (await this.xapiService.removeUserFromSite(userID, this.organizationID)).success;
     console.log(removalSuccess);
   }
 }

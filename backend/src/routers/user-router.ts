@@ -260,9 +260,9 @@ export class UserRouter extends BaseRouter {
 
   async removeUser(req: Request, res: Response) {
     const userID = req.params.userID;
-    const siteID = "";
+    const organizationID = "TODO: Add organizationID";
     try {
-      logger.log("Remove user test data retrieved: ", userID, siteID);
+      logger.log("Remove user test data retrieved: ", userID, organizationID);
       this.sendNormalResponse(res, { success: true, message: "User successfully removed" });
     } catch (error: any) {
       logger.log("Failed to remove user", error);
