@@ -47,15 +47,6 @@ export class UserDAO {
         return users as CharityEmployee[];
     }
 
-    public async getAllUsers(organizationID: string) {
-        const query = datastore.createQuery(UserDAO.USER_KIND)
-            .filter(new PropertyFilter('organizationID', '=', organizationID));
-        const data = await query.run();
-        const [users] = data;
-
-        return users as User[];
-    }
-
     public async saveUser(user: User) {
         if (!user.userID) {
             user.userID = generateId();

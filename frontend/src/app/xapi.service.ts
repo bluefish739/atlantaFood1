@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent, HttpHandlerFn, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Student, Store, Charity, StoreLocation, CharityLocation, Role, User, VerificationResponse, SignupData, SignupResponse, GeneralConfirmationResponse } from './kinds';
+import { Store, Charity, StoreLocation, CharityLocation, Role, User, VerificationResponse, SignupData, SignupResponse, GeneralConfirmationResponse } from './kinds';
 import { first, firstValueFrom, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { sessionAuthenticator } from './utilities/session-authentication';
@@ -27,35 +27,18 @@ export class XapiService {
       'Authentication': sessionID
     });
   }
-
-  //============================================================================================
-  // Student API Requests
-  //============================================================================================
-  public async getAllStudents() {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<Student[]>(`/xapi/students/all`, { headers }));
-  }
-
-  public async getAllStores() {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<Store[]>(`/xapi/stores/all`, { headers }));
-  }
-
-  public async getStudent(id: string) {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<Student>(`/xapi/students/student/` + id, { headers }));
-  }
-
-  public async saveStudent(student: Student) {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.post<Student>(`/xapi/students/student`, student, { headers }));
-  }
+  
   //============================================================================================
   // Store API Requests
   //============================================================================================
   public async getStore(id: string) {
     const headers = this.buildAuthenticationHeader();
     return await firstValueFrom(this.http.get<Store>(`/xapi/stores/store/` + id, { headers }));
+  }
+
+  public async getAllStores() {
+    const headers = this.buildAuthenticationHeader();
+    return await firstValueFrom(this.http.get<Store[]>(`/xapi/stores/all`, { headers }));
   }
 
   public async saveStore(store: Store) {

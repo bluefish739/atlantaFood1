@@ -3,7 +3,6 @@ import express from "express";
 import { StoreRouter } from './routers/store-router';
 import { CharityRouter } from "./routers/charity-router";
 import { StoreLocationRouter } from "./routers/store-location-router";
-import { StudentRouter } from "./routers/student-router";
 import { CharityLocationRouter } from "./routers/charity-location-router";
 import { RoleRouter } from "./routers/role-router";
 import { UserRouter } from "./routers/user-router";
@@ -16,7 +15,6 @@ expressApp.use((req, res, next) => {
     next();
 });
 
-expressApp.use('/xapi/students', StudentRouter.buildRouter());
 expressApp.use('/xapi/stores', StoreRouter.buildRouter());
 expressApp.use('/xapi/store-locations', StoreLocationRouter.buildRouter());
 expressApp.use('/xapi/charity-locations', CharityLocationRouter.buildRouter());
