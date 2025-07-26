@@ -260,7 +260,7 @@ export class UserRouter extends BaseRouter {
 
   async removeUser(req: Request, res: Response) {
     const userID = req.params.userID;
-    const siteID = req.params.siteID;
+    const siteID = "";
     try {
       logger.log("Remove user test data retrieved: ", userID, siteID);
       this.sendNormalResponse(res, { success: true, message: "User successfully removed" });
@@ -279,6 +279,6 @@ export class UserRouter extends BaseRouter {
       .get('/login/:username/:password', userRouter.verifyCreds.bind(userRouter))
       .get('/verify-user-by-session', userRouter.verifyUserBySession.bind(userRouter))
       .post('/signup', userRouter.signupUser.bind(userRouter))
-      .get('/remove-user/:userID/:siteID', authenticator([]), userRouter.removeUser.bind(userRouter));
+      .delete('/remove-user/:userID', authenticator([]), userRouter.removeUser.bind(userRouter));
   }
 }

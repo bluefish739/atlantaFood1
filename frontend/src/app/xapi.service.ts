@@ -170,6 +170,6 @@ export class XapiService {
       .set('userID', userID)
       .set('siteID', siteID);
       */
-    return await firstValueFrom(this.http.get<GeneralConfirmationResponse>(`/xapi/users/remove-user/` + userID + "/" + siteID, { headers }));
+    return await firstValueFrom(this.http.delete<GeneralConfirmationResponse>(`/xapi/users/remove-user/` + userID, { headers }));
   }
 }
