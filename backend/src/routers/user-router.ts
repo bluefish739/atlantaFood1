@@ -143,6 +143,7 @@ export class UserRouter extends BaseRouter {
       user.username = signupData.username;
       user.password = signupData.password;
       user.userType = signupData.userType;
+      user.sessionID = generateId();
       const id = await userDAO.saveUser(user);
       logger.log("User added successfully! id=" + id);
       const organizationID = generateId();
@@ -154,7 +155,8 @@ export class UserRouter extends BaseRouter {
       } else if (user.userType == "Volunteer") {
         this.createNewVolunteer(user.userID!, organizationID);
       }
-      this.sendNormalResponse(res, { success: true, message: "" });
+
+      this.sendNormalResponse(res, { success: true, message: "", sessionID: user.sessionID });
     } catch (error: any) {
       logger.log("Failed to add a user", error);
       this.sendServerErrorResponse(res, { success: false, message: error.message });
@@ -242,7 +244,7 @@ export class UserRouter extends BaseRouter {
     const siteID = req.params.siteID;
     try {
       logger.log("Remove user test data retrieved: ", userID, siteID);
-      this.sendNormalResponse(res, { success: true, message: "User successfully removed" })
+      this.sendNormalResponse(res, { success: true, message: "User successfully removed" });
     } catch (error: any) {
       logger.log("Failed to remove user", error);
       this.sendServerErrorResponse(res, { success: false, message: error.message });

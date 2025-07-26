@@ -97,6 +97,7 @@ export class SignupData {
 export class SignupResponse {
     success: boolean | undefined;
     message: string | undefined;
+    sessionID: string | undefined; // Only use if success is true
 }
 
 export class InventoryEntry {

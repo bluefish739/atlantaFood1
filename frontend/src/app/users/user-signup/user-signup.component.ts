@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SignupData } from '../../kinds';
 import { XapiService } from '../../xapi.service';
+import { sessionAuthenticator } from '../../utilities/session-authentication';
 
 @Component({
     selector: 'app-signup',
@@ -44,8 +45,9 @@ export class UserSignupComponent {
         };
 
         const signupResponse = await this.xapiService.signupUser(payload);
-        if (signupResponse?.success) {
-            await this.xapiService.submitCreds(this.signupData.username, this.signupData.password);
+        const sessionID = signupResponse?.sessionID;
+        if (signupResponse?.success && sessionID) {
+            sessionAuthenticator.setCookie("sessionID", sessionID, 60);
             this.router.navigateByUrl("/dashboard");
         } else {
             console.log("Sign up response:", signupResponse);
