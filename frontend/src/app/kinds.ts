@@ -119,3 +119,10 @@ export class GeneralConfirmationResponse {
     success: boolean | undefined;
     message: string | undefined;
 }
+
+export class UserType {
+    public static PANTRY = "Pantry";
+    public static ADMIN = "Admin";
+    public static STORE = "Store";
+    public static VOLUNTEER = "Volunteer";
+}

@@ -1,9 +1,9 @@
 <page-header></page-header>
 <section class="dashboard-container">
-    <admin-dashboard *ngIf="userType == 'admin'"></admin-dashboard>
-    <pantry-dashboard *ngIf="userType == 'pantry'"></pantry-dashboard>
-    <store-dashboard *ngIf="userType == 'store'"></store-dashboard>
-    <volunteer-dashboard *ngIf="userType == 'volunteer'"></volunteer-dashboard>
+    <admin-dashboard *ngIf="userType == UserType.ADMIN"></admin-dashboard>
+    <pantry-dashboard *ngIf="userType == UserType.PANTRY"></pantry-dashboard>
+    <store-dashboard *ngIf="userType == UserType.STORE"></store-dashboard>
+    <volunteer-dashboard *ngIf="userType == UserType.VOLUNTEER"></volunteer-dashboard>
 </section>
 <footer>
     <p>© 2025 Food Network Non-Profit. All rights reserved.</p>
