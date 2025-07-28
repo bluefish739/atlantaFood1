@@ -7,7 +7,7 @@ import * as logger from "firebase-functions/logger";
 
 export class CharityDAO {
     static CHARITY_KIND = "Charity";
-    
+
 
     public async getAllCharities() {
         const query = datastore.createQuery(CharityDAO.CHARITY_KIND);
@@ -41,5 +41,13 @@ export class CharityDAO {
         const record = data[0][0];
         logger.log("getEmployeeRecordByUserID: querying user by ID = ", userID, data);
         return record as any as CharityEmployee;
+    }
+
+    public async getEmployeesOfPantryByOrganizationID(organizationID: string) {
+        const query = datastore.createQuery(UserDAO.CHARITY_EMPLOYEE_KIND)
+            .filter(new PropertyFilter('organizationID', '=', organizationID));
+        const data = await query.run();
+        const [users] = data;
+        return users as CharityEmployee[];
     }
 }
