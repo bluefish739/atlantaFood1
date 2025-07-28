@@ -1,7 +1,7 @@
 import express, { Request, Response, Router } from "express";
 import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
-import { ADMIN_ROLE_NAME, Charity, CharityEmployee, Role, SignupData, Store, StoreEmployee, TransportVolunteer, User, UserRole, VolunteerOrganization } from "../shared/kinds";
+import { ADMIN_ROLE_NAME, Charity, CharityEmployee, LoginRequest, LoginResponse, Role, SignupData, Store, StoreEmployee, TransportVolunteer, User, UserRole, VolunteerOrganization } from "../shared/kinds";
 import { charityDAO, roleDAO, storeDAO, userDAO, volunteerDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
 import { generateId } from "../shared/idutilities";
@@ -77,21 +77,47 @@ export class UserRouter extends BaseRouter {
     }
   }
 
-  async verifyCreds(req: Request, res: Response) {
+  async login(req: Request, res: Response) {
     try {
-      const username = req.params.username as string;
-      const password = req.params.password as string;
-      const user = await userDAO.verifyUser(username, password);
-      if (user === undefined) {
-        this.sendNormalResponse(res, "Invalid Credentials");
+      const loginRequest = req.body as LoginRequest;
+      const loginRequestValid = this.validateLoginRequest(loginRequest);
+      const loginResponse = new LoginResponse();
+      if (!loginRequestValid) {
+        loginResponse.success = false;
+        loginResponse.message = "Login failed. Please provide both username and password.";
+        this.sendNormalResponse(res, loginResponse);
         return;
       }
+      
+      const user = await userDAO.verifyUser(loginRequest.username!, loginRequest.password!);
+      if (user === undefined) {
+        loginResponse.success = false;
+        loginResponse.message = "Login failed. Username or password is incorrect.";
+        this.sendNormalResponse(res, loginResponse);
+        return;
+      }
+
       user.sessionID = generateId();
       await userDAO.saveUser(user);
-      this.sendNormalResponse(res, user.sessionID);
+      loginResponse.success = true;
+      loginResponse.sessionID = user.sessionID;
+      loginResponse.userID = user.userID;
+      loginResponse.userType = user.userType;
+      this.sendNormalResponse(res, loginResponse);
     } catch (error: any) {
       this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
+  }
+
+  private validateLoginRequest(loginRequest: LoginRequest) {
+    if (!loginRequest) {
+      logger.log("validateLoginRequest: login data not provided", loginRequest);
+      return false;
+    } else if (!loginRequest.username || !loginRequest.password) {
+      logger.log("validateLoginRequest: username or password not provided", loginRequest);
+      return false
+    }
+    return true;
   }
 
   async verifyUserBySession(req: Request, res: Response) {
@@ -276,7 +302,7 @@ export class UserRouter extends BaseRouter {
       .post('/user', authenticator([]), userRouter.saveUser.bind(userRouter))
       .get('/list-users', authenticator([]), userRouter.getAllSiteUsers.bind(userRouter))
       .get('/user/:userId', authenticator([]), userRouter.getUser.bind(userRouter))
-      .get('/login/:username/:password', userRouter.verifyCreds.bind(userRouter))
+      .post('/login', userRouter.login.bind(userRouter))
       .get('/verify-user-by-session', userRouter.verifyUserBySession.bind(userRouter))
       .post('/signup', userRouter.signupUser.bind(userRouter))
       .delete('/remove-user/:userID', authenticator([]), userRouter.removeUser.bind(userRouter));

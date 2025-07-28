@@ -14,6 +14,7 @@ import { sessionAuthenticator } from '../../utilities/session-authentication';
 export class UserLoginComponent {
     username = "";
     password = "";
+    loginError: string | undefined;
     failedLoginAttempted = false;
     constructor(private xapiService: XapiService,
         private activatedRoute: ActivatedRoute,
@@ -25,14 +26,18 @@ export class UserLoginComponent {
     }
 
     async submitCreds() {
-        const sessionID = await this.xapiService.submitCreds(this.username, this.password);
-        if (sessionID == "Invalid Credentials") {
+        const loginResponse = await this.xapiService.login({
+            username: this.username,
+            password: this.password
+        });
+        if (!loginResponse?.success) {
             this.failedLoginAttempted = true;
             this.username = "";
             this.password = "";
+            this.loginError = loginResponse?.message;
             return;
         }
-        sessionAuthenticator.setCookie("sessionID", sessionID, 60);
+        sessionAuthenticator.saveLoginSession(loginResponse);
         this.router.navigateByUrl("/dashboard");
     }
 }

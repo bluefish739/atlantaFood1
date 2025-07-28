@@ -1,3 +1,4 @@
+import { LoginResponse } from "../kinds";
 
 class SessionAuthenticator {
     public setCookie(name: string, value: string, minutesToLive: number) {
@@ -25,8 +26,24 @@ class SessionAuthenticator {
     }
 
     public async getSessionID() {
-        let sessionID: string | null = this.getCookie("sessionID");
+        const sessionID: string | null = this.getCookie("sessionID");
         return sessionID;
+    }
+    
+    public async getUserID() {
+        const userID: string | null = this.getCookie("userID");
+        return userID;
+    }
+
+    public async getUserType() {
+        const userType: string | null = this.getCookie("userType");
+        return userType;
+    }
+
+    public saveLoginSession(loginResponse: LoginResponse) {
+        this.setCookie("sessionID", loginResponse.sessionID!, 60);
+        this.setCookie("userID", loginResponse.userID!, 60);
+        this.setCookie("userType", loginResponse.userType!, 60);
     }
 }
 

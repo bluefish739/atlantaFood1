@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent, HttpHandlerFn, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Store, Charity, StoreLocation, CharityLocation, Role, User, VerificationResponse, SignupData, SignupResponse, GeneralConfirmationResponse } from './kinds';
+import { Store, Charity, StoreLocation, CharityLocation, Role, User, VerificationResponse, SignupData, SignupResponse, GeneralConfirmationResponse, LoginRequest, LoginResponse } from './kinds';
 import { first, firstValueFrom, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { sessionAuthenticator } from './utilities/session-authentication';
@@ -33,9 +33,10 @@ export class XapiService {
     return await firstValueFrom(this.http.get<T>(path, { headers }));
   };
 
-  postResponse = async <T>(path: string): Promise<T> => {
+  postResponse = async <T>(path: string, postData: any): Promise<T> => {
+    console.log("postResponse path=" + path, postData);
     const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.post<T>(path, { headers }));
+    return await firstValueFrom(this.http.post<T>(path, postData, { headers }));
   };
 
   deleteResponse = async <T>(path: string): Promise<T> => {
@@ -146,9 +147,8 @@ export class XapiService {
     return await firstValueFrom(this.http.get<User>(`/xapi/users/user/` + userID, { headers }))
   }
 
-  public async submitCreds(username: string, password: string) {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<string>(`/xapi/users/login/` + username + `/` + password, { headers }))
+  public async login(loginRequest: LoginRequest) {
+    return this.postResponse<LoginResponse>(`/xapi/users/login`, loginRequest);
   }
 
   public async verifyUserBySession() {

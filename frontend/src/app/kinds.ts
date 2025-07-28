@@ -93,6 +93,20 @@ export class SignupResponse {
     sessionID: string | undefined; // Only use if success is true
 }
 
+export class LoginRequest {
+    username: string | undefined;
+    password: string | undefined;
+}
+
+export class LoginResponse {
+    success: boolean | undefined;
+    message: string | undefined;
+    // Only use if success is true
+    sessionID: string | undefined;
+    userID: string | undefined;
+    userType: string | undefined;
+}
+
 export class InventoryEntry {
     foodName: string | undefined;
     units: number | undefined;
