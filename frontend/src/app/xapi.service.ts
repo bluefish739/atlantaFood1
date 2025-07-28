@@ -22,7 +22,7 @@ export class XapiService {
   constructor(private http: HttpClient) { }
 
   public buildAuthenticationHeader() {
-    const sessionID = sessionAuthenticator.getCookie("sessionID");
+    const sessionID = sessionAuthenticator.getSessionID();
     return new HttpHeaders({
       'Authentication': sessionID
     });

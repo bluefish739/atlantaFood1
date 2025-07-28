@@ -1,14 +1,14 @@
 import { LoginResponse } from "../kinds";
 
 class SessionAuthenticator {
-    public setCookie(name: string, value: string, minutesToLive: number) {
+    private setCookie(name: string, value: string, minutesToLive: number) {
         const date = new Date();
         date.setTime(date.getTime() + minutesToLive * 60 * 1000);
         let expires = `expires=${date.toUTCString()}`
         document.cookie = `${name}=${value}; ${expires}; path=/`
     }
 
-    public getCookie(name: string) {
+    private getCookie(name: string) {
         const cDecoded = decodeURIComponent(document.cookie);
         const cArray = cDecoded.split(";");
         for (let element of cArray) {
@@ -20,7 +20,7 @@ class SessionAuthenticator {
         return "";
     }
 
-    public async deleteCookie(name: string) {
+    private deleteCookie(name: string) {
         this.setCookie(name, "", 0);
     }
 
@@ -29,12 +29,12 @@ class SessionAuthenticator {
         return sessionID;
     }
     
-    public async getUserID() {
+    public getUserID() {
         const userID: string | null = this.getCookie("userID");
         return userID;
     }
 
-    public async getUserType() {
+    public getUserType() {
         const userType: string | null = this.getCookie("userType");
         return userType;
     }
@@ -43,6 +43,10 @@ class SessionAuthenticator {
         this.setCookie("sessionID", loginResponse.sessionID!, 60);
         this.setCookie("userID", loginResponse.userID!, 60);
         this.setCookie("userType", loginResponse.userType!, 60);
+    }
+
+    public clearCurrentSession() {
+        this.deleteCookie("sessionID");
     }
 }
 

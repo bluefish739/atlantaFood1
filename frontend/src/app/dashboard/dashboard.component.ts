@@ -10,6 +10,7 @@ import { VolunteerDashboardComponent } from './volunteer-dashboard.component';
 import { AdminDashboardComponent } from './admin-dashboard.component';
 import { sessionAuthenticator } from '../utilities/session-authentication';
 import { HeaderComponent } from '../../shared-components/header-component/header.component';
+import { UserType } from '../kinds';
 
 @Component({
   selector: 'dashboard',
@@ -21,15 +22,19 @@ import { HeaderComponent } from '../../shared-components/header-component/header
 })
 export class DashboardComponent {
   userType = "";
+  UserType = UserType;
   constructor(
     public authService: AuthService,
     private router: Router
   ) {
-    this.userType = "store";
+  }
+
+  ngOnInit() {
+    this.userType = sessionAuthenticator.getUserType();
   }
 
   signOut() {
-    sessionAuthenticator.deleteCookie("sessionID");
+    sessionAuthenticator.clearCurrentSession();
     this.router.navigateByUrl("home");
   }
 }

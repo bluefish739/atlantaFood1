@@ -18,7 +18,7 @@ export class HeaderComponent {
     }
 
     signOut() {
-        sessionAuthenticator.deleteCookie("sessionID");
+        sessionAuthenticator.clearCurrentSession();
         this.router.navigateByUrl("/home");
     }
 }
