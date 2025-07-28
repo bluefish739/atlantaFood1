@@ -44,14 +44,13 @@ export class UserSignupComponent {
             userType: this.signupData.userType as any
         };
 
-        const signupResponse = await this.xapiService.signupUser(payload);
-        const sessionID = signupResponse?.sessionID;
-        if (signupResponse?.success && sessionID) {
-            sessionAuthenticator.setCookie("sessionID", sessionID, 60);
+        const loginResponse = await this.xapiService.signupUser(payload);
+        if (loginResponse?.success) {
+            sessionAuthenticator.saveLoginSession(loginResponse);
             this.router.navigateByUrl("/dashboard");
         } else {
-            console.log("Sign up response:", signupResponse);
-            this.errorMessage = signupResponse.message!;
+            console.log("Sign up response:", loginResponse);
+            this.errorMessage = loginResponse.message!;
         }
     }
 }

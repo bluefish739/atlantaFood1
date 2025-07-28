@@ -11,21 +11,20 @@ class SessionAuthenticator {
     public getCookie(name: string) {
         const cDecoded = decodeURIComponent(document.cookie);
         const cArray = cDecoded.split(";");
-        let result = "";
-        cArray.forEach((element: string) => {
-            if (element.indexOf(name) == 0) {
-                result = element.substring(name.length + 1);
-                return;
+        for (let element of cArray) {
+            element = element.trim();
+            if (element.indexOf(name + "=") == 0) {
+                return element.substring(name.length + 1);
             }
-        });
-        return result;
+        }
+        return "";
     }
 
     public async deleteCookie(name: string) {
         this.setCookie(name, "", 0);
     }
 
-    public async getSessionID() {
+    public getSessionID() {
         const sessionID: string | null = this.getCookie("sessionID");
         return sessionID;
     }

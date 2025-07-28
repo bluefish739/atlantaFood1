@@ -157,7 +157,7 @@ export class XapiService {
   }
 
   public async signupUser(signupData: SignupData) {
-    return await firstValueFrom(this.http.post<SignupResponse>(`/xapi/users/signup`, signupData));
+    return this.postResponse<LoginResponse>(`/xapi/users/signup`, signupData);
   }
 
   public async removeUserFromSite(userID: string, organizationID: string) {

@@ -88,9 +88,9 @@ export class UserRouter extends BaseRouter {
         this.sendNormalResponse(res, loginResponse);
         return;
       }
-      
+
       const user = await userDAO.verifyUser(loginRequest.username!, loginRequest.password!);
-      if (user === undefined) {
+      if (!user) {
         loginResponse.success = false;
         loginResponse.message = "Login failed. Username or password is incorrect.";
         this.sendNormalResponse(res, loginResponse);
@@ -192,7 +192,6 @@ export class UserRouter extends BaseRouter {
       const id = await userDAO.saveUser(user);
       logger.log("User added successfully! id=" + id);
       
-
       if (user.userType == "Store") {
         this.createNewStore(user.userID!, organizationID);
       } else if (user.userType == "Pantry") {
@@ -201,7 +200,12 @@ export class UserRouter extends BaseRouter {
         this.createNewVolunteer(user.userID!, organizationID);
       }
 
-      this.sendNormalResponse(res, { success: true, message: "", sessionID: user.sessionID });
+      const loginResponse = new LoginResponse();
+      loginResponse.success = true;
+      loginResponse.sessionID = user.sessionID;
+      loginResponse.userID = user.userID;
+      loginResponse.userType = user.userType;
+      this.sendNormalResponse(res, loginResponse);
     } catch (error: any) {
       logger.log("Failed to add a user", error);
       this.sendServerErrorResponse(res, { success: false, message: error.message });
