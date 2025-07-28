@@ -1,8 +1,7 @@
-import { CharityEmployee, StoreEmployee, TransportVolunteer, User } from "../shared/kinds";
+import { CharityEmployee, StoreEmployee, User } from "../shared/kinds";
 import { generateId } from "../shared/idutilities";
 import { datastore } from "./data-store-factory";
 import { PropertyFilter } from "@google-cloud/datastore";
-import { VolunteerDAO } from "./volunteer-dao";
 
 export class UserDAO {
     static USER_KIND = "User";
@@ -29,22 +28,6 @@ export class UserDAO {
 
     public async getAdminsByOrganizationID(organizationID: string) {
         throw new Error("TODO: Implement this");
-    }
-
-    public async getVolunteersByOrganizationID(organizationID: string) {
-        const query = datastore.createQuery(VolunteerDAO.VOLUNTEER_KIND)
-            .filter(new PropertyFilter('organizationID', '=', organizationID));
-        const data = await query.run();
-        const [users] = data;
-        return users as TransportVolunteer[];
-    }
-
-    public async getEmployeesOfPantryByOrganizationID(organizationID: string) {
-        const query = datastore.createQuery(UserDAO.CHARITY_EMPLOYEE_KIND)
-            .filter(new PropertyFilter('organizationID', '=', organizationID));
-        const data = await query.run();
-        const [users] = data;
-        return users as CharityEmployee[];
     }
 
     public async saveUser(user: User) {

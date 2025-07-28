@@ -1,6 +1,7 @@
 import { VolunteerOrganization, TransportVolunteer } from "../shared/kinds";
 import { generateId } from "../shared/idutilities";
 import { datastore } from "./data-store-factory";
+import { PropertyFilter } from "@google-cloud/datastore";
 
 export class VolunteerDAO {
     static VOLUNTEER_KIND = "Volunteer";
@@ -25,5 +26,13 @@ export class VolunteerDAO {
         }
         await datastore.save(entity);
         return volunteer;
+    }
+
+    public async getVolunteersByOrganizationID(organizationID: string) {
+        const query = datastore.createQuery(VolunteerDAO.VOLUNTEER_KIND)
+            .filter(new PropertyFilter('organizationID', '=', organizationID));
+        const data = await query.run();
+        const [users] = data;
+        return users as TransportVolunteer[];
     }
 }
