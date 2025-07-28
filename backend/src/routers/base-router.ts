@@ -28,4 +28,8 @@ export class BaseRouter {
     sendClientErrorResponse(res: Response, resObj: any, statusCode: number) {
         sendResponse(res, resObj, statusCode);
     }
+
+    getCurrentOrganizationID(req: Request) {
+        return (req as any).organizationID;
+    }
 }

@@ -34,16 +34,16 @@ export class UserRouter extends BaseRouter {
   async getAllSiteUsers(req: Request, res: Response) {
     try {
       logger.log("getAllSiteUsers: made it to beginning ", req.headers);
-      const organizationID: string = (req as any).organizationID;
+      const organizationID = this.getCurrentOrganizationID(req);
       const user = (req as any).user;
       const userType = user.userType;
       let userIDs: string[] | undefined;
       if (userType == "Store") {
         userIDs = (await userDAO.getEmployeesOfStoreByOrganizationID(organizationID)).map(v => v.userID!);
       } else if (userType == "Pantry") {
-        userIDs = (await userDAO.getEmployeesOfPantryByOrganizationID(organizationID)).map(v => v.userID!);
+        userIDs = (await charityDAO.getEmployeesOfPantryByOrganizationID(organizationID)).map(v => v.userID!);
       } else if (userType == "Volunteer") {
-        userIDs = (await userDAO.getVolunteersByOrganizationID(organizationID)).map(v => v.userID!);
+        userIDs = (await volunteerDAO.getVolunteersByOrganizationID(organizationID)).map(v => v.userID!);
       } else if (userType == "Admin") {
         //TODO: Implement this
         //userIDs = (await userDAO.getAdminsByOrganizationID(organizationID)).map(v => v.userID!);
