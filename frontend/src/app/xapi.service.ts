@@ -27,6 +27,21 @@ export class XapiService {
       'Authentication': sessionID
     });
   }
+
+  getResponse = async <T>(path: string): Promise<T> => {
+    const headers = this.buildAuthenticationHeader();
+    return await firstValueFrom(this.http.get<T>(path, { headers }));
+  };
+
+  postResponse = async <T>(path: string): Promise<T> => {
+    const headers = this.buildAuthenticationHeader();
+    return await firstValueFrom(this.http.post<T>(path, { headers }));
+  };
+
+  deleteResponse = async <T>(path: string): Promise<T> => {
+    const headers = this.buildAuthenticationHeader();
+    return await firstValueFrom(this.http.delete<T>(path, { headers }));
+  };
   
   //============================================================================================
   // Store API Requests
@@ -118,8 +133,7 @@ export class XapiService {
   // User/Credentials API Requests
   //============================================================================================
   public async getAllSiteUsers() {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<User[]>(`/xapi/users/list-users`, { headers }));
+    return this.getResponse<User[]>(`/xapi/users/list-users`);
   }
 
   public async saveUser(user: User) {
