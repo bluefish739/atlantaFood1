@@ -1,4 +1,4 @@
-import { CharityLocation } from "../shared/kinds";
+import { CharityLocation } from "../../../shared/src/kinds";
 import { generateId } from "../shared/idutilities";
 import { datastore } from "./data-store-factory";
 import { PropertyFilter } from "@google-cloud/datastore";

@@ -1,4 +1,4 @@
-import { Charity, CharityEmployee } from "../shared/kinds";
+import { Charity, CharityEmployee } from "../../../shared/src/kinds";
 import { generateId } from "../shared/idutilities";
 import { datastore } from "./data-store-factory";
 import { UserDAO } from "./user-dao";

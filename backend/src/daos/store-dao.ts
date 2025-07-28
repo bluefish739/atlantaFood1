@@ -1,4 +1,4 @@
-import { Store } from "../shared/kinds";
+import { Store } from "../../../shared/src/kinds";
 import { generateId } from "../shared/idutilities";
 import { datastore } from "./data-store-factory";
 

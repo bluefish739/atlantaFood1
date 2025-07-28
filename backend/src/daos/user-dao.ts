@@ -1,4 +1,4 @@
-import { CharityEmployee, StoreEmployee, User } from "../shared/kinds";
+import { CharityEmployee, StoreEmployee, User } from "../../../shared/src/kinds";
 import { generateId } from "../shared/idutilities";
 import { datastore } from "./data-store-factory";
 import { PropertyFilter } from "@google-cloud/datastore";

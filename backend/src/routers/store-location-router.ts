@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
-import { StoreLocation } from "../shared/kinds";
+import { StoreLocation } from "../../../shared/src/kinds";
 import { storeDAO, storeLocationDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
 

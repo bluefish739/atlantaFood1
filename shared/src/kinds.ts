@@ -19,6 +19,11 @@ export class StoreLocation {
     }[] = [];
 }
 
+export class StoreEmployee {
+    userID: string | undefined;
+    organizationID: string | undefined;
+}
+
 export class Charity {
     id: string | undefined;
     name: string | undefined;
@@ -40,6 +45,21 @@ export class CharityLocation {
     }[] = [];
 }
 
+export class CharityEmployee {
+    userID: string | undefined;
+    organizationID: string | undefined;
+}
+
+export class VolunteerOrganization {
+    id: string | undefined;
+    name: string | undefined;
+}
+
+export class TransportVolunteer {
+    userID: string | undefined;
+    organizationID: string | undefined;
+}
+
 export class Role {
     id: string | undefined;
     organizationID: string | undefined;
@@ -58,13 +78,21 @@ export class User {
     username: string | undefined;
     firstName: string | undefined;
     lastName: string | undefined;
-    organizationID: string | undefined;
     phoneNumber: string | undefined;
     password: string | undefined;
-    tokenID: string | undefined;
-    roles: string[] = [];
+    sessionID: string | undefined;
     userType: "Store" | "Pantry" | "Volunteer" | "Admin" | undefined;
+    // TODO: Remove this
+    organizationID: string | undefined;
+    roles: string[] = [];
 }
+
+export class UserRole {
+    userID: string | undefined;
+    roleID: string | undefined;
+}
+
+export const ADMIN_ROLE_NAME = "ORGANIZATION_ADMIN";
 
 export class Food {
     foodID: string | undefined;

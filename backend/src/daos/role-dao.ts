@@ -1,8 +1,7 @@
-import { Role, UserRole } from "../shared/kinds";
+import { Role, UserRole } from "../../../shared/src/kinds";
 import { generateId } from "../shared/idutilities";
 import { datastore } from "./data-store-factory";
 import { PropertyFilter } from "@google-cloud/datastore";
-import { Permission } from "../shared/kinds";
 
 export class RoleDAO {
     static ROLE_KIND = "Role";
@@ -51,27 +50,4 @@ export class RoleDAO {
         const [userRoles] = data;
         return userRoles as UserRole[];
     }
-
-    readonly allPermissions: Permission[] = [
-        {
-            name: "Edit Roles",
-            description: "Enables user to edit and assign roles for other users"
-        },
-        {
-            name: "Update Transaction Logs",
-            description: "Enables user to add, delete, and edit rows to transaction logs"
-        },
-        {
-            name: "Sleeper",
-            description: "Sleeps on the job, occasionally"
-        },
-        {
-            name: "Add Users",
-            description: "Enables user to edit and assign roles for other users"
-        },
-        {
-            name: "Creative Mode",
-            description: "Allows use of flint and steel"
-        }
-    ]
 }

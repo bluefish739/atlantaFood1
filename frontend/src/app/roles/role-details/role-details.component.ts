@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Role } from '../../../../../shared/src/kinds';
 import { FormsModule } from '@angular/forms';
-import { permissions } from '../permissions';
+import { permissions } from '../../../../../shared/src/permissions';
 
 @Component({
     selector: 'role-details',

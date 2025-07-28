@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
-import { Charity, CharityLocation } from "../shared/kinds";
+import { Charity, CharityLocation } from "../../../shared/src/kinds";
 import { charityDAO, charityLocationDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
 
@@ -23,11 +23,12 @@ export class CharityRouter extends BaseRouter {
   }
 
   async getAllCharities(req: Request, res: Response) {
+    /*
     try {
       const charities = await charityDAO.getAllCharities();
       const locations = await charityLocationDAO.getAllLocations();
       for (let charity of charities) {
-        charity.locations = locations.filter((location) => location.charityID == charity.id);
+        //charity.locations = locations.filter((location) => location.charityID == charity.id);
       }
       logger.log("Charities successfully fetched!");
       this.sendNormalResponse(res, charities);
@@ -35,6 +36,7 @@ export class CharityRouter extends BaseRouter {
       logger.log(`Error: charities could not be fetched! ${error}`);
       this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
+      */
   }
 
   async getCharity(req: Request, res: Response) {
