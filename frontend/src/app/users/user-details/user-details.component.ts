@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { XapiService } from '../../xapi.service';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { Role, User } from '../../kinds';
+import { Role, User } from '../../../../../shared/src/kinds';
 import { FormsModule } from '@angular/forms';
 
 @Component({

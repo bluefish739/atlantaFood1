@@ -1,4 +1,4 @@
-import { LoginResponse } from "../kinds";
+import { LoginResponse } from "../../../../shared/src/kinds";
 
 class SessionAuthenticator {
     private setCookie(name: string, value: string, minutesToLive: number) {

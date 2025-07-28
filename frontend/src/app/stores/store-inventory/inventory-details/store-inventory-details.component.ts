@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { InventoryEntry } from '../../../kinds';
+import { InventoryEntry } from '../../../../../../shared/src/kinds';
 
 @Component({
   selector: 'store-inventory-details',

@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent, HttpHandlerFn, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Store, Charity, StoreLocation, CharityLocation, Role, User, VerificationResponse, SignupData, SignupResponse, GeneralConfirmationResponse, LoginRequest, LoginResponse } from './kinds';
+import { Store, Charity, StoreLocation, CharityLocation, Role, User, VerificationResponse, SignupData, SignupResponse, GeneralConfirmationResponse, LoginRequest, LoginResponse } from '../../../shared/src/kinds';
 import { first, firstValueFrom, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { sessionAuthenticator } from './utilities/session-authentication';

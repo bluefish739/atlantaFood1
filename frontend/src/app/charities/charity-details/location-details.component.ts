@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { XapiService } from '../../xapi.service';
-import { CharityLocation } from '../../kinds';
+import { CharityLocation } from '../../../../../shared/src/kinds';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';

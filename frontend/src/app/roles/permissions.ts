@@ -1,4 +1,4 @@
-import { Permission } from "../kinds";
+import { Permission } from "../../../../shared/src/kinds";
 
 export const permissions: Permission[] = [
     {

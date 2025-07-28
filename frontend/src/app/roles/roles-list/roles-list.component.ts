@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { XapiService } from '../../xapi.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Role } from '../../kinds';
+import { Role } from '../../../../../shared/src/kinds';
 
 @Component({
     selector: 'roles-list',

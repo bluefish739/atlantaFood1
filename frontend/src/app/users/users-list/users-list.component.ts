@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { XapiService } from '../../xapi.service';
-import { User } from '../../kinds';
+import { User } from '../../../../../shared/src/kinds';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { HeaderComponent } from '../../../shared-components/header-component/header.component';

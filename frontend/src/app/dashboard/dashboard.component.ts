@@ -10,7 +10,7 @@ import { VolunteerDashboardComponent } from './volunteer-dashboard.component';
 import { AdminDashboardComponent } from './admin-dashboard.component';
 import { sessionAuthenticator } from '../utilities/session-authentication';
 import { HeaderComponent } from '../../shared-components/header-component/header.component';
-import { UserType } from '../kinds';
+import { UserType } from '../../../../shared/src/kinds';
 
 @Component({
   selector: 'dashboard',

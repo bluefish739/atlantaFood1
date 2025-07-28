@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { User } from '../kinds';
+import { User } from '../../../../shared/src/kinds';
 import { XapiService } from '../xapi.service';
 
 @Component({
