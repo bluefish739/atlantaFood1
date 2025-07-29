@@ -18,7 +18,6 @@ if %ERRORLEVEL% NEQ 0 (
     echo Frontend successfully compiled.
 )
 cd ..
-call firebase serve
 
 :end
 cd /d %~dp0
