@@ -6,6 +6,7 @@ import { ADMIN_ROLE_NAME, User } from "../../../shared/src/kinds";
 import { permissions } from "../../../shared/src/permissions";
 import { sendResponse } from "../utility-functions";
 import * as logger from "firebase-functions/logger";
+import { employeeHelpers } from "./employee-helpers";
 
 admin.initializeApp();
 export function authenticator(requiredPermissionsList: string[]) {
@@ -39,46 +40,13 @@ export function authenticator(requiredPermissionsList: string[]) {
             }
         });
 
-        let organizationID: string | undefined;
-        if (user.userType == "Store") {
-            organizationID = await getOrganizationIDofStoreUser(user.userID!);
-        } else if (user.userType == "Pantry") {
-            organizationID = await getOrganizationIDofPantryUser(user.userID!);
-        } else if (user.userType == "Volunteer") {
-            organizationID = await getOrganizationIDofVolunteer(user.userID!);
-        } else if (user.userType == "Admin") {
-            organizationID = await getOrganizationIDofAdmin(user.userID!);
-        } else {
-            logger.log("User type is unknown:", user.userType);
-            sendResponse(res, { success: false, message: "Lacks permission" }, 401);
-            return;
-        }
-
+        const organizationID = employeeHelpers.getOrganizationOfUser(user.userType!, user.userID!)
         logger.log("authenticator: made it to update req", user);
         logger.log("authenticator: made it to add organizationID", organizationID);
         (req as any).user = user;
         (req as any).organizationID = organizationID;
         next();
     }
-}
-
-async function getOrganizationIDofStoreUser(userID: string): Promise<string | undefined> {
-    const employeeRecord = await storeDAO.getEmployeeRecordByUserID(userID);
-    return employeeRecord?.organizationID;
-}
-
-async function getOrganizationIDofPantryUser(userID: string): Promise<string | undefined> {
-    const employeeRecord = await charityDAO.getEmployeeRecordByUserID(userID);
-    return employeeRecord?.organizationID;
-}
-
-async function getOrganizationIDofVolunteer(userID: string): Promise<string | undefined> {
-    const employeeRecord = await volunteerDAO.getEmployeeRecordByUserID(userID);
-    return employeeRecord?.organizationID;
-}
-
-async function getOrganizationIDofAdmin(userID: string): Promise<string | undefined> {
-    throw new Error("Function not implemented.");
 }
 
 /*
