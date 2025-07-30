@@ -1,7 +1,7 @@
 
 import { Request, Response, NextFunction } from "express";
 import admin from 'firebase-admin';
-import { charityDAO, roleDAO, storeDAO, userDAO, volunteerDAO } from "../daos/dao-factory";
+import { roleDAO, userDAO } from "../daos/dao-factory";
 import { ADMIN_ROLE_NAME, User } from "../../../shared/src/kinds";
 import { permissions } from "../../../shared/src/permissions";
 import { sendResponse } from "../utility-functions";
@@ -40,7 +40,7 @@ export function authenticator(requiredPermissionsList: string[]) {
             }
         });
 
-        const organizationID = employeeHelpers.getOrganizationOfUser(user.userType!, user.userID!)
+        const organizationID = await employeeHelpers.getOrganizationOfUser(user.userType!, user.userID!)
         logger.log("authenticator: made it to update req", user);
         logger.log("authenticator: made it to add organizationID", organizationID);
         (req as any).user = user;

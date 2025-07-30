@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { userDAO } from "../daos/dao-factory";
 import { sendResponse } from "../utility-functions";
+import { User } from "../shared/kinds";
 
 export class BaseRouter {
     async getUserBySession(req: Request, res: Response) {
@@ -29,7 +30,11 @@ export class BaseRouter {
         sendResponse(res, resObj, statusCode);
     }
 
-    getCurrentOrganizationID(req: Request) {
+    getCurrentUser(req: Request): User | undefined {
+        return (req as any).user;
+    }
+
+    getCurrentOrganizationID(req: Request): string | undefined {
         return (req as any).organizationID;
     }
 }

@@ -5,6 +5,7 @@ import { ADMIN_ROLE_NAME, Charity, CharityEmployee, LoginRequest, LoginResponse,
 import { charityDAO, roleDAO, storeDAO, userDAO, volunteerDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
 import { generateId } from "../shared/idutilities";
+import { employeeHelpers } from "../shared/employee-helpers";
 
 export class UserRouter extends BaseRouter {
   async saveUser(req: Request, res: Response) {
@@ -34,7 +35,7 @@ export class UserRouter extends BaseRouter {
   async getAllSiteUsers(req: Request, res: Response) {
     try {
       logger.log("getAllSiteUsers: made it to beginning ", req.headers);
-      const organizationID = this.getCurrentOrganizationID(req);
+      const organizationID = this.getCurrentOrganizationID(req)!;
       const user = (req as any).user;
       const userType = user.userType;
       let userIDs: string[] | undefined;
@@ -289,15 +290,51 @@ export class UserRouter extends BaseRouter {
   }
 
   async removeUser(req: Request, res: Response) {
+    const user = this.getCurrentUser(req)!;
+    const organizationID = this.getCurrentOrganizationID(req)!;
     const userID = req.params.userID;
-    const organizationID = "TODO: Add organizationID";
     try {
       logger.log("Remove user test data retrieved: ", userID, organizationID);
-      this.sendNormalResponse(res, { success: true, message: "User successfully removed" });
+      const deleteRequestValid = await this.validateDeleteRequest(userID, user.userID!, organizationID);
+      if (!deleteRequestValid) {
+        this.sendNormalResponse(res, { success: false, message: "Invalid request data" });
+        return;
+      }
+      if (!await employeeHelpers.removeUser(userID, user.userType!)) {
+        this.sendNormalResponse(res, { success: false, message: "Failed to remove the user." });
+      } else {
+        this.sendNormalResponse(res, { success: true, message: "User successfully removed" });
+      }
     } catch (error: any) {
       logger.log("Failed to remove user", error);
       this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
+  }
+
+  async validateDeleteRequest(targetUserID: string, currentUserID: string, currentOrganizationID: string) {
+    if (!targetUserID) {
+      logger.log("validateDeleteRequest: no user ID provided");
+      return false;
+    }
+
+    if (targetUserID == currentUserID) {
+      logger.log("validateDeleteRequest: attempting to delete user who sent delete request " + targetUserID);
+      return false;
+    }
+
+    const user = await userDAO.getUser(targetUserID);
+    if (!user) {
+      logger.log("validateDeleteRequest: no user with ID found " + targetUserID);
+      return false;
+    }
+
+    const targetUserOrganizationID = await employeeHelpers.getOrganizationOfUser(user.userType!, targetUserID);
+    if (targetUserOrganizationID != currentOrganizationID) {
+      logger.log("validateDeleteRequest: target organization id does not match current " + targetUserOrganizationID + " | " + currentOrganizationID);
+      return false;
+    }
+
+    return true;
   }
 
   static buildRouter(): Router {

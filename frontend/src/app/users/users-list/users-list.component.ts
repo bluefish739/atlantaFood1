@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { HeaderComponent } from '../../../shared-components/header-component/header.component';
 import { FooterComponent } from '../../../shared-components/footer-component/footer.component';
+import { sessionAuthenticator } from '../../utilities/session-authentication';
 
 @Component({
   selector: 'users-user-list',
@@ -15,6 +16,7 @@ import { FooterComponent } from '../../../shared-components/footer-component/foo
 export class UserListComponent {
   users!: User[];
   organizationID = "e878dc70-f213-11ef-9653-8d47654d5c1c";
+  currentUserID: string | undefined;
   constructor(
     private xapiService: XapiService,
     private router: Router
@@ -24,6 +26,7 @@ export class UserListComponent {
   async ngOnInit() {
     try {
       this.users = await this.xapiService.getAllSiteUsers();
+      this.currentUserID = sessionAuthenticator.getUserID();
     } catch (error: any) {
       if (error.status == 401) {
         console.log("Session missing or expired", error);
@@ -33,8 +36,12 @@ export class UserListComponent {
   }
 
   async removeUser(userID: string) {
-    let removalSuccess = (await this.xapiService.removeUserFromSite(userID, this.organizationID)).success;
-    console.log(removalSuccess);
+    if (userID == sessionAuthenticator.getUserID()) {
+      console.log("removeUser: can't remove self, userID=" + userID);
+      return;
+    }
+    const removalResponse = (await this.xapiService.removeUserFromSite(userID));
+    console.log("removeUser: removal response=", removalResponse);
   }
 }
 

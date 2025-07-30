@@ -20,7 +20,7 @@
                     <td>{{ user.lastName }}</td>
                     <td>
                         <button class="action-button" [routerLink]="['/users/details', user.userID, organizationID]">Modify</button>
-                        <button class="action-button" (click)="removeUser(user.userID!)">Remove</button>
+                        <button class="action-button" (click)="removeUser(user.userID!)" *ngIf="user.userID != currentUserID">Remove</button>
                     </td>
                 </tr>
             </tbody>

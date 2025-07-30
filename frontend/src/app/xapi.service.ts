@@ -160,13 +160,7 @@ export class XapiService {
     return this.postResponse<LoginResponse>(`/xapi/users/signup`, signupData);
   }
 
-  public async removeUserFromSite(userID: string, organizationID: string) {
-    const headers = this.buildAuthenticationHeader();
-    /*
-    const params = new HttpParams()
-      .set('userID', userID)
-      .set('organizationID', organizationID);
-      */
-    return await firstValueFrom(this.http.delete<GeneralConfirmationResponse>(`/xapi/users/remove-user/` + userID, { headers }));
+  public async removeUserFromSite(userID: string) {
+    return this.deleteResponse<GeneralConfirmationResponse>(`/xapi/users/remove-user/${userID}`);
   }
 }
