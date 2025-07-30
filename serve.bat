@@ -1,2 +1,12 @@
+cd /d %~dp0
+
 call build.bat
-call firebase serve
+if %ERRORLEVEL% NEQ 0 (
+    echo Complilation failed.
+    goto end
+) else (
+    call firebase serve
+)
+
+:end
+cd /d %~dp0
