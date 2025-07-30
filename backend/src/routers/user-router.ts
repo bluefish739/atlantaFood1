@@ -39,7 +39,7 @@ export class UserRouter extends BaseRouter {
       const userType = user.userType;
       let userIDs: string[] | undefined;
       if (userType == "Store") {
-        userIDs = (await userDAO.getEmployeesOfStoreByOrganizationID(organizationID)).map(v => v.userID!);
+        userIDs = (await storeDAO.getEmployeesOfStoreByOrganizationID(organizationID)).map(v => v.userID!);
       } else if (userType == "Pantry") {
         userIDs = (await charityDAO.getEmployeesOfPantryByOrganizationID(organizationID)).map(v => v.userID!);
       } else if (userType == "Volunteer") {
@@ -220,7 +220,7 @@ export class UserRouter extends BaseRouter {
     const storeEmployee = new StoreEmployee();
     storeEmployee.userID = userID;
     storeEmployee.organizationID = organizationID;
-    userDAO.saveStoreEmployee(storeEmployee);
+    storeDAO.saveStoreEmployee(storeEmployee);
 
     const adminRole = new Role();
     adminRole.name = ADMIN_ROLE_NAME;
@@ -245,7 +245,7 @@ export class UserRouter extends BaseRouter {
     const charityEmployee = new CharityEmployee();
     charityEmployee.userID = userID;
     charityEmployee.organizationID = organizationID;
-    userDAO.saveCharityEmployee(charityEmployee);
+    charityDAO.saveCharityEmployee(charityEmployee);
     logger.log("Created charity employee: ", charityEmployee);
 
     const adminRole = new Role();

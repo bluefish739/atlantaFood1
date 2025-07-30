@@ -1,12 +1,10 @@
-import { CharityEmployee, StoreEmployee, User } from "../../../shared/src/kinds";
+import { User } from "../../../shared/src/kinds";
 import { generateId } from "../shared/idutilities";
 import { datastore } from "./data-store-factory";
 import { PropertyFilter } from "@google-cloud/datastore";
 
 export class UserDAO {
     static USER_KIND = "User";
-    static STORE_EMPLOYEE_KIND = "StoreEmployee";
-    static CHARITY_EMPLOYEE_KIND = "CharityEmployee";
 
     public async getUsersByUserIDs(userIDs: string[]) {
         // Construct keys for the given IDs
@@ -16,14 +14,6 @@ export class UserDAO {
 
         // Return the found entities (filter out undefined results if some IDs don't exist)
         return entities.filter((entity: User) => entity !== undefined);
-    }
-
-    public async getEmployeesOfStoreByOrganizationID(organizationID: string): Promise<StoreEmployee[]> {
-        const query = datastore.createQuery(UserDAO.STORE_EMPLOYEE_KIND)
-            .filter(new PropertyFilter('organizationID', '=', organizationID));
-        const data = await query.run();
-        const users = data[0];
-        return users as StoreEmployee[];
     }
 
     public async getAdminsByOrganizationID(organizationID: string) {
@@ -83,27 +73,5 @@ export class UserDAO {
             return true;
         }
         return false;
-    }
-
-    public async saveStoreEmployee(employee: StoreEmployee) {
-        const entityKey = datastore.key([UserDAO.STORE_EMPLOYEE_KIND, employee.userID!]);
-        const entity = {
-            key: entityKey,
-            data: employee
-        };
-
-        await datastore.save(entity);
-        return employee;
-    }
-
-    public async saveCharityEmployee(employee: CharityEmployee) {
-        const entityKey = datastore.key([UserDAO.CHARITY_EMPLOYEE_KIND, employee.userID!]);
-        const entity = {
-            key: entityKey,
-            data: employee
-        };
-
-        await datastore.save(entity);
-        return employee;
     }
 }

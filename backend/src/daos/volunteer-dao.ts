@@ -35,4 +35,12 @@ export class VolunteerDAO {
         const [users] = data;
         return users as TransportVolunteer[];
     }
+
+    public async getEmployeeRecordByUserID(userID: string) {
+        const query = datastore.createQuery(VolunteerDAO.VOLUNTEER_KIND)
+            .filter(new PropertyFilter('userID', '=', userID));
+        const data = await query.run();
+        const record = data[0][0];
+        return record as any as TransportVolunteer;
+    }
 }

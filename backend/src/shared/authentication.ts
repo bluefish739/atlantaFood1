@@ -1,7 +1,7 @@
 
 import { Request, Response, NextFunction } from "express";
 import admin from 'firebase-admin';
-import { charityDAO, roleDAO, userDAO } from "../daos/dao-factory";
+import { charityDAO, roleDAO, storeDAO, userDAO, volunteerDAO } from "../daos/dao-factory";
 import { ADMIN_ROLE_NAME, User } from "../../../shared/src/kinds";
 import { permissions } from "../../../shared/src/permissions";
 import { sendResponse } from "../utility-functions";
@@ -63,17 +63,18 @@ export function authenticator(requiredPermissionsList: string[]) {
 }
 
 async function getOrganizationIDofStoreUser(userID: string): Promise<string | undefined> {
-    throw new Error("Function not implemented.");
+    const employeeRecord = await storeDAO.getEmployeeRecordByUserID(userID);
+    return employeeRecord?.organizationID;
 }
 
 async function getOrganizationIDofPantryUser(userID: string): Promise<string | undefined> {
     const employeeRecord = await charityDAO.getEmployeeRecordByUserID(userID);
-    logger.log("getOrganizationIDofPantryUser: query user ID = " + userID, employeeRecord);
     return employeeRecord?.organizationID;
 }
 
 async function getOrganizationIDofVolunteer(userID: string): Promise<string | undefined> {
-    throw new Error("Function not implemented.");
+    const employeeRecord = await volunteerDAO.getEmployeeRecordByUserID(userID);
+    return employeeRecord?.organizationID;
 }
 
 async function getOrganizationIDofAdmin(userID: string): Promise<string | undefined> {
