@@ -1,7 +1,7 @@
 import express, { Request, Response, Router } from "express";
 import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
-import { ADMIN_ROLE_NAME, Charity, CharityEmployee, LoginRequest, LoginResponse, Role, SignupData, Store, StoreEmployee, TransportVolunteer, User, UserRole, VolunteerOrganization } from "../../../shared/src/kinds";
+import { ADMIN_ROLE_NAME, Charity, CharityEmployee, LoginRequest, LoginResponse, Role, SignupData, Store, StoreEmployee, TransportVolunteer, User, UserListData, UserRole, VolunteerOrganization } from "../../../shared/src/kinds";
 import { charityDAO, roleDAO, storeDAO, userDAO, volunteerDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
 import { generateId } from "../shared/idutilities";
@@ -51,9 +51,18 @@ export class UserRouter extends BaseRouter {
       }
       
       logger.log("getAllSiteUsers: organizationID from user ", organizationID);
-      const users = userIDs? await userDAO.getUsersByUserIDs(userIDs) : [];
+      const users: User[] = userIDs? await userDAO.getUsersByUserIDs(userIDs) : [];
       logger.log("getAllSiteUsers: made it to send normal response", users);
-      this.sendNormalResponse(res, users);
+      const usersData = users.map(user => {
+        const userListData = new UserListData();
+        userListData.userID = user.userID;
+        userListData.username = user.username;
+        userListData.firstName = user.firstName;
+        userListData.lastName = user.lastName;
+        return userListData;
+      });
+      logger.log("getAllSiteUsers: usersData=", usersData)
+      this.sendNormalResponse(res, usersData);
     } catch (error: any) {
       logger.log("getAllSiteUsers: failed", error)
       this.sendServerErrorResponse(res, { success: false, message: error.message });

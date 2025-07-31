@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { XapiService } from '../../xapi.service';
-import { User } from '../../../../../shared/src/kinds';
+import { User, UserListData } from '../../../../../shared/src/kinds';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { HeaderComponent } from '../../../shared-components/header-component/header.component';
@@ -14,7 +14,7 @@ import { sessionAuthenticator } from '../../utilities/session-authentication';
   styleUrl: './users-list.component.scss'
 })
 export class UserListComponent {
-  users!: User[];
+  usersData!: UserListData[];
   organizationID = "e878dc70-f213-11ef-9653-8d47654d5c1c";
   currentUserID: string | undefined;
   constructor(
@@ -25,7 +25,8 @@ export class UserListComponent {
 
   async ngOnInit() {
     try {
-      this.users = await this.xapiService.getAllSiteUsers();
+      this.usersData = await this.xapiService.getAllSiteUsers();
+      console.log("ngOnInit: usersData=", this.usersData);
       this.currentUserID = sessionAuthenticator.getUserID();
     } catch (error: any) {
       if (error.status == 401) {

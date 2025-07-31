@@ -154,3 +154,10 @@ export class UserType {
     public static STORE = "Store";
     public static VOLUNTEER = "Volunteer";
 }
+
+export class UserListData {
+    userID: string | undefined;
+    username: string | undefined;
+    firstName: string | undefined;
+    lastName: string | undefined;
+}

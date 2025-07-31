@@ -6,7 +6,7 @@
             <a routerLink="/users/details/new/{{organizationID}}" class="action-button">Add User</a>
             <a routerLink="/roles/roles-list" class="action-button secondary">Modify Site Roles</a>
         </div>
-        <table class="users-table" *ngIf="users?.length; else noUsers">
+        <table class="users-table" *ngIf="usersData?.length; else noUsers">
             <thead>
                 <tr>
                     <th>First Name</th>
@@ -15,7 +15,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let user of users; let idx = index">
+                <tr *ngFor="let user of usersData; let idx = index">
                     <td>{{ user.firstName }}</td>
                     <td>{{ user.lastName }}</td>
                     <td>
