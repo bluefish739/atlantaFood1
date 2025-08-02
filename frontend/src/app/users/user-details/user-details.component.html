@@ -1,40 +1,59 @@
-<div id="content">
-    <table *ngIf="user" id="infoTable">
-        <h1>User Details for {{ user.username }}</h1>
-        <tr>
-            <td>User Name</td>
-            <td><input [(ngModel)]="user.username" /></td>
-        </tr>
-        <tr>
-            <td>Password</td>
-            <td><input [(ngModel)]="user.password" /></td>
-        </tr>
-        <tr>
-            <td>First Name</td>
-            <td><input [(ngModel)]="user.firstName" /></td>
-        </tr>
-        <tr>
-            <td>Last Name</td>
-            <td><input [(ngModel)]="user.lastName" /></td>
-        </tr>
-        <tr>
-            <td>Phone Number</td>
-            <td><input [(ngModel)]="user.phoneNumber" /></td>
-        </tr>
-        <tr>
-            <td>Roles</td>
-            <td>
-                <button (click)="toggleRolesView()">View Roles</button>
-                <table *ngIf="rolesViewActive">
-                    <tr>
-                        <td *ngFor="let role of siteRoles; let idx=index" style="display: block">
-                            <span>{{ role.name }}</span>
-                            <input type="checkbox" [(ngModel)]="rolesCheckBoxRef[idx]">
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-    <button (click)="saveClicked()">Save</button>
-</div>
+<section class="user-details-container">
+    <div class="user-details-section">
+        <h2>{{ isNewUser ? 'Add User' : 'Edit User Details' }}</h2>
+        <div class="message" [class.show]="message"
+            [ngClass]="{'success': isSuccessMessage, 'error': !isSuccessMessage}" aria-live="polite">
+            {{ message }}
+        </div>
+        <form #userForm="ngForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="text-input" id="username" name="username" [(ngModel)]="user.username" required
+                    pattern="[a-zA-Z0-9]{4,}" #username="ngModel" placeholder="Enter username" [disabled]="!isNewUser">
+                <div class="error" *ngIf="username.touched && username.invalid">
+                    Username must be at least 4 characters (letters or numbers only).
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" class="text-input" id="firstName" name="firstName" [(ngModel)]="user.firstName" required
+                    #firstName="ngModel" placeholder="Enter first name">
+                <div class="error" *ngIf="firstName.touched && firstName.invalid">
+                    First name is required.
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" class="text-input" id="lastName" name="lastName" [(ngModel)]="user.lastName" required
+                    #lastName="ngModel" placeholder="Enter last name">
+                <div class="error" *ngIf="lastName.touched && lastName.invalid">
+                    Last name is required.
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="phoneNumber">Phone Number</label>
+                <input type="tel" class="text-input" id="phoneNumber" name="phoneNumber" [(ngModel)]="user.phoneNumber" pattern="[0-9]{10}"
+                    #phoneNumber="ngModel" placeholder="e.g., 1234567890">
+                <div class="error" *ngIf="phoneNumber.touched && phoneNumber.invalid">
+                    Phone number must be 10 digits (e.g., 1234567890).
+                </div>
+            </div>
+            <div class="form-group">
+                <label>User Roles</label>
+                <ng-container *ngFor="let role of availableRoles; let idx=index">
+                    <div class="checkbox-group">
+                        <input type="checkbox" class="checkbox-input" [name]="role.name!" [(ngModel)]="rolesCheckBoxRef[idx]">
+                        <label>
+                            {{ role.name | titlecase }}
+                        </label>
+                    </div>
+                </ng-container>
+                <div class="error" *ngIf="userForm.submitted && getSelectedRolesCount() == 0">
+                    At least one role must be selected.
+                </div>
+            </div>
+            <button type="submit" [disabled]="!userForm.valid || !isFormDirty()">Save Changes</button>
+            <a routerLink="/users/list" class="cancel-button">Cancel</a>
+        </form>
+    </div>
+</section>
