@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { XapiService } from '../../xapi.service';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { Role, User } from '../../../../../shared/src/kinds';
+import { DetailedUser, Role, User } from '../../../../../shared/src/kinds';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -16,6 +16,7 @@ export class UserDetailsComponent {
     siteRoles: Role[] = [];
     rolesCheckBoxRef: boolean[] = [];
     user = new User();
+    userRoleIDs: string[] = [];
     constructor(private xapiService: XapiService,
         private activatedRoute: ActivatedRoute,
         private router: Router
@@ -23,23 +24,24 @@ export class UserDetailsComponent {
     }
 
     async ngOnInit() {
-        const id = this.activatedRoute.snapshot.params['id'];
-        const organizationID = this.activatedRoute.snapshot.params['organizationID'];
-        if (id && id != 'new') {
-            this.user = await this.xapiService.getUserByID(id);
-            if (!this.user) {
-                this.user = new User();
+        const userID = this.activatedRoute.snapshot.params['userID'];
+        console.log("ngOnInit: userID=" + userID);
+        if (userID && userID != 'new') {
+            const detailedUser = await this.xapiService.getDetailedUserByID(userID);
+            console.log("ngOnInit: detailedUser=", detailedUser);
+            if (detailedUser) {
+                this.user = detailedUser.user || new User();
+                this.userRoleIDs = detailedUser.userRoleIDs || [];
             }
         }
-        this.user.organizationID = organizationID;
-        this.siteRoles = await this.xapiService.getSiteRoles(this.user.organizationID as string);
+        this.siteRoles = await this.xapiService.getAllUserRolesOfCurrentOrg();
         this.initRolesRef();
     }
 
     initRolesRef() {
         this.rolesCheckBoxRef.length = 0;
         this.siteRoles.forEach((role) => {
-            if (this.user.roles.includes(role.id as string)) {
+            if (this.userRoleIDs.includes(role.id as string)) {
                 this.rolesCheckBoxRef.push(true);
             } else {
                 this.rolesCheckBoxRef.push(false);
@@ -52,13 +54,16 @@ export class UserDetailsComponent {
     }
 
     async saveClicked() {
-        this.user.roles.length = 0;
+        this.userRoleIDs.length = 0;
         for (let i = 0; i < this.rolesCheckBoxRef.length; i++) {
             if (this.rolesCheckBoxRef[i]) {
-                this.user.roles.push(this.siteRoles[i].id!)
+                this.userRoleIDs.push(this.siteRoles[i].id!)
             }
         }
-        await this.xapiService.saveUser(this.user!);
+        const detailedUser = new DetailedUser();
+        detailedUser.user = this.user;
+        detailedUser.userRoleIDs = this.userRoleIDs;
+        await this.xapiService.saveUser(detailedUser!);
         this.router.navigateByUrl("/users/list")
     }
 }

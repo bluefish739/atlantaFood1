@@ -16,7 +16,6 @@ export class RolesListComponent {
     }
 
     async ngOnInit() {
-        // Placeholder site ID
-        this.roles = await this.xapiService.getSiteRoles("e878dc70-f213-11ef-9653-8d47654d5c1c");
+        this.roles = await this.xapiService.getAllUserRolesOfCurrentOrg();
     }
 }

@@ -20,7 +20,7 @@ export function authenticator(requiredPermissionsList: string[]) {
         }
 
         let userPermissions = new Set();
-        const userRoles = await roleDAO.getUserRoles(user.userID!);
+        const userRoles = await roleDAO.getUserRolesByUserID(user.userID!);
         for (let userRole of userRoles) {
             const role = await roleDAO.getRole(userRole.roleID!);
             if (role.name == ADMIN_ROLE_NAME) {

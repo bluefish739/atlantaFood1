@@ -1,7 +1,7 @@
 import express, { Request, Response, Router } from "express";
 import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
-import { ADMIN_ROLE_NAME, Charity, CharityEmployee, LoginRequest, LoginResponse, Role, SignupData, Store, StoreEmployee, TransportVolunteer, User, UserListData, UserRole, VolunteerOrganization } from "../../../shared/src/kinds";
+import { ADMIN_ROLE_NAME, Charity, CharityEmployee, DetailedUser, LoginRequest, LoginResponse, Role, SignupData, Store, StoreEmployee, TransportVolunteer, User, UserRole, VolunteerOrganization } from "../../../shared/src/kinds";
 import { charityDAO, roleDAO, storeDAO, userDAO, volunteerDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
 import { generateId } from "../shared/idutilities";
@@ -54,12 +54,8 @@ export class UserRouter extends BaseRouter {
       const users: User[] = userIDs? await userDAO.getUsersByUserIDs(userIDs) : [];
       logger.log("getAllSiteUsers: made it to send normal response", users);
       const usersData = users.map(user => {
-        const userListData = new UserListData();
-        userListData.userID = user.userID;
-        userListData.username = user.username;
-        userListData.firstName = user.firstName;
-        userListData.lastName = user.lastName;
-        return userListData;
+        // Send back user object containing only needed attributes by frontend to avoid sending back sensitive data
+        return this.copyUserAttributesForFrontend(user);
       });
       logger.log("getAllSiteUsers: usersData=", usersData)
       this.sendNormalResponse(res, usersData);
@@ -69,7 +65,7 @@ export class UserRouter extends BaseRouter {
     }
   }
 
-  async getUser(req: Request, res: Response) {
+  async getDetailedUserByID(req: Request, res: Response) {
     try {
       const userId = req.params.userId as string;
       if (!userId) {
@@ -81,7 +77,11 @@ export class UserRouter extends BaseRouter {
         this.sendClientErrorResponse(res, { success: false, message: "User not found " + userId }, 404);
         return;
       }
-      this.sendNormalResponse(res, user);
+      const userRoles = await roleDAO.getUserRolesByUserID(userId);
+      const detailedUser = new DetailedUser();
+      detailedUser.user = this.copyUserAttributesForFrontend(user);
+      detailedUser.userRoleIDs = userRoles.map(userRole => userRole.roleID!);
+      this.sendNormalResponse(res, detailedUser);
     } catch (error: any) {
       this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
@@ -222,6 +222,16 @@ export class UserRouter extends BaseRouter {
     }
   }
 
+  private copyUserAttributesForFrontend(user: User) {
+    const userForFrontend = new User();
+    userForFrontend.userID = user.userID;
+    userForFrontend.username = user.username;
+    userForFrontend.firstName = user.firstName;
+    userForFrontend.lastName = user.lastName;
+    userForFrontend.phoneNumber = user.phoneNumber;
+    return userForFrontend;
+  }
+
   private async createNewStore(userID: string, organizationID: string) {
     const store = new Store();
     store.id = organizationID;
@@ -351,7 +361,7 @@ export class UserRouter extends BaseRouter {
     return express.Router()
       .post('/user', authenticator([]), userRouter.saveUser.bind(userRouter))
       .get('/list-users', authenticator([]), userRouter.getAllSiteUsers.bind(userRouter))
-      .get('/user/:userId', authenticator([]), userRouter.getUser.bind(userRouter))
+      .get('/user-details/:userId', authenticator([]), userRouter.getDetailedUserByID.bind(userRouter))
       .post('/login', userRouter.login.bind(userRouter))
       .get('/verify-user-by-session', userRouter.verifyUserBySession.bind(userRouter))
       .post('/signup', userRouter.signupUser.bind(userRouter))

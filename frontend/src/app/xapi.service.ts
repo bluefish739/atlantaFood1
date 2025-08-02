@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent, HttpHandlerFn, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Store, Charity, StoreLocation, CharityLocation, Role, User, VerificationResponse, SignupData, SignupResponse, GeneralConfirmationResponse, LoginRequest, LoginResponse, UserListData } from '../../../shared/src/kinds';
+import { Store, Charity, StoreLocation, CharityLocation, Role, User, VerificationResponse, SignupData, GeneralConfirmationResponse, LoginRequest, LoginResponse, DetailedUser } from '../../../shared/src/kinds';
 import { first, firstValueFrom, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { sessionAuthenticator } from './utilities/session-authentication';
@@ -116,9 +116,9 @@ export class XapiService {
   //============================================================================================
   // Role API Requests
   //============================================================================================
-  public async getSiteRoles(organizationID: string) {
+  public async getAllUserRolesOfCurrentOrg() {
     const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<Role[]>(`/xapi/roles/` + organizationID + `/list-roles`, { headers }))
+    return await firstValueFrom(this.http.get<Role[]>(`/xapi/roles/list-roles`, { headers }))
   }
 
   public async getRole(roleID: string) {
@@ -134,17 +134,16 @@ export class XapiService {
   // User/Credentials API Requests
   //============================================================================================
   public async getAllSiteUsers() {
-    return this.getResponse<UserListData[]>(`/xapi/users/list-users`);
+    return this.getResponse<User[]>(`/xapi/users/list-users`);
   }
 
-  public async saveUser(user: User) {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.post<User>(`/xapi/users/user`, user, { headers }));
+  public async saveUser(detailedUser: DetailedUser) {
+    return this.postResponse<DetailedUser>(`/xapi/users/user`, detailedUser);
   }
 
-  public async getUserByID(userID: string) {
+  public async getDetailedUserByID(userID: string) {
     const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<User>(`/xapi/users/user/` + userID, { headers }))
+    return await firstValueFrom(this.http.get<DetailedUser>(`/xapi/users/user-details/${userID}`, { headers }))
   }
 
   public async login(loginRequest: LoginRequest) {

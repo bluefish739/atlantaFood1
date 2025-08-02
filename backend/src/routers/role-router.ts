@@ -48,14 +48,10 @@ export class RoleRouter extends BaseRouter {
         }
     }
 
-    async getRolesBySiteID(req: Request, res: Response) {
+    async getAllUserRolesOfCurrentOrg(req: Request, res: Response) {
         try {
-            const organizationID = req.params.organizationID as string;
-            if (!organizationID) {
-                this.sendClientErrorResponse(res, { success: false, message: "Missing site ID" }, 400);
-                return;
-            }
-            const roles = await roleDAO.getAllRolesBySiteID(organizationID);
+            const organizationID = this.getCurrentOrganizationID(req)!;
+            const roles = await roleDAO.getUserRolesByOrgID(organizationID);
             this.sendNormalResponse(res, roles);
         } catch (error: any) {
             this.sendServerErrorResponse(res, { success: false, message: error.message });
@@ -67,6 +63,6 @@ export class RoleRouter extends BaseRouter {
         return express.Router()
             .post('/role', authenticator([]), roleRouter.saveRole.bind(roleRouter))
             .get('/role/:roleID', authenticator([]), roleRouter.getRole.bind(roleRouter))
-            .get('/:organizationID/list-roles', authenticator([]), roleRouter.getRolesBySiteID.bind(roleRouter));
+            .get('/list-roles', authenticator([]), roleRouter.getAllUserRolesOfCurrentOrg.bind(roleRouter));
     }
 }

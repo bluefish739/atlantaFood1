@@ -47,7 +47,7 @@ class EmployeeHelpers {
         const transaction = datastore.transaction();
         try {
             // remove record of StoreEmployee/CharityEmployee/Volunteer
-            const userRoles = await roleDAO.getUserRoles(userID);
+            const userRoles = await roleDAO.getUserRolesByUserID(userID);
             const keys = [
                 datastore.key([UserDAO.USER_KIND, userID]), // remove User
             ];

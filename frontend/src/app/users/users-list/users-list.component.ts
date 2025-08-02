@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { XapiService } from '../../xapi.service';
-import { User, UserListData } from '../../../../../shared/src/kinds';
+import { User } from '../../../../../shared/src/kinds';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { HeaderComponent } from '../../../shared-components/header-component/header.component';
@@ -14,7 +14,7 @@ import { sessionAuthenticator } from '../../utilities/session-authentication';
   styleUrl: './users-list.component.scss'
 })
 export class UserListComponent {
-  usersData!: UserListData[];
+  usersData!: User[];
   organizationID = "e878dc70-f213-11ef-9653-8d47654d5c1c";
   currentUserID: string | undefined;
   constructor(

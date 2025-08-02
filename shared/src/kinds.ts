@@ -76,20 +76,29 @@ export class Permission {
 export class User {
     userID: string | undefined;
     username: string | undefined;
+    password: string | undefined;
     firstName: string | undefined;
     lastName: string | undefined;
     phoneNumber: string | undefined;
-    password: string | undefined;
-    sessionID: string | undefined;
     userType: "Store" | "Pantry" | "Volunteer" | "Admin" | undefined;
-    // TODO: Remove this
-    organizationID: string | undefined;
-    roles: string[] = [];
+    sessionID: string | undefined;
+}
+
+export class DetailedUser {
+    user: User | undefined;
+    userRoleIDs: string[] = [];
 }
 
 export class UserRole {
     userID: string | undefined;
     roleID: string | undefined;
+}
+
+export class UserType {
+    public static PANTRY = "Pantry";
+    public static ADMIN = "Admin";
+    public static STORE = "Store";
+    public static VOLUNTEER = "Volunteer";
 }
 
 export const ADMIN_ROLE_NAME = "ORGANIZATION_ADMIN";
@@ -146,18 +155,4 @@ export class InventoryEntry {
 export class GeneralConfirmationResponse {
     success: boolean | undefined;
     message: string | undefined;
-}
-
-export class UserType {
-    public static PANTRY = "Pantry";
-    public static ADMIN = "Admin";
-    public static STORE = "Store";
-    public static VOLUNTEER = "Volunteer";
-}
-
-export class UserListData {
-    userID: string | undefined;
-    username: string | undefined;
-    firstName: string | undefined;
-    lastName: string | undefined;
 }

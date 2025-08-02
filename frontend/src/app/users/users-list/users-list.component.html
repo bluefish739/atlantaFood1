@@ -3,7 +3,7 @@
     <div class="users-section">
         <h2>User Manager</h2>
         <div class="actions">
-            <a routerLink="/users/details/new/{{organizationID}}" class="action-button">Add User</a>
+            <a routerLink="/users/details/new" class="action-button">Add User</a>
             <a routerLink="/roles/roles-list" class="action-button secondary">Modify Site Roles</a>
         </div>
         <table class="users-table" *ngIf="usersData?.length; else noUsers">
@@ -19,7 +19,7 @@
                     <td>{{ user.firstName }}</td>
                     <td>{{ user.lastName }}</td>
                     <td>
-                        <button class="action-button" [routerLink]="['/users/details', user.userID, organizationID]">Modify</button>
+                        <button class="action-button" [routerLink]="['/users/details', user.userID]">Modify</button>
                         <button class="action-button" (click)="removeUser(user.userID!)" *ngIf="user.userID != currentUserID">Remove</button>
                     </td>
                 </tr>
