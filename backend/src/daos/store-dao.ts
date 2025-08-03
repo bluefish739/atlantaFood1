@@ -1,8 +1,7 @@
 import { PropertyFilter } from "@google-cloud/datastore";
-import { Store } from "../../../shared/src/kinds";
+import { Store, StoreEmployee } from "../../../shared/src/kinds";
 import { generateId } from "../shared/idutilities";
 import { datastore } from "./data-store-factory";
-import { StoreEmployee } from "../shared/kinds";
 
 export class StoreDAO {
     static STORE_KIND = "Store";

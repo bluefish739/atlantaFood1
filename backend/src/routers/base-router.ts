@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { userDAO } from "../daos/dao-factory";
 import { sendResponse } from "../utility-functions";
-import { User } from "../shared/kinds";
+import { User } from "../../../shared/src/kinds";
 
 export class BaseRouter {
     async getUserBySession(req: Request, res: Response) {
