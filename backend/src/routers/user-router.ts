@@ -194,7 +194,7 @@ export class UserRouter extends BaseRouter {
       }
 
       const organizationID = generateId();
-      const user = new User;
+      const user = new User();
       user.username = signupData.username;
       user.password = signupData.password;
       user.userType = signupData.userType;
@@ -235,50 +235,50 @@ export class UserRouter extends BaseRouter {
   private async createNewStore(userID: string, organizationID: string) {
     const store = new Store();
     store.id = organizationID;
-    storeDAO.saveStore(store);
+    await storeDAO.saveStore(store);
 
     const storeEmployee = new StoreEmployee();
     storeEmployee.userID = userID;
     storeEmployee.organizationID = organizationID;
-    storeDAO.saveStoreEmployee(storeEmployee);
+    await storeDAO.saveStoreEmployee(storeEmployee);
 
     const adminRole = new Role();
     adminRole.name = ADMIN_ROLE_NAME;
     adminRole.organizationID = organizationID;
     adminRole.description = "Administrator";
-    roleDAO.saveRole(adminRole);
+    await roleDAO.saveRole(adminRole);
     logger.log("Created admin role: ", adminRole);
 
     const userRole = new UserRole();
     userRole.userID = userID;
     userRole.roleID = adminRole.id;
-    roleDAO.saveUserRole(userRole);
+    await roleDAO.saveUserRole(userRole);
     logger.log("Created user role: ", userRole);
   }
 
   private async createNewCharity(userID: string, organizationID: string) {
     const charity = new Charity();
     charity.id = organizationID;
-    charityDAO.saveCharity(charity);
+    await charityDAO.saveCharity(charity);
     logger.log("Created charity: ", charity);
 
     const charityEmployee = new CharityEmployee();
     charityEmployee.userID = userID;
     charityEmployee.organizationID = organizationID;
-    charityDAO.saveCharityEmployee(charityEmployee);
+    await charityDAO.saveCharityEmployee(charityEmployee);
     logger.log("Created charity employee: ", charityEmployee);
 
     const adminRole = new Role();
     adminRole.name = ADMIN_ROLE_NAME;
     adminRole.organizationID = organizationID;
     adminRole.description = "Administrator";
-    roleDAO.saveRole(adminRole);
+    await roleDAO.saveRole(adminRole);
     logger.log("Created admin role: ", adminRole);
 
     const userRole = new UserRole();
     userRole.userID = userID;
     userRole.roleID = adminRole.id;
-    roleDAO.saveUserRole(userRole);
+    await roleDAO.saveUserRole(userRole);
     logger.log("Created user role: ", userRole);
   }
 
