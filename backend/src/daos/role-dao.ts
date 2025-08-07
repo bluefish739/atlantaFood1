@@ -2,6 +2,7 @@ import { Role, UserRole } from "../../../shared/src/kinds";
 import { generateId } from "../shared/idutilities";
 import { datastore } from "./data-store-factory";
 import { PropertyFilter } from "@google-cloud/datastore";
+import * as logger from "firebase-functions/logger";
 
 export class RoleDAO {
     static ROLE_KIND = "Role";
@@ -9,9 +10,10 @@ export class RoleDAO {
 
     public async getUserRolesByOrgID(organizationID: string) {
         const query = datastore.createQuery(RoleDAO.ROLE_KIND)
-            .filter(new PropertyFilter('organizationID', '=', organizationID));;
+            .filter(new PropertyFilter('organizationID', '=', organizationID));
         const data = await query.run();
         const roles = data[0];
+        logger.log("getUserRolesByOrgID: organizationID=" + organizationID, roles)
         return roles as Role[];
     }
 

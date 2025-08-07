@@ -117,8 +117,7 @@ export class XapiService {
   // Role API Requests
   //============================================================================================
   public async getAllUserRolesOfCurrentOrg() {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<Role[]>(`/xapi/roles/list-roles`, { headers }))
+    return this.getResponse<Role[]>(`/xapi/roles/list-roles`);
   }
 
   public async getRole(roleID: string) {
@@ -127,8 +126,7 @@ export class XapiService {
   }
 
   public async saveRole(role: Role) {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.post<Role>(`/xapi/roles/role`, role, { headers }));
+    return this.postResponse<Role>(`/xapi/roles/role`, role);
   }
   //============================================================================================
   // User/Credentials API Requests

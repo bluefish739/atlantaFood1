@@ -15,7 +15,6 @@ import { sessionAuthenticator } from '../../utilities/session-authentication';
 })
 export class UserListComponent {
   usersData!: User[];
-  organizationID = "e878dc70-f213-11ef-9653-8d47654d5c1c";
   currentUserID: string | undefined;
   constructor(
     private xapiService: XapiService,

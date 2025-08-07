@@ -103,7 +103,7 @@ export class UserDetailsComponent {
         const detailedUser = new DetailedUser();
         detailedUser.user = this.user;
         detailedUser.userRoleIDs = this.userRoleIDs;
-        await this.xapiService.saveUser(detailedUser!);
-        this.router.navigateByUrl("/users/list")
+        await this.xapiService.saveUser(detailedUser);
+        this.router.navigateByUrl("/users/list");
     }
 }

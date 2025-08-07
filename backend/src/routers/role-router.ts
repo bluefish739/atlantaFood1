@@ -21,7 +21,9 @@ export class RoleRouter extends BaseRouter {
                     return;
                 }
             }
+            role.organizationID = this.getCurrentOrganizationID(req);
             const id = await roleDAO.saveRole(role);
+            logger.log("saveRole: role=", role)
             logger.log("Role saved successfully! id=" + id);
             this.sendNormalResponse(res, role);
         } catch (error: any) {

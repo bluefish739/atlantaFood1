@@ -9,27 +9,71 @@ import { employeeHelpers } from "../shared/employee-helpers";
 
 export class UserRouter extends BaseRouter {
   async saveUser(req: Request, res: Response) {
-    const user = req.body as User;
+    const detailedUser = req.body as DetailedUser;
     try {
-      if (!user) {
+      if (!detailedUser.user) {
         logger.log("User entity is not provided");
         this.sendClientErrorResponse(res, { success: false, message: "User entity is not provided" }, 404);
         return;
       }
-      if (user.userID) {
-        const existingUser = await userDAO.getUser(user.userID);
-        if (!existingUser) {
-          this.sendClientErrorResponse(res, { success: false, message: "No user with id " + user.userID + " was found" }, 404);
+      const user = detailedUser.user;
+      if (!user.userID) {
+        // TODO: create new user to be saved
+        this.sendBadRequestResponse(res, { success: false, message: "No user id provided on user" });
+        return;
+      }
+
+      const existingUser: User | undefined = await userDAO.getUser(user.userID);
+      if (!existingUser) {
+        this.sendClientErrorResponse(res, { success: false, message: "No user with id " + user.userID + " was found" }, 404);
+        return;
+      }
+
+      existingUser.firstName = user.firstName;
+      existingUser.lastName = user.lastName;
+      existingUser.phoneNumber = user.phoneNumber;
+      const savedUser = await userDAO.saveUser(existingUser);
+      logger.log("User added successfully! id=" + savedUser.userID);
+
+      const newUserRoleIDs = detailedUser.userRoleIDs;
+      if (!newUserRoleIDs || !newUserRoleIDs.length) {
+        this.sendBadRequestResponse(res, { success: false, message: "No user roles provided" });
+        return;
+      }
+
+      const currentOrganizationID = this.getCurrentOrganizationID(req)!;
+      for (let newUserRoleID of newUserRoleIDs) {
+        const newUserRole = await roleDAO.getRole(newUserRoleID);
+        if (newUserRole.organizationID != currentOrganizationID) {
+          logger.log("saveUser: newUserRole not part of organization, newUserRoleID=" + newUserRole);
+          this.sendBadRequestResponse(res, { success: false, message: "Attempting to add role not belonging to current organization" });
           return;
         }
       }
-      const id = await userDAO.saveUser(user);
-      logger.log("User added successfully! id=" + id);
+
+      await this.updateUserRoles(savedUser.userID!, newUserRoleIDs);
       this.sendNormalResponse(res, user);
     } catch (error: any) {
       logger.log("Failed to add a user", error);
       this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
+  }
+
+  private async updateUserRoles(userID: string, newUserRoleIDs: string[]) {
+    const savedUserRolesIDs = (await roleDAO.getUserRolesByUserID(userID)).map(userRole => userRole.roleID!) || [];
+    savedUserRolesIDs.forEach(savedUserRolesID => {
+      if (!newUserRoleIDs.includes(savedUserRolesID)) {
+        // TODO: delete role
+      }
+    });
+    newUserRoleIDs.forEach(newUserRoleID => {
+      if (!savedUserRolesIDs.includes(newUserRoleID)) {
+        const userRole = new UserRole();
+        userRole.userID = userID;
+        userRole.roleID = newUserRoleID;
+        roleDAO.saveUserRole(userRole);
+      }
+    });
   }
 
   async getAllSiteUsers(req: Request, res: Response) {
@@ -49,9 +93,9 @@ export class UserRouter extends BaseRouter {
         //TODO: Implement this
         //userIDs = (await userDAO.getAdminsByOrganizationID(organizationID)).map(v => v.userID!);
       }
-      
+
       logger.log("getAllSiteUsers: organizationID from user ", organizationID);
-      const users: User[] = userIDs? await userDAO.getUsersByUserIDs(userIDs) : [];
+      const users: User[] = userIDs ? await userDAO.getUsersByUserIDs(userIDs) : [];
       logger.log("getAllSiteUsers: made it to send normal response", users);
       const usersData = users.map(user => {
         // Send back user object containing only needed attributes by frontend to avoid sending back sensitive data
@@ -201,7 +245,7 @@ export class UserRouter extends BaseRouter {
       user.sessionID = generateId();
       const id = await userDAO.saveUser(user);
       logger.log("User added successfully! id=" + id);
-      
+
       if (user.userType == "Store") {
         this.createNewStore(user.userID!, organizationID);
       } else if (user.userType == "Pantry") {
