@@ -17,23 +17,19 @@ export class UserRouter extends BaseRouter {
         return;
       }
       const user = detailedUser.user;
-      if (!user.userID) {
-        // TODO: create new user to be saved
-        this.sendBadRequestResponse(res, { success: false, message: "No user id provided on user" });
-        return;
-      }
-
-      const existingUser: User | undefined = await userDAO.getUser(user.userID);
-      if (!existingUser) {
-        this.sendClientErrorResponse(res, { success: false, message: "No user with id " + user.userID + " was found" }, 404);
-        return;
+      let existingUser = new User();
+      if (user.userID) {
+        existingUser = await userDAO.getUser(user.userID);
+        if (!existingUser) {
+          this.sendClientErrorResponse(res, { success: false, message: "No user with id " + user.userID + " was found" }, 404);
+          return;
+        }
       }
 
       existingUser.firstName = user.firstName;
       existingUser.lastName = user.lastName;
       existingUser.phoneNumber = user.phoneNumber;
       const savedUser = await userDAO.saveUser(existingUser);
-      logger.log("User added successfully! id=" + savedUser.userID);
 
       const newUserRoleIDs = detailedUser.userRoleIDs;
       if (!newUserRoleIDs || !newUserRoleIDs.length) {
@@ -51,29 +47,13 @@ export class UserRouter extends BaseRouter {
         }
       }
 
-      await this.updateUserRoles(savedUser.userID!, newUserRoleIDs);
+      const oldRoleIDs = (await roleDAO.getUserRolesByUserID(savedUser.userID!)).map(userRole => userRole.roleID!);
+      await employeeHelpers.updateRoles(savedUser.userID!, oldRoleIDs, newUserRoleIDs);
       this.sendNormalResponse(res, user);
     } catch (error: any) {
       logger.log("Failed to add a user", error);
       this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
-  }
-
-  private async updateUserRoles(userID: string, newUserRoleIDs: string[]) {
-    const savedUserRolesIDs = (await roleDAO.getUserRolesByUserID(userID)).map(userRole => userRole.roleID!) || [];
-    savedUserRolesIDs.forEach(savedUserRolesID => {
-      if (!newUserRoleIDs.includes(savedUserRolesID)) {
-        // TODO: delete role
-      }
-    });
-    newUserRoleIDs.forEach(newUserRoleID => {
-      if (!savedUserRolesIDs.includes(newUserRoleID)) {
-        const userRole = new UserRole();
-        userRole.userID = userID;
-        userRole.roleID = newUserRoleID;
-        roleDAO.saveUserRole(userRole);
-      }
-    });
   }
 
   async getAllSiteUsers(req: Request, res: Response) {

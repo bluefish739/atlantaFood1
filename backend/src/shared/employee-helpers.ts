@@ -4,7 +4,7 @@ import { datastore } from "../daos/data-store-factory";
 import { RoleDAO } from "../daos/role-dao";
 import { UserDAO } from "../daos/user-dao";
 import { StoreDAO } from "../daos/store-dao";
-import { UserType } from "../../../shared/src/kinds";
+import { UserRole, UserType } from "../../../shared/src/kinds";
 import { CharityDAO } from "../daos/charity-dao";
 import { VolunteerDAO } from "../daos/volunteer-dao";
 
@@ -79,6 +79,43 @@ class EmployeeHelpers {
             logger.log('Transaction failed:', error);
             return false;
         }
+    }
+
+    private async deleteOutdatedRoles(userID: string, outdatedRoleIDs: string[]) {
+        const transaction = datastore.transaction();
+        const keys = [];
+        try {
+            for (let outdatedRoleID of outdatedRoleIDs) {
+                keys.push(datastore.key([RoleDAO.USER_ROLE_KIND, userID + "|" + outdatedRoleID]));
+            }
+            await transaction.run();
+            transaction.delete(keys);
+            await transaction.commit();
+            logger.log('Entities deleted successfully.');
+            return true;
+        } catch (error) {
+            await transaction.rollback();
+            logger.log('Transaction failed:', error);
+            return false;
+        }
+    }
+
+    public async updateRoles(userID: string, oldRoleIDs: string[], newRoleIDs: string[]) {
+        const outdatedRoleIDs: string[] = [];
+        oldRoleIDs.forEach(savedUserRolesID => {
+            if (!newRoleIDs.includes(savedUserRolesID)) {
+                outdatedRoleIDs.push(savedUserRolesID);
+            }
+        });
+        this.deleteOutdatedRoles(userID, outdatedRoleIDs);
+        newRoleIDs.forEach(newUserRoleID => {
+            if (!oldRoleIDs.includes(newUserRoleID)) {
+                const userRole = new UserRole();
+                userRole.userID = userID;
+                userRole.roleID = newUserRoleID;
+                roleDAO.saveUserRole(userRole);
+            }
+        });
     }
 }
 
