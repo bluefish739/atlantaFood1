@@ -103,7 +103,11 @@ export class UserDetailsComponent {
         const detailedUser = new DetailedUser();
         detailedUser.user = this.user;
         detailedUser.userRoleIDs = this.userRoleIDs;
-        await this.xapiService.saveUser(detailedUser);
-        this.router.navigateByUrl("/users/list");
+        const response: any = await this.xapiService.saveUser(detailedUser);
+        if (response.message) {
+            this.message = response.message;
+        } else {
+            this.router.navigateByUrl("/users/list");
+        }
     }
 }

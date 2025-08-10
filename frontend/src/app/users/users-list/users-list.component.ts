@@ -42,7 +42,8 @@ export class UserListComponent {
     }
     const removalResponse = (await this.xapiService.removeUserFromSite(userID));
     console.log("removeUser: removal response=", removalResponse);
+    this.usersData = this.usersData.filter(userData => userData.userID != userID);
   }
 }
 
-//(click)="confirmRemoveUser(user.userID, user.firstName, user.lastName)"
+// TODO: (click)="confirmRemoveUser(user.userID, user.firstName, user.lastName)"

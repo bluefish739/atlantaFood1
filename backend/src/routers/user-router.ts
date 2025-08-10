@@ -16,6 +16,10 @@ export class UserRouter extends BaseRouter {
       const existingUser = await this.validateSaveUserRequest(organizationID, detailedUser);
       userBeingSaved = existingUser ? existingUser : new User();
     } catch (error: any) {
+      if (error == "USERNAME_TAKEN") {
+        this.sendNormalResponse(res, { success: false, message: "Username already taken, please choose another." });
+        return;
+      }
       logger.log("saveUser: failed to validate detailedUser object ", detailedUser);
       this.sendBadRequestResponse(res, { success: false, message: error });
       return;
@@ -26,6 +30,7 @@ export class UserRouter extends BaseRouter {
     userBeingSaved.firstName = user.firstName;
     userBeingSaved.lastName = user.lastName;
     userBeingSaved.phoneNumber = user.phoneNumber;
+    userBeingSaved.username = user.username;
     userBeingSaved.userType = this.getCurrentUser(req)!.userType;
     if (!userBeingSaved.userID) {
       userBeingSaved.userID = generateId();
@@ -76,6 +81,13 @@ export class UserRouter extends BaseRouter {
         throw "Attempting to modify user not on organization";
       }
       return existingUser;
+    }
+
+    if (user.username) {
+      const isUsernameTaken = await this.checkDuplicatedUsername(user.username);
+      if (isUsernameTaken) {
+        throw 'USERNAME_TAKEN';
+      }
     }
 
     return null;
