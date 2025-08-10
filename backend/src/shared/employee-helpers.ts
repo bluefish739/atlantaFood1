@@ -81,41 +81,48 @@ class EmployeeHelpers {
         }
     }
 
-    private async deleteOutdatedRoles(userID: string, outdatedRoleIDs: string[]) {
-        const transaction = datastore.transaction();
-        const keys = [];
-        try {
-            for (let outdatedRoleID of outdatedRoleIDs) {
-                keys.push(datastore.key([RoleDAO.USER_ROLE_KIND, userID + "|" + outdatedRoleID]));
+    private buildEmployeeRecordEntity(userType: string, userID: string, organizationID: string) {
+        switch (userType) {
+            case UserType.STORE: {
+                const storeEmployee = new StoreEmployee();
+                storeEmployee.userID = userID;
+                storeEmployee.organizationID = organizationID;
+                const storeEmployeeKey = datastore.key([StoreDAO.STORE_EMPLOYEE_KIND, userID]);
+                const storeEmployeeEntity = {
+                    key: storeEmployeeKey,
+                    data: storeEmployee
+                };
+                return [storeEmployeeEntity];
             }
-            await transaction.run();
-            transaction.delete(keys);
-            await transaction.commit();
-            logger.log('Entities deleted successfully.');
-            return true;
-        } catch (error) {
-            await transaction.rollback();
-            logger.log('Transaction failed:', error);
-            return false;
+            case UserType.PANTRY: {
+                const charityEmployee = new CharityEmployee();
+                charityEmployee.userID = userID;
+                charityEmployee.organizationID = organizationID;
+                const charityEmployeeKey = datastore.key([CharityDAO.CHARITY_EMPLOYEE_KIND, userID]);
+                const charityEmployeeEntity = {
+                    key: charityEmployeeKey,
+                    data: charityEmployee
+                };
+                return [charityEmployeeEntity];
+            }
+            case UserType.VOLUNTEER: {
+                const volunteer = new TransportVolunteer();
+                volunteer.userID = userID;
+                volunteer.organizationID = organizationID;
+                const volunteerKey = datastore.key([VolunteerDAO.VOLUNTEER_KIND, userID]);
+                const volunteerEntity = {
+                    key: volunteerKey,
+                    data: volunteer
+                };
+                return [volunteerEntity];
+            }
+            case UserType.ADMIN: {
+                throw new Error("TODO: Admin record class not implemented");
+            }
+            default: {
+                throw new Error("Unknown user type=" + userType);
+            }
         }
-    }
-
-    public async updateRoles(userID: string, oldUserRoleIDs: string[], newUserRoleIDs: string[]) {
-        const outdatedRoleIDs: string[] = [];
-        oldUserRoleIDs.forEach(userRoleID => {
-            if (!newUserRoleIDs.includes(userRoleID)) {
-                outdatedRoleIDs.push(userRoleID);
-            }
-        });
-        this.deleteOutdatedRoles(userID, outdatedRoleIDs);
-        newUserRoleIDs.forEach(userRoleID => {
-            if (!oldUserRoleIDs.includes(userRoleID)) {
-                const userRole = new UserRole();
-                userRole.userID = userID;
-                userRole.roleID = userRoleID;
-                roleDAO.saveUserRole(userRole);
-            }
-        });
     }
 
     public async saveEmployee(user: User, organizationID: string, idsOfUserRolesToSave: string[], idsOfUserRolesToDelete: string[]) {
@@ -127,50 +134,14 @@ class EmployeeHelpers {
                 key: userKey,
                 data: user
             };
-            transaction.save([userEntity]);
 
-            const userType = user.userType;
-            if (userType == UserType.STORE) {
-                const storeEmployee = new StoreEmployee();
-                storeEmployee.userID = user.userID;
-                storeEmployee.organizationID = organizationID;
-                const storeEmployeeKey = datastore.key([StoreDAO.STORE_EMPLOYEE_KIND, userID]);
-                const storeEmployeeEntity = {
-                    key: storeEmployeeKey,
-                    data: storeEmployee
-                };
-                transaction.save([storeEmployeeEntity]);
-            } else if (userType == UserType.PANTRY) {
-                const charityEmployee = new CharityEmployee();
-                charityEmployee.userID = user.userID;
-                charityEmployee.organizationID = organizationID;
-                const charityEmployeeKey = datastore.key([CharityDAO.CHARITY_EMPLOYEE_KIND, userID]);
-                const charityEmployeeEntity = {
-                    key: charityEmployeeKey,
-                    data: charityEmployee
-                };
-                transaction.save([charityEmployeeEntity]);
-            } else if (userType == UserType.VOLUNTEER) {
-                const volunteer = new TransportVolunteer();
-                volunteer.userID = user.userID;
-                volunteer.organizationID = organizationID;
-                const volunteerKey = datastore.key([VolunteerDAO.VOLUNTEER_KIND, userID]);
-                const volunteerEntity = {
-                    key: volunteerKey,
-                    data: volunteer
-                };
-                transaction.save([volunteerEntity]);
-            } else if (userType == UserType.ADMIN) {
-                throw new Error("TODO: Admin record class not implemented");
-            } else {
-                throw new Error("Unknown user type=" + userType);
-            }
+            transaction.save([userEntity]);
+            transaction.save(this.buildEmployeeRecordEntity(user.userType!, userID, organizationID));
 
             const userRoleEntities = idsOfUserRolesToSave.map(userRoleID => {
                 const userRole = new UserRole();
                 userRole.roleID = userRoleID;
                 userRole.userID = user.userID;
-
                 const userRoleKey = datastore.key([RoleDAO.USER_ROLE_KIND, user.userID + "|" + userRoleID]);
                 const userRoleEntity = {
                     key: userRoleKey,
@@ -180,10 +151,7 @@ class EmployeeHelpers {
             });
             transaction.save(userRoleEntities);
 
-            const keysOfUserRolesToDelete = [];
-            for (let userRoleID of idsOfUserRolesToDelete) {
-                keysOfUserRolesToDelete.push(datastore.key([RoleDAO.USER_ROLE_KIND, user.userID + "|" + userRoleID]));
-            }
+            const keysOfUserRolesToDelete = idsOfUserRolesToDelete.map(userRoleID => datastore.key([RoleDAO.USER_ROLE_KIND, user.userID + "|" + userRoleID]));
             await transaction.run();
             transaction.delete(keysOfUserRolesToDelete);
             await transaction.commit();
