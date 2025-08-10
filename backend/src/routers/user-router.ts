@@ -10,50 +10,75 @@ import { employeeHelpers } from "../shared/employee-helpers";
 export class UserRouter extends BaseRouter {
   async saveUser(req: Request, res: Response) {
     const detailedUser = req.body as DetailedUser;
+    const organizationID = this.getCurrentOrganizationID(req)!;
+    let userBeingSaved: User;
     try {
-      if (!detailedUser.user) {
-        logger.log("User entity is not provided");
-        this.sendClientErrorResponse(res, { success: false, message: "User entity is not provided" }, 404);
-        return;
-      }
-      const user = detailedUser.user;
-      let existingUser = new User();
-      if (user.userID) {
-        existingUser = await userDAO.getUser(user.userID);
-        if (!existingUser) {
-          this.sendClientErrorResponse(res, { success: false, message: "No user with id " + user.userID + " was found" }, 404);
-          return;
-        }
-      }
+      const existingUser = await this.validateSaveUserRequest(organizationID, detailedUser);
+      userBeingSaved = existingUser ? existingUser : new User();
+    } catch (error: any) {
+      logger.log("saveUser: failed to validate detailedUser object ", detailedUser);
+      this.sendBadRequestResponse(res, { success: false, message: error });
+      return;
+    }
 
-      existingUser.firstName = user.firstName;
-      existingUser.lastName = user.lastName;
-      existingUser.phoneNumber = user.phoneNumber;
-      const savedUser = await userDAO.saveUser(existingUser);
-
-      const newUserRoleIDs = detailedUser.userRoleIDs;
-      if (!newUserRoleIDs || !newUserRoleIDs.length) {
-        this.sendBadRequestResponse(res, { success: false, message: "No user roles provided" });
-        return;
-      }
-
-      const currentOrganizationID = this.getCurrentOrganizationID(req)!;
-      for (let newUserRoleID of newUserRoleIDs) {
-        const newUserRole = await roleDAO.getRole(newUserRoleID);
-        if (newUserRole.organizationID != currentOrganizationID) {
-          logger.log("saveUser: newUserRole not part of organization, newUserRoleID=" + newUserRole);
-          this.sendBadRequestResponse(res, { success: false, message: "Attempting to add role not belonging to current organization" });
-          return;
-        }
-      }
-
-      const oldRoleIDs = (await roleDAO.getUserRolesByUserID(savedUser.userID!)).map(userRole => userRole.roleID!);
-      await employeeHelpers.updateRoles(savedUser.userID!, oldRoleIDs, newUserRoleIDs);
+    const user = detailedUser.user!;
+    const newUserRoleIDs = detailedUser.userRoleIDs;
+    userBeingSaved.firstName = user.firstName;
+    userBeingSaved.lastName = user.lastName;
+    userBeingSaved.phoneNumber = user.phoneNumber;
+    userBeingSaved.userType = this.getCurrentUser(req)!.userType;
+    if (!userBeingSaved.userID) {
+      userBeingSaved.userID = generateId();
+    }
+    try {
+      const oldUserRoleIDs = (await roleDAO.getUserRolesByUserID(userBeingSaved.userID!)).map(userRole => userRole.roleID!);
+      const idsOfUserRolesToDelete = oldUserRoleIDs.filter(userRoleID => !newUserRoleIDs.includes(userRoleID));
+      const idsOfUserRolesToSave = newUserRoleIDs.filter(userRoleID => !oldUserRoleIDs.includes(userRoleID));
+      await employeeHelpers.saveEmployee(userBeingSaved, organizationID, idsOfUserRolesToSave, idsOfUserRolesToDelete);
       this.sendNormalResponse(res, user);
     } catch (error: any) {
       logger.log("Failed to add a user", error);
       this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
+  }
+
+  private async validateSaveUserRequest(organizationID: string, detailedUser: DetailedUser) {
+    const user = detailedUser.user;
+    if (!user) {
+      logger.log("User entity is not provided");
+      throw "User entity is not provided";
+    }
+
+    const newUserRoleIDs = detailedUser.userRoleIDs;
+    if (!newUserRoleIDs || !newUserRoleIDs.length) {
+      throw "No user roles provided";
+    }
+
+    for (let newUserRoleID of newUserRoleIDs) {
+      const newUserRole = await roleDAO.getRole(newUserRoleID);
+      if (!newUserRole) {
+        logger.log("saveUser: newUserRole does not exist, newUserRoleID=" + newUserRole);
+        throw "Attempting to assign nonexistent role";
+      }
+      if (newUserRole.organizationID != organizationID) {
+        logger.log("saveUser: newUserRole not part of organization, newUserRoleID=" + newUserRole);
+        throw "Attempting to assign role not belonging to current organization";
+      }
+    }
+
+    if (user.userID) {
+      const existingUser = await userDAO.getUser(user.userID);
+      if (!existingUser) {
+        throw "No user with id " + user.userID + " was found";
+      }
+
+      if (await employeeHelpers.getOrganizationOfUser(existingUser.userType, existingUser.userID) != organizationID) {
+        throw "Attempting to modify user not on organization";
+      }
+      return existingUser;
+    }
+
+    return null;
   }
 
   async getAllSiteUsers(req: Request, res: Response) {

@@ -4,7 +4,7 @@ import { datastore } from "../daos/data-store-factory";
 import { RoleDAO } from "../daos/role-dao";
 import { UserDAO } from "../daos/user-dao";
 import { StoreDAO } from "../daos/store-dao";
-import { UserRole, UserType } from "../../../shared/src/kinds";
+import { CharityEmployee, StoreEmployee, TransportVolunteer, User, UserRole, UserType } from "../../../shared/src/kinds";
 import { CharityDAO } from "../daos/charity-dao";
 import { VolunteerDAO } from "../daos/volunteer-dao";
 
@@ -100,22 +100,99 @@ class EmployeeHelpers {
         }
     }
 
-    public async updateRoles(userID: string, oldRoleIDs: string[], newRoleIDs: string[]) {
+    public async updateRoles(userID: string, oldUserRoleIDs: string[], newUserRoleIDs: string[]) {
         const outdatedRoleIDs: string[] = [];
-        oldRoleIDs.forEach(savedUserRolesID => {
-            if (!newRoleIDs.includes(savedUserRolesID)) {
-                outdatedRoleIDs.push(savedUserRolesID);
+        oldUserRoleIDs.forEach(userRoleID => {
+            if (!newUserRoleIDs.includes(userRoleID)) {
+                outdatedRoleIDs.push(userRoleID);
             }
         });
         this.deleteOutdatedRoles(userID, outdatedRoleIDs);
-        newRoleIDs.forEach(newUserRoleID => {
-            if (!oldRoleIDs.includes(newUserRoleID)) {
+        newUserRoleIDs.forEach(userRoleID => {
+            if (!oldUserRoleIDs.includes(userRoleID)) {
                 const userRole = new UserRole();
                 userRole.userID = userID;
-                userRole.roleID = newUserRoleID;
+                userRole.roleID = userRoleID;
                 roleDAO.saveUserRole(userRole);
             }
         });
+    }
+
+    public async saveEmployee(user: User, organizationID: string, idsOfUserRolesToSave: string[], idsOfUserRolesToDelete: string[]) {
+        const userID = user.userID!;
+        const transaction = datastore.transaction();
+        try {
+            const userKey = datastore.key([UserDAO.USER_KIND, userID]);
+            const userEntity = {
+                key: userKey,
+                data: user
+            };
+            transaction.save([userEntity]);
+
+            const userType = user.userType;
+            if (userType == UserType.STORE) {
+                const storeEmployee = new StoreEmployee();
+                storeEmployee.userID = user.userID;
+                storeEmployee.organizationID = organizationID;
+                const storeEmployeeKey = datastore.key([StoreDAO.STORE_EMPLOYEE_KIND, userID]);
+                const storeEmployeeEntity = {
+                    key: storeEmployeeKey,
+                    data: storeEmployee
+                };
+                transaction.save([storeEmployeeEntity]);
+            } else if (userType == UserType.PANTRY) {
+                const charityEmployee = new CharityEmployee();
+                charityEmployee.userID = user.userID;
+                charityEmployee.organizationID = organizationID;
+                const charityEmployeeKey = datastore.key([CharityDAO.CHARITY_EMPLOYEE_KIND, userID]);
+                const charityEmployeeEntity = {
+                    key: charityEmployeeKey,
+                    data: charityEmployee
+                };
+                transaction.save([charityEmployeeEntity]);
+            } else if (userType == UserType.VOLUNTEER) {
+                const volunteer = new TransportVolunteer();
+                volunteer.userID = user.userID;
+                volunteer.organizationID = organizationID;
+                const volunteerKey = datastore.key([VolunteerDAO.VOLUNTEER_KIND, userID]);
+                const volunteerEntity = {
+                    key: volunteerKey,
+                    data: volunteer
+                };
+                transaction.save([volunteerEntity]);
+            } else if (userType == UserType.ADMIN) {
+                throw new Error("TODO: Admin record class not implemented");
+            } else {
+                throw new Error("Unknown user type=" + userType);
+            }
+
+            const userRoleEntities = idsOfUserRolesToSave.map(userRoleID => {
+                const userRole = new UserRole();
+                userRole.roleID = userRoleID;
+                userRole.userID = user.userID;
+
+                const userRoleKey = datastore.key([RoleDAO.USER_ROLE_KIND, user.userID + "|" + userRoleID]);
+                const userRoleEntity = {
+                    key: userRoleKey,
+                    data: userRole
+                };
+                return userRoleEntity;
+            });
+            transaction.save(userRoleEntities);
+
+            const keysOfUserRolesToDelete = [];
+            for (let userRoleID of idsOfUserRolesToDelete) {
+                keysOfUserRolesToDelete.push(datastore.key([RoleDAO.USER_ROLE_KIND, user.userID + "|" + userRoleID]));
+            }
+            await transaction.run();
+            transaction.delete(keysOfUserRolesToDelete);
+            await transaction.commit();
+            return true;
+        } catch (error) {
+            await transaction.rollback();
+            logger.log('saveUser: Transaction failed ', error);
+            return false;
+        }
     }
 }
 
