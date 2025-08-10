@@ -32,9 +32,9 @@ export class UserRouter extends BaseRouter {
     userBeingSaved.phoneNumber = user.phoneNumber;
     userBeingSaved.username = user.username;
     userBeingSaved.userType = this.getCurrentUser(req)!.userType;
-    if (!userBeingSaved.userID) {
-      userBeingSaved.userID = generateId();
-    }
+    if (!userBeingSaved.userID) userBeingSaved.userID = generateId();
+    if (!userBeingSaved.password) userBeingSaved.password = generateId().slice(0, 6);
+    
     try {
       const oldUserRoleIDs = (await roleDAO.getUserRolesByUserID(userBeingSaved.userID!)).map(userRole => userRole.roleID!);
       const idsOfUserRolesToDelete = oldUserRoleIDs.filter(userRoleID => !newUserRoleIDs.includes(userRoleID));
