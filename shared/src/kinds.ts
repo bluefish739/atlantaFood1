@@ -113,6 +113,14 @@ export class Food {
     organizationID: string | undefined;
 }
 
+export class InventoryEntry {
+    foodID: string | undefined;
+    name: string | undefined;
+    currentQuantity: number | undefined;
+    entryDate: string | undefined;
+    categories: string[] = [];
+}
+
 export class FoodCateogoriesList {
     foodID: string | undefined;
     foodCategoryID: string | undefined;
@@ -151,14 +159,6 @@ export class LoginResponse {
     sessionID: string | undefined;
     userID: string | undefined;
     userType: string | undefined;
-}
-
-export class InventoryEntry {
-    foodName: string | undefined;
-    units: number | undefined;
-    expirationDate: Date | undefined;
-    source: string | undefined;
-    tags: string[] = [];
 }
 
 export class GeneralConfirmationResponse {

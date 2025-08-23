@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Food } from '../../../../../../shared/src/kinds';
 import { XapiService } from '../../../xapi.service';
+import { InventoryEntry } from '../../../../../../shared/src/kinds';
 
 @Component({
   selector: 'store-inventory-details',
@@ -12,7 +12,7 @@ import { XapiService } from '../../../xapi.service';
   styleUrl: './store-inventory-details.component.scss'
 })
 export class StoreInventoryDetailsComponent {
-  inventoryData: Food[] = [];
+  inventoryData: InventoryEntry[] = [];
   constructor(
     private xapiService: XapiService,
     private activatedRoute: ActivatedRoute,
