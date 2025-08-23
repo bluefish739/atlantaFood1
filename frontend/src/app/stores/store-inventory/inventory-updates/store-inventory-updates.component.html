@@ -13,6 +13,14 @@
           <input type="number" id="quantity" name="quantity" required [(ngModel)]="food.initialQuantity" placeholder="e.g., 100">
         </div>
         <div class="form-group">
+          <label>Food Categories</label>
+          <div class="checkbox-group">
+            <label *ngFor="let category of foodCategories; let idx=index" class="inline-label">
+              <input type="checkbox" [name]="category.name"> {{ category.name }}
+            </label>
+          </div>
+        </div>
+        <div class="form-group">
           <label for="expirationDate">Expiration Date</label>
           <input type="date" id="expirationDate" name="expirationDate" required [(ngModel)]="expirationDate">
         </div>

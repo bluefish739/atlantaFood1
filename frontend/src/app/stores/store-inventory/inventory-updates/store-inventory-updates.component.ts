@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Food, GeneralConfirmationResponse, InventoryEntry } from '../../../../../../shared/src/kinds';
 import { XapiService } from '../../../xapi.service';
+import { foodCategories } from '../../../../../../shared/src/food-categories';
 
 @Component({
   selector: 'store-inventory-updates',
@@ -14,6 +15,7 @@ import { XapiService } from '../../../xapi.service';
 export class StoreInventoryUpdatesComponent {
   food = new Food();
   expirationDate: string | undefined;
+  foodCategories = foodCategories;
   constructor(
     private xapiService: XapiService,
     private router: Router
