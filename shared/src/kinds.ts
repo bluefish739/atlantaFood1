@@ -106,11 +106,20 @@ export const ADMIN_ROLE_NAME = "ORGANIZATION_ADMIN";
 export class Food {
     foodID: string | undefined;
     name: string | undefined;
-    categories: string[] = [];
+    initialQuantity: number | undefined;
+    currentQuantity: number | undefined;
+    expirationDate: string | undefined;
+    entryDate: string | undefined;
+    organizationID: string | undefined;
+}
+
+export class FoodCateogoriesList {
+    foodID: string | undefined;
+    foodCategoryID: string | undefined;
 }
 
 export class FoodCategory {
-    foodCateogryID: string | undefined;
+    foodCategoryID: string | undefined;
     name: string | undefined;
 }
 

@@ -13,7 +13,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class StoreDetailsComponent {
   store = new Store();
-  constructor(private xapiService: XapiService,
+  constructor(
+    private xapiService: XapiService,
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) {
@@ -22,10 +23,10 @@ export class StoreDetailsComponent {
   storeID = ""
   async ngOnInit() {
     const id = this.activatedRoute.snapshot.params['id'];
-    if(id && id!='new') {
+    if (id && id != 'new') {
       this.store = await this.xapiService.getStore(id);
       this.storeID = id;
-      if(!this.store) {
+      if (!this.store) {
         this.store = new Store();
       }
     }

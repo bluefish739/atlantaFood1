@@ -13,7 +13,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class LocationDetailsComponent {
   location = new StoreLocation();
-  constructor(private xapiService: XapiService,
+  constructor(
+    private xapiService: XapiService,
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) {

@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { InventoryEntry } from '../../../../../../shared/src/kinds';
+import { Food } from '../../../../../../shared/src/kinds';
+import { XapiService } from '../../../xapi.service';
 
 @Component({
   selector: 'store-inventory-details',
@@ -11,20 +12,15 @@ import { InventoryEntry } from '../../../../../../shared/src/kinds';
   styleUrl: './store-inventory-details.component.scss'
 })
 export class StoreInventoryDetailsComponent {
-  // Get store from user somehow
-  // inventory = Store.inventory;
+  inventoryData: Food[] = [];
+  constructor(
+    private xapiService: XapiService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router
+  ) {
+  }
 
-  // Placeholder inventory data
-  inventoryData: InventoryEntry[] = [
-    {
-      foodName: "Tomato",
-      units: 47,
-      expirationDate: new Date("2025-09-09"),
-      source: undefined,
-      tags: ["Fresh", "Produce"]
-    }
-  ]
-  constructor() {
-    // Generate inventoryData from store.inventory
+  async ngOnInit() {
+    this.inventoryData = await this.xapiService.getStoreInventory();
   }
 }
