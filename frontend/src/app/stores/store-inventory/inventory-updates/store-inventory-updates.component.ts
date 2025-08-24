@@ -28,7 +28,7 @@ export class StoreInventoryUpdatesComponent {
     this.food.entryDate = Date.now();
     const date = new Date(this.expirationDate + "T00:00:00Z");
     this.food.expirationDate = date.getTime();
-    const response = await this.xapiService.postFood(this.food);
+    const response = await this.xapiService.saveFood(this.food);
     if (!response.success) {
       // Something went wrong
     } else {

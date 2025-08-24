@@ -86,7 +86,7 @@ export class XapiService {
     return this.getResponse<InventoryEntry[]>(`/xapi/stores/get-store-inventory`);
   }
 
-  public async postFood(food: Food) {
+  public async saveFood(food: Food) {
     return this.postResponse<GeneralConfirmationResponse>(`/xapi/stores/post-food`, food);
   }
   //============================================================================================
