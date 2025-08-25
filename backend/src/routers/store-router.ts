@@ -1,8 +1,8 @@
 import express, { Request, Response, Router } from "express";
 import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
-import { Store } from "../../../shared/src/kinds";
-import { storeLocationDAO, storeDAO } from "../daos/dao-factory";
+import { InventoryEntry, Store } from "../../../shared/src/kinds";
+import { storeLocationDAO, storeDAO, foodDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
 
 export class StoreRouter extends BaseRouter {
@@ -90,6 +90,25 @@ export class StoreRouter extends BaseRouter {
     }
   }
 
+  async getStoreInventory(req: Request, res: Response) {
+    try {
+      const organizationID = this.getCurrentOrganizationID(req)!;
+      const foodData = await foodDAO.getFoodByOrganizationID(organizationID);
+      const foodValueObjects = foodData.map(food => {
+        const inventoryEntry = new InventoryEntry();
+        inventoryEntry.foodID = food.foodID;
+        inventoryEntry.name = food.name;
+        inventoryEntry.currentQuantity = food.currentQuantity;
+        inventoryEntry.entryDate = food.entryDate;
+        return inventoryEntry;
+      });
+      this.sendNormalResponse(res, foodValueObjects);
+    } catch (error: any) {
+      logger.log("getStoreInventory: failed", error)
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
+    }
+  }
+
   static buildRouter(): Router {
     const storeRouter = new StoreRouter();
     return express.Router()
@@ -97,6 +116,7 @@ export class StoreRouter extends BaseRouter {
       .get('/all', authenticator([]), storeRouter.getAllStores.bind(storeRouter))
       .get('/store/:storeId', authenticator([]), storeRouter.getStore.bind(storeRouter))
       .get('/:storeID/locations', authenticator([]), storeRouter.getStoreLocations.bind(storeRouter))
-      .post('/store', authenticator([]), storeRouter.addStore.bind(storeRouter));
+      .post('/store', authenticator([]), storeRouter.addStore.bind(storeRouter))
+      .get('/xapi/stores/get-store-inventory', authenticator([]), storeRouter.getStoreInventory.bind(storeRouter));
   }
 }
