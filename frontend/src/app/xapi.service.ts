@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent, HttpHandlerFn, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Store, Charity, StoreLocation, CharityLocation, Role, User, VerificationResponse, SignupData, GeneralConfirmationResponse, LoginRequest, LoginResponse, DetailedUser, Food, InventoryEntry } from '../../../shared/src/kinds';
+import { Store, Charity, StoreLocation, CharityLocation, Role, User, VerificationResponse, SignupData, GeneralConfirmationResponse, LoginRequest, LoginResponse, DetailedUser, Food, InventoryEntry, FoodCategory } from '../../../shared/src/kinds';
 import { first, firstValueFrom, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { sessionAuthenticator } from './utilities/session-authentication';
@@ -82,13 +82,6 @@ export class XapiService {
     return await firstValueFrom(this.http.get<StoreLocation>(`/xapi/store-locations/location/` + id, { headers }));
   }
   
-  public async getStoreInventory() {
-    return this.getResponse<InventoryEntry[]>(`/xapi/stores/get-store-inventory`);
-  }
-
-  public async saveFood(food: Food) {
-    return this.postResponse<GeneralConfirmationResponse>(`/xapi/stores/post-food`, food);
-  }
   //============================================================================================
   // Charity API Requests
   //============================================================================================
@@ -167,5 +160,19 @@ export class XapiService {
 
   public async removeUserFromSite(userID: string) {
     return this.deleteResponse<GeneralConfirmationResponse>(`/xapi/users/remove-user/${userID}`);
+  }
+  //============================================================================================
+  // Food/Inventory API Requests
+  //============================================================================================
+  public async getStoreInventory() {
+    return this.getResponse<InventoryEntry[]>(`/xapi/stores/get-store-inventory`);
+  }
+
+  public async saveFood(food: Food) {
+    return this.postResponse<GeneralConfirmationResponse>(`/xapi/stores/post-food`, food);
+  }
+
+  public async getFoodCategories() {
+    return this.getResponse<FoodCategory[]>(`/xapi/stores/get-food-categories`);
   }
 }
