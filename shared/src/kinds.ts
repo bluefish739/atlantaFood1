@@ -121,7 +121,7 @@ export class InventoryEntry {
     categories: string[] = [];
 }
 
-export class FoodCategoriesList {
+export class FoodCategoryAssociation {
     foodID: string | undefined;
     foodCategoryID: string | undefined;
 }

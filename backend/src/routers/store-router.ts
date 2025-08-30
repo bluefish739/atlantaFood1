@@ -90,18 +90,33 @@ export class StoreRouter extends BaseRouter {
     }
   }
 
+  private async getCategoriesByFoodID(foodID: string) {
+    const categories = await Promise.all(
+      (await foodDAO.getFoodCategoryAssociationsByFoodID(foodID)).map(async foodCategoryAssociation => {
+        const foodCategoryID = foodCategoryAssociation.foodCategoryID!;
+        const foodCategory = await foodDAO.getFoodCategoryByID(foodCategoryID);
+        return foodCategory.name!;
+      })
+    );
+    return categories;
+  }
+
   async getStoreInventory(req: Request, res: Response) {
     try {
+      logger.log("getStoreInventory: beginning");
       const organizationID = this.getCurrentOrganizationID(req)!;
       const foodData = await foodDAO.getFoodByOrganizationID(organizationID);
-      const foodValueObjects = foodData.map(food => {
+      const foodValueObjects = foodData.map(async food => {
         const inventoryEntry = new InventoryEntry();
         inventoryEntry.foodID = food.foodID;
         inventoryEntry.name = food.name;
         inventoryEntry.currentQuantity = food.currentQuantity;
         inventoryEntry.entryDate = food.entryDate;
+        inventoryEntry.categories = await this.getCategoriesByFoodID(inventoryEntry.foodID!);
+
         return inventoryEntry;
       });
+      logger.log("getStoreInventory: foodValueObjects=", foodValueObjects);
       this.sendNormalResponse(res, foodValueObjects);
     } catch (error: any) {
       logger.log("getStoreInventory: failed", error)
@@ -117,6 +132,6 @@ export class StoreRouter extends BaseRouter {
       .get('/store/:storeId', authenticator([]), storeRouter.getStore.bind(storeRouter))
       .get('/:storeID/locations', authenticator([]), storeRouter.getStoreLocations.bind(storeRouter))
       .post('/store', authenticator([]), storeRouter.addStore.bind(storeRouter))
-      .get('/xapi/stores/get-store-inventory', authenticator([]), storeRouter.getStoreInventory.bind(storeRouter));
+      .get('/get-store-inventory', authenticator([]), storeRouter.getStoreInventory.bind(storeRouter));
   }
 }

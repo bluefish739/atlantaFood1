@@ -7,7 +7,7 @@ import { BaseRouter } from "./base-router";
 export class FoodRouter extends BaseRouter {
     async getFoodCategories(req: Request, res: Response) {
         try {
-            const foodCategories = await foodDAO.getFoodCategories();
+            const foodCategories = await foodDAO.getAllFoodCategories();
             this.sendNormalResponse(res, foodCategories);
         } catch (error: any) {
             logger.log("getStoreInventory: failed", error)

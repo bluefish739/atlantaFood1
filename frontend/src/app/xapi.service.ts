@@ -173,6 +173,6 @@ export class XapiService {
   }
 
   public async getFoodCategories() {
-    return this.getResponse<FoodCategory[]>(`/xapi/stores/get-food-categories`);
+    return this.getResponse<FoodCategory[]>(`/xapi/food/get-food-categories`);
   }
 }
