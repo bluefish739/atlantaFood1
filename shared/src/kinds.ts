@@ -113,7 +113,7 @@ export class Food {
     organizationID: string | undefined;
 }
 
-export class InventoryEntry {
+export class DetailedFood {
     foodID: string | undefined;
     name: string | undefined;
     currentQuantity: number | undefined;

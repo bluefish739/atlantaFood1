@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Food, FoodCategory, GeneralConfirmationResponse, InventoryEntry } from '../../../../../../shared/src/kinds';
+import { Food, FoodCategory, GeneralConfirmationResponse, DetailedFood } from '../../../../../../shared/src/kinds';
 import { XapiService } from '../../../xapi.service';
 
 @Component({

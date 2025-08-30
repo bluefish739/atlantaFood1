@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent, HttpHandlerFn, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Store, Charity, StoreLocation, CharityLocation, Role, User, VerificationResponse, SignupData, GeneralConfirmationResponse, LoginRequest, LoginResponse, DetailedUser, Food, InventoryEntry, FoodCategory } from '../../../shared/src/kinds';
+import { Store, Charity, StoreLocation, CharityLocation, Role, User, VerificationResponse, SignupData, GeneralConfirmationResponse, LoginRequest, LoginResponse, DetailedUser, Food, DetailedFood, FoodCategory } from '../../../shared/src/kinds';
 import { first, firstValueFrom, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { sessionAuthenticator } from './utilities/session-authentication';
@@ -165,7 +165,7 @@ export class XapiService {
   // Food/Inventory API Requests
   //============================================================================================
   public async getStoreInventory() {
-    return this.getResponse<InventoryEntry[]>(`/xapi/stores/get-store-inventory`);
+    return this.getResponse<DetailedFood[]>(`/xapi/stores/get-store-inventory`);
   }
 
   public async saveFood(food: Food) {

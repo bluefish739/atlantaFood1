@@ -1,7 +1,7 @@
 import express, { Request, Response, Router } from "express";
 import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
-import { InventoryEntry, Store } from "../../../shared/src/kinds";
+import { DetailedFood, Store } from "../../../shared/src/kinds";
 import { storeLocationDAO, storeDAO, foodDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
 
@@ -107,14 +107,14 @@ export class StoreRouter extends BaseRouter {
       const organizationID = this.getCurrentOrganizationID(req)!;
       const foodData = await foodDAO.getFoodByOrganizationID(organizationID);
       const foodValueObjects = foodData.map(async food => {
-        const inventoryEntry = new InventoryEntry();
-        inventoryEntry.foodID = food.foodID;
-        inventoryEntry.name = food.name;
-        inventoryEntry.currentQuantity = food.currentQuantity;
-        inventoryEntry.entryDate = food.entryDate;
-        inventoryEntry.categories = await this.getCategoriesByFoodID(inventoryEntry.foodID!);
+        const detailedFood = new DetailedFood();
+        detailedFood.foodID = food.foodID;
+        detailedFood.name = food.name;
+        detailedFood.currentQuantity = food.currentQuantity;
+        detailedFood.entryDate = food.entryDate;
+        detailedFood.categories = await this.getCategoriesByFoodID(detailedFood.foodID!);
 
-        return inventoryEntry;
+        return detailedFood;
       });
       logger.log("getStoreInventory: foodValueObjects=", foodValueObjects);
       this.sendNormalResponse(res, foodValueObjects);
