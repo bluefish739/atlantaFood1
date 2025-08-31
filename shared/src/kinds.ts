@@ -108,17 +108,14 @@ export class Food {
     name: string | undefined;
     initialQuantity: number | undefined;
     currentQuantity: number | undefined;
-    expirationDate: number | undefined;
-    entryDate: number | undefined;
+    expirationDate: Date | undefined;
+    entryDate: Date | undefined;
     organizationID: string | undefined;
 }
 
 export class DetailedFood {
-    foodID: string | undefined;
-    name: string | undefined;
-    currentQuantity: number | undefined;
-    entryDate: number | undefined;
-    categories: string[] = [];
+    food: Food | undefined;
+    categoryIDs: string[] = [];
 }
 
 export class FoodCategoryAssociation {

@@ -3,9 +3,9 @@ import { datastore } from "./data-store-factory";
 import { PropertyFilter } from "@google-cloud/datastore";
 
 export class FoodDAO {
-    static FOOD_KIND = "FOOD";
-    static FOOD_CATEGORY_KIND = "FOOD_CATEGORY";
-    static FOOD_CATEGORY_ASSOCIATION_KIND = "FOOD_CATEGORY_ASSOCIATION_KIND";
+    static FOOD_KIND = "Food";
+    static FOOD_CATEGORY_KIND = "FoodCategory";
+    static FOOD_CATEGORY_ASSOCIATION_KIND = "FoodCategoryAssocation";
     public async getFoodByOrganizationID(organizationID: string) {
         const query = datastore.createQuery(FoodDAO.FOOD_KIND)
             .filter(new PropertyFilter('organizationID', '=', organizationID));
@@ -30,7 +30,7 @@ export class FoodDAO {
     }
 
     public async getFoodCategoryAssociationsByFoodID(foodID: string) {
-        const query = datastore.createQuery(FoodDAO.FOOD_CATEGORY_KIND)
+        const query = datastore.createQuery(FoodDAO.FOOD_CATEGORY_ASSOCIATION_KIND)
             .filter(new PropertyFilter('foodID', '=', foodID));
         const data = await query.run();
         const foodCategories = data[0];
@@ -42,6 +42,23 @@ export class FoodDAO {
         const entity = {
             key: entityKey,
             data: foodCategoryAssociation
+        }
+        await datastore.save(entity);
+    }
+
+    public async getFoodByID(foodID: string) {
+        const query = datastore.createQuery(FoodDAO.FOOD_KIND)
+            .filter(new PropertyFilter('foodID', '=', foodID));
+        const data = await query.run();
+        const [food] = data[0];
+        return food as Food;
+    }
+
+    public async saveFood(food: Food) {
+        const entityKey = datastore.key([FoodDAO.FOOD_KIND, food.foodID!]);
+        const entity = {
+            key: entityKey,
+            data: food
         }
         await datastore.save(entity);
     }

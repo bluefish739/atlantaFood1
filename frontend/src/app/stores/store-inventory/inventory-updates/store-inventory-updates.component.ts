@@ -28,10 +28,14 @@ export class StoreInventoryUpdatesComponent {
   async onSubmit() {
     // Disable submit button until form is valid
 
-    this.food.entryDate = Date.now();
-    const date = new Date(this.expirationDate + "T00:00:00Z");
-    this.food.expirationDate = date.getTime();
-    const response = await this.xapiService.saveFood(this.food);
+    this.food.expirationDate = new Date();
+    this.food.currentQuantity = this.food.initialQuantity;
+    const detailedFood = new DetailedFood();
+    detailedFood.food = this.food;
+    // TODO: Make sure this is IDs
+    detailedFood.categoryIDs = [];
+    const response = await this.xapiService.saveFood(detailedFood);
+    console.log(response);
     if (!response.success) {
       // Something went wrong
     } else {

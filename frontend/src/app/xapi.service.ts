@@ -164,12 +164,12 @@ export class XapiService {
   //============================================================================================
   // Food/Inventory API Requests
   //============================================================================================
-  public async getStoreInventory() {
-    return this.getResponse<DetailedFood[]>(`/xapi/stores/get-store-inventory`);
+  public async getInventory() {
+    return this.getResponse<DetailedFood[]>(`/xapi/food/get-inventory`);
   }
 
-  public async saveFood(food: Food) {
-    return this.postResponse<GeneralConfirmationResponse>(`/xapi/stores/post-food`, food);
+  public async saveFood(detailedFood: DetailedFood) {
+    return this.postResponse<GeneralConfirmationResponse>(`/xapi/food/post-food`, detailedFood);
   }
 
   public async getFoodCategories() {
