@@ -1,8 +1,8 @@
 import express, { Request, Response, Router } from "express";
 import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
-import { DetailedFood, Store } from "../../../shared/src/kinds";
-import { storeLocationDAO, storeDAO, foodDAO } from "../daos/dao-factory";
+import { Store } from "../../../shared/src/kinds";
+import { storeLocationDAO, storeDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
 
 export class StoreRouter extends BaseRouter {
@@ -90,40 +90,6 @@ export class StoreRouter extends BaseRouter {
     }
   }
 
-  private async getCategoriesByFoodID(foodID: string) {
-    const categories = await Promise.all(
-      (await foodDAO.getFoodCategoryAssociationsByFoodID(foodID)).map(async foodCategoryAssociation => {
-        const foodCategoryID = foodCategoryAssociation.foodCategoryID!;
-        const foodCategory = await foodDAO.getFoodCategoryByID(foodCategoryID);
-        return foodCategory.name!;
-      })
-    );
-    return categories;
-  }
-
-  async getStoreInventory(req: Request, res: Response) {
-    try {
-      logger.log("getStoreInventory: beginning");
-      const organizationID = this.getCurrentOrganizationID(req)!;
-      const foodData = await foodDAO.getFoodByOrganizationID(organizationID);
-      const foodValueObjects = foodData.map(async food => {
-        const detailedFood = new DetailedFood();
-        detailedFood.foodID = food.foodID;
-        detailedFood.name = food.name;
-        detailedFood.currentQuantity = food.currentQuantity;
-        detailedFood.entryDate = food.entryDate;
-        detailedFood.categories = await this.getCategoriesByFoodID(detailedFood.foodID!);
-
-        return detailedFood;
-      });
-      logger.log("getStoreInventory: foodValueObjects=", foodValueObjects);
-      this.sendNormalResponse(res, foodValueObjects);
-    } catch (error: any) {
-      logger.log("getStoreInventory: failed", error)
-      this.sendServerErrorResponse(res, { success: false, message: error.message });
-    }
-  }
-
   static buildRouter(): Router {
     const storeRouter = new StoreRouter();
     return express.Router()
@@ -131,7 +97,6 @@ export class StoreRouter extends BaseRouter {
       .get('/all', authenticator([]), storeRouter.getAllStores.bind(storeRouter))
       .get('/store/:storeId', authenticator([]), storeRouter.getStore.bind(storeRouter))
       .get('/:storeID/locations', authenticator([]), storeRouter.getStoreLocations.bind(storeRouter))
-      .post('/store', authenticator([]), storeRouter.addStore.bind(storeRouter))
-      .get('/get-store-inventory', authenticator([]), storeRouter.getStoreInventory.bind(storeRouter));
+      .post('/store', authenticator([]), storeRouter.addStore.bind(storeRouter));
   }
 }
