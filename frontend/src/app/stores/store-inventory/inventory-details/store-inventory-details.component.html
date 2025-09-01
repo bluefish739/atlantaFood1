@@ -15,7 +15,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let entry of inventoryData; let idx=index">
-            <td>{{ entry.food!.name! }}</td>
+            <td><a [routerLink]="['/stores/inventory/updates', entry.food!.foodID!]">{{ entry.food!.name! }}</a></td>
             <td>{{ entry.food!.currentQuantity! }}</td>
             <td>{{ entry.food!.expirationDate! | date:"shortDate" }}</td>
           </tr>

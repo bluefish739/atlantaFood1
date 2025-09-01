@@ -23,7 +23,7 @@ const routes: Routes = [
         loadComponent: () => import('./store-inventory/inventory-details/store-inventory-details.component').then(c => c.StoreInventoryDetailsComponent)
     },
     {
-        path: 'inventory/updates',
+        path: 'inventory/updates/:foodID',
         loadComponent: () => import('./store-inventory/inventory-updates/store-inventory-updates.component').then(c => c.StoreInventoryUpdatesComponent)
     }
 ];

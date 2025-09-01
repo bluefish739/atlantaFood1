@@ -25,6 +25,6 @@ export class StoreDashboardComponent {
   }
 
   navigateToInventoryUpdates() {
-    this.router.navigateByUrl('/stores/inventory/updates');
+    this.router.navigateByUrl('/stores/inventory/updates/new');
   }
 }
