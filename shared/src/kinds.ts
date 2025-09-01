@@ -108,7 +108,7 @@ export class Food {
     name: string | undefined;
     initialQuantity: number | undefined;
     currentQuantity: number | undefined;
-    expirationDate: Date | undefined;
+    expirationDate: string | undefined; // Format in yyyy-mm-dd
     entryDate: Date | undefined;
     organizationID: string | undefined;
 }

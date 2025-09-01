@@ -7,7 +7,6 @@ import { DetailedFood, Food, FoodCategoryAssociation, GeneralConfirmationRespons
 import { generateId } from "../shared/idutilities";
 import { datastore } from "../daos/data-store-factory";
 import { FoodDAO } from "../daos/food-dao";
-import { toDate } from "../utility-functions";
 
 export class FoodRouter extends BaseRouter {
   async getFoodCategories(req: Request, res: Response) {
@@ -35,7 +34,7 @@ export class FoodRouter extends BaseRouter {
 
     const food = detailedFood.food!;
     foodBeingSaved.name = food.name;
-    foodBeingSaved.expirationDate = toDate(food.expirationDate);
+    foodBeingSaved.expirationDate = food.expirationDate;
     if (!foodBeingSaved.entryDate) {
       foodBeingSaved.entryDate = new Date();
     }
@@ -132,14 +131,14 @@ export class FoodRouter extends BaseRouter {
       return false;
     }
   }
-/*
+
   private async getCategoriesByFoodID(foodID: string) {
     const categories = await Promise.all(
       (await foodDAO.getFoodCategoryAssociationsByFoodID(foodID))
         .map(async foodCategoryAssociation => { return foodCategoryAssociation.foodCategoryID! })
     );
     return categories;
-  }*/
+  }
 
   async getInventory(req: Request, res: Response) {
     try {
@@ -163,11 +162,25 @@ export class FoodRouter extends BaseRouter {
     }
   }
 
+  async getDetailedFoodByID(req: Request, res: Response) {
+    try {
+      const foodID = req.params.foodID as string;
+      const detailedFood = new DetailedFood();
+      detailedFood.food = await foodDAO.getFoodByID(foodID);
+      detailedFood.categoryIDs = await this.getCategoriesByFoodID(foodID);
+      this.sendNormalResponse(res, detailedFood);
+    } catch (error: any) {
+      logger.log("getFoodByID: failed", error);
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
+    }
+  }
+
   static buildRouter() {
     const foodRouter = new FoodRouter();
     return express.Router()
       .get('/get-food-categories', authenticator([]), foodRouter.getFoodCategories.bind(foodRouter))
       .post('/post-food', authenticator([]), foodRouter.saveFood.bind(foodRouter))
-      .get('/get-inventory', authenticator([]), foodRouter.getInventory.bind(foodRouter));
+      .get('/get-inventory', authenticator([]), foodRouter.getInventory.bind(foodRouter))
+      .get('/get-detailed-food/:foodID', authenticator([]), foodRouter.getDetailedFoodByID.bind(foodRouter));
   }
 }

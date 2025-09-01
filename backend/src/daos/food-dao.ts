@@ -48,7 +48,7 @@ export class FoodDAO {
 
     public async getFoodByID(foodID: string) {
         const query = datastore.createQuery(FoodDAO.FOOD_KIND)
-            .filter(new PropertyFilter('foodID', '=', foodID));
+            .filter(new PropertyFilter('id', '=', foodID));
         const data = await query.run();
         const [food] = data[0];
         return food as Food;
