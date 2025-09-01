@@ -7,6 +7,7 @@ import { DetailedFood, Food, FoodCategoryAssociation, GeneralConfirmationRespons
 import { generateId } from "../shared/idutilities";
 import { datastore } from "../daos/data-store-factory";
 import { FoodDAO } from "../daos/food-dao";
+import { toDate } from "../utility-functions";
 
 export class FoodRouter extends BaseRouter {
   async getFoodCategories(req: Request, res: Response) {
@@ -34,8 +35,7 @@ export class FoodRouter extends BaseRouter {
 
     const food = detailedFood.food!;
     foodBeingSaved.name = food.name;
-    // TODO: remove temporary fix for expirationDate type
-    foodBeingSaved.expirationDate = new Date();
+    foodBeingSaved.expirationDate = toDate(food.expirationDate);
     if (!foodBeingSaved.entryDate) {
       foodBeingSaved.entryDate = new Date();
     }
@@ -90,6 +90,8 @@ export class FoodRouter extends BaseRouter {
       return existingFood;
     }
 
+    // TODO: Make sure expiration date exists
+
     return null;
   }
 
@@ -102,7 +104,6 @@ export class FoodRouter extends BaseRouter {
         key: foodKey,
         data: food
       };
-      //logger.log("saveFoodToDatabase: foodEntity=", foodEntity);
 
       transaction.save(foodEntity);
 
@@ -157,7 +158,7 @@ export class FoodRouter extends BaseRouter {
       }));
       this.sendNormalResponse(res, foodValueObjects);
     } catch (error: any) {
-      logger.log("getStoreInventory: failed", error)
+      logger.log("getStoreInventory: failed", error);
       this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
