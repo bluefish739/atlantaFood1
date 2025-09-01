@@ -1,5 +1,6 @@
 import { CharityDAO } from "./charity-dao";
 import { CharityLocationDAO } from "./charity-location-dao";
+import { FoodDAO } from "./food-dao";
 import { RoleDAO } from "./role-dao";
 import { StoreDAO } from "./store-dao";
 import { StoreLocationDAO } from "./store-location-dao";
@@ -13,3 +14,4 @@ export const storeDAO = new StoreDAO();
 export const roleDAO = new RoleDAO();
 export const userDAO = new UserDAO();
 export const volunteerDAO = new VolunteerDAO();
+export const foodDAO = new FoodDAO();

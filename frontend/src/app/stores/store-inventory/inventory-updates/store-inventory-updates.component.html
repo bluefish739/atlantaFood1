@@ -3,40 +3,26 @@
       <h2>Update Inventory</h2>
       <div class="message" aria-live="polite">
       </div>
-      <form #inventoryUpdateForm="ngForm">
+      <form #inventoryUpdateForm="ngForm" (ngSubmit)="onSubmit()">
         <div class="form-group">
-          <label for="updateDateTime">Date and Time of Update</label>
-          <input type="datetime-local" id="updateDateTime" name="updateDateTime" required>
-        </div>
-        <div class="form-group">
-          <label for="foodType">Food Type</label>
-          <input type="text" id="foodType" name="foodType" required placeholder="e.g., Canned Beans, Apples">
+          <label for="foodType">Food Name</label>
+          <input type="text" id="foodName" name="foodName" required [(ngModel)]="food.name" placeholder="e.g., Cans of Beans, Apples, Cartons of Eggs">
         </div>
         <div class="form-group">
           <label for="quantity">Quantity</label>
-          <input type="number" id="quantity" name="quantity" required placeholder="e.g., 100">
-          <select id="quantityUnit" name="quantityUnit" required>
-            <option value="units">Units</option>
-            <option value="lbs">Pounds (lbs)</option>
-          </select>
+          <input type="number" id="quantity" name="quantity" required [(ngModel)]="food.initialQuantity" placeholder="e.g., 100">
         </div>
         <div class="form-group">
-          <label for="action">Action</label>
-          <select id="action" name="action" required>
-            <option value="add">Add to Inventory</option>
-            <option value="subtract">Subtract from Inventory</option>
-          </select>
+          <label>Food Categories</label>
+          <div class="checkbox-group">
+            <label *ngFor="let category of foodCategories; let idx=index" class="inline-label">
+              <input type="checkbox" [name]="category.name"> {{ category.name }}
+            </label>
+          </div>
         </div>
         <div class="form-group">
-          <label for="pantry">Receiving Pantry</label>
-          <select id="pantry" name="pantry">
-            <option value="">Select a pantry</option>
-            <option>pantry name</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="employees">Associated Employees</label>
-          <input type="text" id="employees" name="employees" required placeholder="e.g., John Doe, Jane Smith">
+          <label for="expirationDate">Expiration Date</label>
+          <input type="date" id="expirationDate" name="expirationDate" required [(ngModel)]="expirationDate">
         </div>
         <button type="submit">Submit Update</button>
       </form>

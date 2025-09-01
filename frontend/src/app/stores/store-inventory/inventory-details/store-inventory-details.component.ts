@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { XapiService } from '../../../xapi.service';
-import { InventoryEntry } from '../../../../../../shared/src/kinds';
+import { DetailedFood } from '../../../../../../shared/src/kinds';
 
 @Component({
   selector: 'store-inventory-details',
@@ -12,7 +12,7 @@ import { InventoryEntry } from '../../../../../../shared/src/kinds';
   styleUrl: './store-inventory-details.component.scss'
 })
 export class StoreInventoryDetailsComponent {
-  inventoryData: InventoryEntry[] = [];
+  inventoryData: DetailedFood[] = [];
   constructor(
     private xapiService: XapiService,
     private activatedRoute: ActivatedRoute,
@@ -21,6 +21,6 @@ export class StoreInventoryDetailsComponent {
   }
 
   async ngOnInit() {
-    this.inventoryData = await this.xapiService.getStoreInventory();
+    this.inventoryData = await this.xapiService.getInventory();
   }
 }

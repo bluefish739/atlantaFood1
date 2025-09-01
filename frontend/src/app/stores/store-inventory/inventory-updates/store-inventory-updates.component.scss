@@ -114,3 +114,10 @@ button:disabled {
     font-size: 1.5rem;
   }
 }
+
+.inline-label {
+  display: inline-block;
+  input {
+    max-width: 10%;
+  }
+}

@@ -5,13 +5,12 @@ import { roleDAO, userDAO } from "../daos/dao-factory";
 import { ADMIN_ROLE_NAME, User } from "../../../shared/src/kinds";
 import { permissions } from "../../../shared/src/permissions";
 import { sendResponse } from "../utility-functions";
-import * as logger from "firebase-functions/logger";
+//import * as logger from "firebase-functions/logger";
 import { employeeHelpers } from "./employee-helpers";
 
 admin.initializeApp();
 export function authenticator(requiredPermissionsList: string[]) {
     return async (req: Request, res: Response, next: NextFunction) => {
-        logger.log("authenticator: made it to authentication", req.headers);
         const authentication = req.headers.authentication as string;
         const user = await userDAO.getUserBySessionID(authentication) as User;
         if (!user) {
@@ -40,9 +39,7 @@ export function authenticator(requiredPermissionsList: string[]) {
             }
         });
 
-        const organizationID = await employeeHelpers.getOrganizationOfUser(user.userType!, user.userID!)
-        logger.log("authenticator: made it to update req", user);
-        logger.log("authenticator: made it to add organizationID", organizationID);
+        const organizationID = await employeeHelpers.getOrganizationOfUser(user.userType!, user.userID!);
         (req as any).user = user;
         (req as any).organizationID = organizationID;
         next();

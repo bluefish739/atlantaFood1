@@ -21,4 +21,4 @@ export const permissions: Permission[] = [
         name: "Creative Mode",
         description: "Allows use of flint and steel"
     }
-]
+];
