@@ -132,14 +132,14 @@ export class FoodRouter extends BaseRouter {
       return false;
     }
   }
-
+/*
   private async getCategoriesByFoodID(foodID: string) {
     const categories = await Promise.all(
       (await foodDAO.getFoodCategoryAssociationsByFoodID(foodID))
         .map(async foodCategoryAssociation => { return foodCategoryAssociation.foodCategoryID! })
     );
     return categories;
-  }
+  }*/
 
   async getInventory(req: Request, res: Response) {
     try {
@@ -153,7 +153,6 @@ export class FoodRouter extends BaseRouter {
         detailedFood.food.currentQuantity = food.currentQuantity;
         detailedFood.food.entryDate = food.entryDate;
         detailedFood.food.expirationDate = food.expirationDate;
-        detailedFood.categoryIDs = await this.getCategoriesByFoodID(detailedFood.food.foodID!);
       
         return detailedFood;
       }));
