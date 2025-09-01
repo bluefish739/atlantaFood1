@@ -23,4 +23,8 @@ export class StoreInventoryDetailsComponent {
   async ngOnInit() {
     this.inventoryData = await this.xapiService.getInventory();
   }
+
+  navigateToInventoryUpdates() {
+    this.router.navigateByUrl('/stores/inventory/updates/new');
+  }
 }

@@ -73,3 +73,26 @@
       max-width: none;
     }
   }
+
+.inventory-actions-section {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+button {
+  display: inline-block;
+  background-color: #2E7D32;
+  color: white;
+  text-decoration: none;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0rem 2rem;
+}
+
+button:hover {
+  background-color: #1B5E20;
+}
