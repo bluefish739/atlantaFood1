@@ -10,7 +10,7 @@
           <tr>
             <th>Product</th>
             <th>Quantity</th>
-            <th>Details</th>
+            <th>Expiration Date</th>
             <th>Tags</th>
           </tr>
         </thead>
@@ -18,7 +18,7 @@
           <tr *ngFor="let entry of inventoryData; let idx=index">
             <td>{{ entry.food!.name! }}</td>
             <td>{{ entry.food!.currentQuantity! }}</td>
-            <td>{{ entry.food!.entryDate! }}</td>
+            <td>{{ entry.food!.expirationDate! | date:"shortDate" }}</td>
             <td>
               <span *ngFor="let category of entry.categoryIDs; let idx2=index">{{ category }}, </span>
             </td>

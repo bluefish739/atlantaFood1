@@ -152,6 +152,7 @@ export class FoodRouter extends BaseRouter {
         detailedFood.food.name = food.name;
         detailedFood.food.currentQuantity = food.currentQuantity;
         detailedFood.food.entryDate = food.entryDate;
+        detailedFood.food.expirationDate = food.expirationDate;
         detailedFood.categoryIDs = await this.getCategoriesByFoodID(detailedFood.food.foodID!);
       
         return detailedFood;
