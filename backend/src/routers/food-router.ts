@@ -142,21 +142,19 @@ export class FoodRouter extends BaseRouter {
 
   async getInventory(req: Request, res: Response) {
     try {
-      logger.log("getStoreInventory: beginning");
       const organizationID = this.getCurrentOrganizationID(req)!;
       const foodData = await foodDAO.getFoodByOrganizationID(organizationID);
-      const foodValueObjects = foodData.map(async food => {
+      const foodValueObjects = await Promise.all(foodData.map(async food => {
         const detailedFood = new DetailedFood();
-        detailedFood.food = new Food()
+        detailedFood.food = new Food();
         detailedFood.food.foodID = food.foodID;
         detailedFood.food.name = food.name;
         detailedFood.food.currentQuantity = food.currentQuantity;
         detailedFood.food.entryDate = food.entryDate;
         detailedFood.categoryIDs = await this.getCategoriesByFoodID(detailedFood.food.foodID!);
-
+      
         return detailedFood;
-      });
-      logger.log("getStoreInventory: foodValueObjects=", foodValueObjects);
+      }));
       this.sendNormalResponse(res, foodValueObjects);
     } catch (error: any) {
       logger.log("getStoreInventory: failed", error)

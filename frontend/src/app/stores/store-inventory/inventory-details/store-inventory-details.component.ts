@@ -21,6 +21,6 @@ export class StoreInventoryDetailsComponent {
   }
 
   async ngOnInit() {
-    this.inventoryData = await this.xapiService.getStoreInventory();
+    this.inventoryData = await this.xapiService.getInventory();
   }
 }

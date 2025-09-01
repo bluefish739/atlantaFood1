@@ -16,11 +16,11 @@
         </thead>
         <tbody>
           <tr *ngFor="let entry of inventoryData; let idx=index">
-            <td>{{ entry.name }}</td>
-            <td>{{ entry.currentQuantity }}</td>
-            <td>{{ entry.entryDate }}</td>
+            <td>{{ entry.food!.name! }}</td>
+            <td>{{ entry.food!.currentQuantity! }}</td>
+            <td>{{ entry.food!.entryDate! }}</td>
             <td>
-              <span *ngFor="let category of entry.categories; let idx2=index">{{ category }}, </span>
+              <span *ngFor="let category of entry.categoryIDs; let idx2=index">{{ category }}, </span>
             </td>
           </tr>
         </tbody>
