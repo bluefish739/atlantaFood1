@@ -6,7 +6,7 @@ export class FoodDAO {
     static FOOD_KIND = "Food";
     static FOOD_CATEGORY_KIND = "FoodCategory";
     static FOOD_CATEGORY_ASSOCIATION_KIND = "FoodCategoryAssocation";
-    public async getFoodByOrganizationID(organizationID: string) {
+    public async getFoodsByOrganizationID(organizationID: string) {
         const query = datastore.createQuery(FoodDAO.FOOD_KIND)
             .filter(new PropertyFilter('organizationID', '=', organizationID));
         const data = await query.run();
