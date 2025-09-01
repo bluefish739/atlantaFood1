@@ -104,7 +104,7 @@ export class UserType {
 export const ADMIN_ROLE_NAME = "ORGANIZATION_ADMIN";
 
 export class Food {
-    foodID: string | undefined;
+    id: string | undefined;
     name: string | undefined;
     initialQuantity: number | undefined;
     currentQuantity: number | undefined;

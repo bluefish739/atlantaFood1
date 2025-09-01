@@ -42,12 +42,12 @@ export class FoodRouter extends BaseRouter {
     foodBeingSaved.initialQuantity = food.initialQuantity;
     foodBeingSaved.currentQuantity = food.currentQuantity;
     foodBeingSaved.organizationID = organizationID;
-    if (!foodBeingSaved.foodID) {
-      foodBeingSaved.foodID = generateId();
+    if (!foodBeingSaved.id) {
+      foodBeingSaved.id = generateId();
     }
 
     try {
-      const oldFoodCategoryIDs = (await foodDAO.getFoodCategoryAssociationsByFoodID(foodBeingSaved.foodID!))
+      const oldFoodCategoryIDs = (await foodDAO.getFoodCategoryAssociationsByFoodID(foodBeingSaved.id!))
         .map(foodCategoryAssociation => foodCategoryAssociation.foodCategoryID!);
       const idsOfFoodCategoryAssociationsToDelete = oldFoodCategoryIDs.filter(foodCategoryID => !detailedFood.categoryIDs.includes(foodCategoryID!));
       const idsOfFoodCategoryAssociationsToSave = detailedFood.categoryIDs.filter(foodCategoryID => !oldFoodCategoryIDs.includes(foodCategoryID));
@@ -78,10 +78,10 @@ export class FoodRouter extends BaseRouter {
       }
     }
  
-    if (food.foodID) {
-      const existingFood = await foodDAO.getFoodByID(food.foodID);
+    if (food.id) {
+      const existingFood = await foodDAO.getFoodByID(food.id);
       if (!existingFood) {
-        throw "No food with id " + food.foodID + " was found";
+        throw "No food with id " + food.id + " was found";
       }
       
       if (food.organizationID != organizationID) {
@@ -96,7 +96,7 @@ export class FoodRouter extends BaseRouter {
   }
 
   private async saveFoodToDatabase(food: Food, idsOfFoodCategoriestoSave: string[], idsOfFoodCategoriestoDelete: string[]) {
-    const foodID = food.foodID!;
+    const foodID = food.id!;
     const transaction = datastore.transaction();
     try {
       const foodKey = datastore.key([FoodDAO.FOOD_KIND, foodID]);
@@ -110,8 +110,8 @@ export class FoodRouter extends BaseRouter {
       const foodCategoryEntities = idsOfFoodCategoriestoSave.map(foodCategoryID => {
         const foodCategoryAssociation = new FoodCategoryAssociation();
         foodCategoryAssociation.foodCategoryID = foodCategoryID;
-        foodCategoryAssociation.foodID = food.foodID;
-        const foodCategoryKey = datastore.key([FoodDAO.FOOD_CATEGORY_ASSOCIATION_KIND, food.foodID + "|" + foodCategoryID]);
+        foodCategoryAssociation.foodID = food.id;
+        const foodCategoryKey = datastore.key([FoodDAO.FOOD_CATEGORY_ASSOCIATION_KIND, food.id + "|" + foodCategoryID]);
         const foodCategoryAssociationEntity = {
           key: foodCategoryKey,
           data: foodCategoryAssociation
@@ -121,7 +121,7 @@ export class FoodRouter extends BaseRouter {
       transaction.save(foodCategoryEntities);
 
       const keysOfFoodCategoryAssociationToDelete = idsOfFoodCategoriestoDelete
-        .map(foodCategoryID => datastore.key([FoodDAO.FOOD_CATEGORY_ASSOCIATION_KIND, food.foodID + "|" + foodCategoryID]));
+        .map(foodCategoryID => datastore.key([FoodDAO.FOOD_CATEGORY_ASSOCIATION_KIND, food.id + "|" + foodCategoryID]));
       await transaction.run();
       transaction.delete(keysOfFoodCategoryAssociationToDelete);
       await transaction.commit();
@@ -148,7 +148,7 @@ export class FoodRouter extends BaseRouter {
       const detailedFoodList = await Promise.all(foods.map(async food => {
         const detailedFood = new DetailedFood();
         detailedFood.food = new Food();
-        detailedFood.food.foodID = food.foodID;
+        detailedFood.food.id = food.id;
         detailedFood.food.name = food.name;
         detailedFood.food.currentQuantity = food.currentQuantity;
         detailedFood.food.entryDate = food.entryDate;

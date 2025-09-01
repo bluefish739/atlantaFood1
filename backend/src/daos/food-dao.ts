@@ -55,7 +55,7 @@ export class FoodDAO {
     }
 
     public async saveFood(food: Food) {
-        const entityKey = datastore.key([FoodDAO.FOOD_KIND, food.foodID!]);
+        const entityKey = datastore.key([FoodDAO.FOOD_KIND, food.id!]);
         const entity = {
             key: entityKey,
             data: food
