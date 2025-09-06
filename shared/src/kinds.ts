@@ -124,7 +124,7 @@ export class FoodCategoryAssociation {
 }
 
 export class FoodCategory {
-    foodCategoryID: string | undefined;
+    id: string | undefined;
     name: string | undefined;
 }
 

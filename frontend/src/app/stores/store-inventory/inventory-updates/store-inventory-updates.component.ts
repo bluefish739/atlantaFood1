@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Food, FoodCategory, GeneralConfirmationResponse, DetailedFood } from '../../../../../../shared/src/kinds';
-import { toDate, formatDateToString } from '../../../../../../shared/src/utilities';
 import { XapiService } from '../../../xapi.service';
 
 @Component({
@@ -15,6 +14,7 @@ import { XapiService } from '../../../xapi.service';
 export class StoreInventoryUpdatesComponent {
   detailedFood = new DetailedFood();
   allFoodCategories: FoodCategory[] = [];
+  categoriesCheckboxRef: boolean[];
   isNewFood = true;
   constructor(
     private xapiService: XapiService,
@@ -22,31 +22,36 @@ export class StoreInventoryUpdatesComponent {
     private router: Router
   ) {
     this.detailedFood.food = new Food();
+    this.categoriesCheckboxRef = [];
   }
 
   async ngOnInit() {
     this.allFoodCategories = await this.xapiService.getFoodCategories();
     const foodID = this.activatedRoute.snapshot.params['foodID'];
-    console.log("ngOnInit: foodID=" + foodID);
     if (foodID && foodID != 'new') {
       const detailedFood = await this.xapiService.getDetailedFoodByID(foodID);
-      console.log("ngOnInit: detailedFood=", detailedFood);
       if (detailedFood) {
         this.detailedFood.food = detailedFood.food || new Food();
         this.detailedFood.categoryIDs = detailedFood.categoryIDs || [];
-        //this.originalUser = this.createOriginalCopyOfUser(this.user, this.userRoleIDs);
         this.isNewFood = !this.detailedFood.food.id;
       }
     }
-    //this.availableRoles = await this.xapiService.getAllUserRolesOfCurrentOrg();
-    //this.initRolesRef();
+    this.categoriesCheckboxRef = this.allFoodCategories.map(foodCategory => this.detailedFood.categoryIDs.includes(foodCategory.id!));
   }
 
   async onSubmit() {
-    // Disable submit button until form is valid
+    // Disable submit button until form valid
+    this.detailedFood.categoryIDs = [];
+        for (let i = 0; i < this.categoriesCheckboxRef.length; i++) {
+            if (this.categoriesCheckboxRef[i]) {
+              this.detailedFood.categoryIDs.push(this.allFoodCategories[i].id!)
+            }
+        }
     if (this.isNewFood) {
       this.detailedFood.food!.currentQuantity = this.detailedFood.food!.initialQuantity;
     }
+    console.log(this.detailedFood);
+    console.log(this.categoriesCheckboxRef);
     const response = await this.xapiService.saveFood(this.detailedFood);
     console.log(response);
     if (!response.success) {

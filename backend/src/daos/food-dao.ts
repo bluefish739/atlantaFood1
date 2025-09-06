@@ -23,7 +23,7 @@ export class FoodDAO {
 
     public async getFoodCategoryByID(foodCategoryID: string) {
         const query = datastore.createQuery(FoodDAO.FOOD_CATEGORY_KIND)
-            .filter(new PropertyFilter('foodCategoryID', '=', foodCategoryID));
+            .filter(new PropertyFilter('id', '=', foodCategoryID));
         const data = await query.run();
         const [foodCategory] = data[0];
         return foodCategory as FoodCategory;
