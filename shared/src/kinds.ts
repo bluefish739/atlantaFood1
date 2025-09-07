@@ -162,3 +162,17 @@ export class GeneralConfirmationResponse {
     success: boolean | undefined;
     message: string | undefined;
 }
+
+export class BadRequestError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = "BadRequestError";
+    }
+}
+
+export class ServerError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = "ServerError";
+    }
+}
