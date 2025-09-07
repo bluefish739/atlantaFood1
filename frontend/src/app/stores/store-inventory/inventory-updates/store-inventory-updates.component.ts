@@ -42,20 +42,18 @@ export class StoreInventoryUpdatesComponent {
   async onSubmit() {
     // Disable submit button until form valid
     this.detailedFood.categoryIDs = [];
-        for (let i = 0; i < this.categoriesCheckboxRef.length; i++) {
-            if (this.categoriesCheckboxRef[i]) {
-              this.detailedFood.categoryIDs.push(this.allFoodCategories[i].id!)
-            }
-        }
+    for (let i = 0; i < this.categoriesCheckboxRef.length; i++) {
+      if (this.categoriesCheckboxRef[i]) {
+        this.detailedFood.categoryIDs.push(this.allFoodCategories[i].id!)
+      }
+    }
     if (this.isNewFood) {
       this.detailedFood.food!.currentQuantity = this.detailedFood.food!.initialQuantity;
     }
-    console.log(this.detailedFood);
-    console.log(this.categoriesCheckboxRef);
     const response = await this.xapiService.saveFood(this.detailedFood);
-    console.log(response);
     if (!response.success) {
       // Something went wrong
+      // TODO: show error message
     } else {
       this.router.navigateByUrl('/stores/inventory/details');
     }
