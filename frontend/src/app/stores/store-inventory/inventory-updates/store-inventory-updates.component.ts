@@ -41,6 +41,7 @@ export class StoreInventoryUpdatesComponent {
 
   async onSubmit() {
     // Disable submit button until form valid
+    // TODO: clean up code using map and filter
     this.detailedFood.categoryIDs = [];
     for (let i = 0; i < this.categoriesCheckboxRef.length; i++) {
       if (this.categoriesCheckboxRef[i]) {
