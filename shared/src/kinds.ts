@@ -176,3 +176,18 @@ export class ServerError extends Error {
         this.name = "ServerError";
     }
 }
+
+export class RequestContext {
+    req: any;
+    constructor(req: any) {
+        this.req = req;
+    }
+
+    public getCurrentUser(): User | undefined {
+        return (this.req).user;
+    }
+
+    public getCurrentOrganizationID(): string | undefined {
+        return (this.req).organizationID;
+    }
+}

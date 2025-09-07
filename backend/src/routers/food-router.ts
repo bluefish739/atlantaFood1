@@ -3,8 +3,9 @@ import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
 import { foodDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
-import { BadRequestError, DetailedFood, Food, GeneralConfirmationResponse } from "../../../shared/src/kinds";
+import { BadRequestError, DetailedFood, Food, GeneralConfirmationResponse, RequestContext } from "../../../shared/src/kinds";
 import { saveFoodManager } from "../managers/manager-factory";
+
 
 export class FoodRouter extends BaseRouter {
   async getFoodCategories(req: Request, res: Response) {
@@ -19,9 +20,8 @@ export class FoodRouter extends BaseRouter {
 
   async saveFood(req: Request, res: Response) {
     const detailedFood = req.body as DetailedFood;
-    const organizationID = this.getCurrentOrganizationID(req)!;
     try {
-      saveFoodManager.saveFood(detailedFood, organizationID);
+      saveFoodManager.saveFood(new RequestContext(req), detailedFood);
       const generalConfirmationResponse = new GeneralConfirmationResponse();
       generalConfirmationResponse.success = true;
       generalConfirmationResponse.message = "Food added successfully!";

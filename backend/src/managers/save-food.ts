@@ -1,4 +1,4 @@
-import { BadRequestError, DetailedFood, Food, FoodCategoryAssociation, ServerError } from "../../../shared/src/kinds";
+import { BadRequestError, DetailedFood, Food, FoodCategoryAssociation, RequestContext, ServerError } from "../../../shared/src/kinds";
 import * as logger from "firebase-functions/logger";
 import { generateId } from "../shared/idutilities";
 import { foodDAO } from "../daos/dao-factory";
@@ -6,7 +6,8 @@ import { datastore } from "../daos/data-store-factory";
 import { FoodDAO } from "../daos/food-dao";
 
 export class SaveFoodManager {
-    async saveFood(detailedFood: DetailedFood, organizationID: string) {
+    async saveFood(requestContext: RequestContext, detailedFood: DetailedFood) {
+        const organizationID = requestContext.getCurrentOrganizationID()!;
         let foodBeingSaved: Food;
         try {
             const existingFood = await this.validateSaveFoodRequest(organizationID, detailedFood);
