@@ -3,8 +3,8 @@ import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
 import { foodDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
-import { BadRequestError, DetailedFood, Food, GeneralConfirmationResponse, RequestContext } from "../../../shared/src/kinds";
-import { deleteFoodManager, saveFoodManager } from "../managers/manager-factory";
+import { BadRequestError, DetailedFood, GeneralConfirmationResponse, RequestContext } from "../../../shared/src/kinds";
+import { deleteFoodManager, getInventoryManager, saveFoodManager } from "../managers/manager-factory";
 
 
 export class FoodRouter extends BaseRouter {
@@ -45,23 +45,10 @@ export class FoodRouter extends BaseRouter {
 
   async getInventory(req: Request, res: Response) {
     try {
-      const organizationID = this.getCurrentOrganizationID(req)!;
-      const foods = await foodDAO.getFoodsByOrganizationID(organizationID);
-      const detailedFoodList = await Promise.all(foods.map(async food => {
-        const detailedFood = new DetailedFood();
-        detailedFood.food = new Food();
-        detailedFood.food.id = food.id;
-        detailedFood.food.name = food.name;
-        detailedFood.food.currentQuantity = food.currentQuantity;
-        detailedFood.food.entryDate = food.entryDate;
-        detailedFood.food.expirationDate = food.expirationDate;
-      
-        return detailedFood;
-      }));
+      const detailedFoodList = await getInventoryManager.getInventory(new RequestContext(req));
       this.sendNormalResponse(res, detailedFoodList);
     } catch (error: any) {
-      logger.log("getStoreInventory: failed", error);
-      this.sendServerErrorResponse(res, { success: false, message: error.message });
+      this.sendServerErrorResponse(res, {success: false, message: error.message});
     }
   }
 

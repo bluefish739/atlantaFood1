@@ -19,6 +19,10 @@
           <input type="number" id="currentQuantity" name="currentQuantity" required [(ngModel)]="food.currentQuantity" placeholder="e.g., 100" class="text-input">
         </div>
         <div class="form-group">
+          <label for="units" class="text-input-label">Units</label>
+          <input type="text" id="units" name="units" required [(ngModel)]="food.units" placeholder="e.g., gallons, bunches" class="text-input">
+        </div>
+        <div class="form-group">
           <div class="food-categories-label">Food Categories</div>
           <div class="checkbox-group" >
             <div *ngFor="let category of allFoodCategories; let idx=index" class="checkbox-item">

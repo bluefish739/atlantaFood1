@@ -1,9 +1,9 @@
-import { BadRequestError, DetailedFood, Food, FoodCategoryAssociation, RequestContext, ServerError } from "../../../shared/src/kinds";
+import { BadRequestError, DetailedFood, Food, FoodCategoryAssociation, RequestContext, ServerError } from "../../../../shared/src/kinds";
 import * as logger from "firebase-functions/logger";
-import { generateId } from "../shared/idutilities";
-import { foodDAO } from "../daos/dao-factory";
-import { datastore } from "../daos/data-store-factory";
-import { FoodDAO } from "../daos/food-dao";
+import { generateId } from "../../shared/idutilities";
+import { foodDAO } from "../../daos/dao-factory";
+import { datastore } from "../../daos/data-store-factory";
+import { FoodDAO } from "../../daos/food-dao";
 
 export class SaveFoodManager {
     async saveFood(requestContext: RequestContext, detailedFood: DetailedFood) {
@@ -25,6 +25,7 @@ export class SaveFoodManager {
         }
         foodBeingSaved.initialQuantity = food.initialQuantity;
         foodBeingSaved.currentQuantity = food.currentQuantity;
+        foodBeingSaved.units = food.units;
         foodBeingSaved.organizationID = organizationID;
         if (!foodBeingSaved.id) {
             foodBeingSaved.id = generateId();
@@ -71,6 +72,10 @@ export class SaveFoodManager {
 
         if (!food.expirationDate) {
             throw "No expiration date assigned";
+        }
+
+        if (!food.units) {
+            throw "No units assigned";
         }
 
         return null;

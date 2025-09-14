@@ -111,6 +111,7 @@ export class Food {
     expirationDate: string | undefined; // Format in yyyy-mm-dd
     entryDate: Date | undefined;
     organizationID: string | undefined;
+    units: string | undefined;
 }
 
 export class DetailedFood {

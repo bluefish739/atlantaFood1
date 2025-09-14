@@ -1,7 +1,7 @@
-import { BadRequestError, RequestContext } from "../../../shared/src/kinds";
-import { foodDAO } from "../daos/dao-factory";
-import { datastore } from "../daos/data-store-factory";
-import { FoodDAO } from "../daos/food-dao";
+import { BadRequestError, RequestContext } from "../../../../shared/src/kinds";
+import { foodDAO } from "../../daos/dao-factory";
+import { datastore } from "../../daos/data-store-factory";
+import { FoodDAO } from "../../daos/food-dao";
 
 export class DeleteFoodManager {
     async deleteFood(requestContext: RequestContext, foodID: string) {
