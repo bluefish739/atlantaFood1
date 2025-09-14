@@ -178,7 +178,7 @@ export class ServerError extends Error {
 }
 
 export class RequestContext {
-    req: any;
+    private req: any;
     constructor(req: any) {
         this.req = req;
     }

@@ -27,4 +27,9 @@ export class StoreInventoryDetailsComponent {
   navigateToInventoryUpdates() {
     this.router.navigateByUrl('/stores/inventory/updates/new');
   }
+
+  async removeEntry(foodID: string) {
+    const success = await this.xapiService.deleteFood(foodID);
+    this.inventoryData = this.inventoryData.filter(detailedFood => detailedFood.food!.id != foodID);
+  }
 }

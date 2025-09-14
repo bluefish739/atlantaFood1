@@ -179,4 +179,8 @@ export class XapiService {
   public async getDetailedFoodByID(foodID: string) {
     return this.getResponse<DetailedFood>(`/xapi/food/get-detailed-food/` + foodID);
   }
+
+  public async deleteFood(foodID: string) {
+    return this.deleteResponse<GeneralConfirmationResponse>(`/xapi/food/delete-food/` + foodID);
+  }
 }
