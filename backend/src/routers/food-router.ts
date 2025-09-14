@@ -4,7 +4,7 @@ import { authenticator } from "../shared/authentication";
 import { foodDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
 import { BadRequestError, DetailedFood, Food, GeneralConfirmationResponse, RequestContext } from "../../../shared/src/kinds";
-import { saveFoodManager } from "../managers/manager-factory";
+import { deleteFoodManager, saveFoodManager } from "../managers/manager-factory";
 
 
 export class FoodRouter extends BaseRouter {
@@ -78,12 +78,30 @@ export class FoodRouter extends BaseRouter {
     }
   }
 
+  async deleteFood(req: Request, res: Response) {
+    const foodID = req.params.foodID as string;
+    try {
+      deleteFoodManager.deleteFood(new RequestContext(req), foodID);
+      const generalConfirmationResponse = new GeneralConfirmationResponse();
+      generalConfirmationResponse.success = true;
+      generalConfirmationResponse.message = "Food deleted successfully!";
+      this.sendNormalResponse(res, generalConfirmationResponse);
+    } catch (error: any) {
+      if (error instanceof BadRequestError) {
+        this.sendBadRequestResponse(res, { success: false, message: error.message });
+      } else {
+        this.sendServerErrorResponse(res, {success: false, message: error.message});
+      }
+    }
+  }
+
   static buildRouter() {
     const foodRouter = new FoodRouter();
     return express.Router()
       .get('/get-food-categories', authenticator([]), foodRouter.getFoodCategories.bind(foodRouter))
       .post('/post-food', authenticator([]), foodRouter.saveFood.bind(foodRouter))
       .get('/get-inventory', authenticator([]), foodRouter.getInventory.bind(foodRouter))
-      .get('/get-detailed-food/:foodID', authenticator([]), foodRouter.getDetailedFoodByID.bind(foodRouter));
+      .get('/get-detailed-food/:foodID', authenticator([]), foodRouter.getDetailedFoodByID.bind(foodRouter))
+      .delete('/delete-food/:foodID', authenticator([]), foodRouter.deleteFood.bind(foodRouter));
   }
 }
