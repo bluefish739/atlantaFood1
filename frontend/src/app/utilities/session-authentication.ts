@@ -40,9 +40,9 @@ class SessionAuthenticator {
     }
 
     public saveLoginSession(loginResponse: LoginResponse) {
-        this.setCookie("sessionID", loginResponse.sessionID!, 60);
-        this.setCookie("userID", loginResponse.userID!, 60);
-        this.setCookie("userType", loginResponse.userType!, 60);
+        this.setCookie("sessionID", loginResponse.sessionID!, 600);
+        this.setCookie("userID", loginResponse.userID!, 600);
+        this.setCookie("userType", loginResponse.userType!, 600);
     }
 
     public clearCurrentSession() {
