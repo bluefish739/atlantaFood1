@@ -21,4 +21,26 @@ export class HeaderComponent {
         sessionAuthenticator.clearCurrentSession();
         this.router.navigateByUrl("/home");
     }
+
+    goToInventory() {
+        const userType = sessionAuthenticator.getUserType();
+        let pathHead: string;
+        switch (userType) {
+            case "Store":
+                pathHead = "stores"
+                break;
+            case "Pantry":
+                pathHead = "charities"
+                break;
+            case "Volunteer":
+                pathHead = "volunteers"
+                break;
+            case "Admin":
+                pathHead = "admins"
+                break;
+            default:
+                return;
+        }
+        this.router.navigateByUrl(`/${pathHead}/inventory/details`);
+    }
 }
