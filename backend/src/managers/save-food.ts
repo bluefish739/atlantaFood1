@@ -69,7 +69,9 @@ export class SaveFoodManager {
             return existingFood;
         }
 
-        // TODO: Make sure expiration date exists
+        if (!food.expirationDate) {
+            throw "No expiration date assigned";
+        }
 
         return null;
     }
