@@ -1,42 +1,48 @@
 <section class="inventory-update-container">
-    <div class="inventory-update-section">
-      <h2 *ngIf="isNewFood">Add New Food</h2>
-      <h2 *ngIf="!isNewFood">Update Food Details</h2>
-      <div class="message" aria-live="polite">
-      </div>
-      <form #inventoryUpdateForm="ngForm" (ngSubmit)="onSubmit()" *ngIf="detailedFood.food as food">
-        <div class="form-group">
-          <label for="foodType" class="text-input-label">Food Name</label>
-          <input type="text" id="foodName" name="foodName" required [(ngModel)]="food.name" placeholder="e.g., Cans of Beans, Apples, Cartons of Eggs" class="text-input">
-        </div>
-        <div class="form-group">
-          <label for="initialQuantity" *ngIf="isNewFood" class="text-input-label">Quantity</label>
-          <label for="initialQuantity" *ngIf="!isNewFood" class="text-input-label">Initial Quantity</label>
-          <input type="number" id="initialQuantity" name="initialQuantity" required [(ngModel)]="food.initialQuantity" placeholder="e.g., 100" class="text-input">
-        </div>
-        <div class="form-group" *ngIf="!isNewFood">
-          <label for="currentQuantity" class="text-input-label">Current Quantity</label>
-          <input type="number" id="currentQuantity" name="currentQuantity" required [(ngModel)]="food.currentQuantity" placeholder="e.g., 100" class="text-input">
-        </div>
-        <div class="form-group">
-          <label for="units" class="text-input-label">Units</label>
-          <input type="text" id="units" name="units" required [(ngModel)]="food.units" placeholder="e.g., gallons, bunches" class="text-input">
-        </div>
-        <div class="form-group">
-          <div class="food-categories-label">Food Categories</div>
-          <div class="checkbox-group" >
-            <div *ngFor="let category of allFoodCategories; let idx=index" class="checkbox-item">
-              <input type="checkbox" [name]="category.name!" [(ngModel)]="categoriesCheckboxRef[idx]" id="category-{{idx}}" class="category-checkbox">  
-              <label class="inline-label" for="category-{{idx}}" class="checkbox-input-label">{{ category.name }}</label>
-            </div>
-          </div>      
-        </div>
-        <div class="form-group">
-          <label for="expirationDate" class="text-input-label">Expiration Date</label>
-          <input type="date" id="expirationDate" name="expirationDate" required [(ngModel)]="food.expirationDate" class="text-input">
-        </div>
-        <!--TODO: Add delete entry feature-->
-        <button type="submit">Submit Update</button>
-      </form>
+  <div class="inventory-update-section">
+    <h2 *ngIf="isNewFood">Add New Food</h2>
+    <h2 *ngIf="!isNewFood">Update Food Details</h2>
+    <div class="message error" [class.show]="errorMessage" aria-live="polite">
+      {{ errorMessage }}
     </div>
-  </section>
+    <form #inventoryUpdateForm="ngForm" (ngSubmit)="onSubmit()" *ngIf="detailedFood.food as food">
+      <div class="form-group">
+        <label for="foodType" class="text-input-label">Food Name</label>
+        <input type="text" id="foodName" name="foodName" required [(ngModel)]="food.name"
+          placeholder="e.g., Cans of Beans, Apples, Cartons of Eggs" class="text-input">
+      </div>
+      <div class="form-group">
+        <label for="initialQuantity" *ngIf="isNewFood" class="text-input-label">Quantity</label>
+        <label for="initialQuantity" *ngIf="!isNewFood" class="text-input-label">Initial Quantity</label>
+        <input type="number" id="initialQuantity" name="initialQuantity" required [(ngModel)]="food.initialQuantity"
+          placeholder="e.g., 100" class="text-input">
+      </div>
+      <div class="form-group" *ngIf="!isNewFood">
+        <label for="currentQuantity" class="text-input-label">Current Quantity</label>
+        <input type="number" id="currentQuantity" name="currentQuantity" required [(ngModel)]="food.currentQuantity"
+          placeholder="e.g., 100" class="text-input">
+      </div>
+      <div class="form-group">
+        <label for="units" class="text-input-label">Units</label>
+        <input type="text" id="units" name="units" required [(ngModel)]="food.units"
+          placeholder="e.g., gallons, bunches" class="text-input">
+      </div>
+      <div class="form-group">
+        <div class="food-categories-label">Food Categories</div>
+        <div class="checkbox-group">
+          <div *ngFor="let category of allFoodCategories; let idx=index" class="checkbox-item">
+            <input type="checkbox" [name]="category.name!" [(ngModel)]="categoriesCheckboxRef[idx]"
+              id="category-{{idx}}" class="category-checkbox">
+            <label class="inline-label" for="category-{{idx}}" class="checkbox-input-label">{{ category.name }}</label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="expirationDate" class="text-input-label">Expiration Date</label>
+        <input type="date" id="expirationDate" name="expirationDate" required [(ngModel)]="food.expirationDate"
+          class="text-input">
+      </div>
+      <button type="submit">Submit Update</button>
+    </form>
+  </div>
+</section>

@@ -16,6 +16,7 @@ export class StoreInventoryUpdatesComponent {
   allFoodCategories: FoodCategory[] = [];
   categoriesCheckboxRef: boolean[];
   isNewFood = true;
+  errorMessage = "";
   constructor(
     private xapiService: XapiService,
     private activatedRoute: ActivatedRoute,
@@ -52,8 +53,7 @@ export class StoreInventoryUpdatesComponent {
     }
     const response = await this.xapiService.saveFood(this.detailedFood);
     if (!response.success) {
-      // Something went wrong
-      // TODO: show error message
+      this.errorMessage = response.message!;
     } else {
       this.router.navigateByUrl('/stores/inventory/details');
     }

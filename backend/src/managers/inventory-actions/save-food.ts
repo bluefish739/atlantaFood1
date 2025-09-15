@@ -58,6 +58,14 @@ export class SaveFoodManager {
             }
         }
 
+        if (!food.expirationDate) {
+            throw "No expiration date assigned";
+        }
+
+        if (!food.units) {
+            throw "No units assigned";
+        }
+
         if (food.id) {
             const existingFood = await foodDAO.getFoodByID(food.id);
             if (!existingFood) {
@@ -68,14 +76,6 @@ export class SaveFoodManager {
                 throw "Attempting to modify food not on organization";
             }
             return existingFood;
-        }
-
-        if (!food.expirationDate) {
-            throw "No expiration date assigned";
-        }
-
-        if (!food.units) {
-            throw "No units assigned";
         }
 
         return null;
