@@ -45,5 +45,3 @@ export class UserListComponent {
     this.usersData = this.usersData.filter(userData => userData.userID != userID);
   }
 }
-
-// TODO: (click)="confirmRemoveUser(user.userID, user.firstName, user.lastName)"

@@ -43,12 +43,10 @@ export class StoreInventoryUpdatesComponent {
   async onSubmit() {
     try {
       // Disable submit button until form valid
-      this.detailedFood.categoryIDs = this.categoriesCheckboxRef.flatMap((assigned, index) => {
-        if (assigned) {
-          return this.allFoodCategories[index].id!;
-        }
-        return [];
-      });
+      this.detailedFood.categoryIDs = this.categoriesCheckboxRef.map((assigned, index) => {
+        return assigned ? this.allFoodCategories[index].id! : "";
+      }).filter(value => value);
+
       if (this.isNewFood) {
         this.detailedFood.food!.currentQuantity = this.detailedFood.food!.initialQuantity;
       }

@@ -37,7 +37,6 @@ export class UserSignupComponent {
             return;
         }
 
-        // TODO: fix userType to accept this.signupData.userType
         const payload: SignupData = {
             username: this.signupData.username,
             password: this.signupData.password,
