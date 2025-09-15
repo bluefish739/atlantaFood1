@@ -21,7 +21,8 @@ export class FoodRouter extends BaseRouter {
   async saveFood(req: Request, res: Response) {
     const detailedFood = req.body as DetailedFood;
     try {
-      saveFoodManager.saveFood(new RequestContext(req), detailedFood);
+      await saveFoodManager.saveFood(new RequestContext(req), detailedFood);
+      logger.log("saveFood: save food manager complete");
       const generalConfirmationResponse = new GeneralConfirmationResponse();
       generalConfirmationResponse.success = true;
       generalConfirmationResponse.message = "Food added successfully!";
@@ -29,8 +30,10 @@ export class FoodRouter extends BaseRouter {
     } catch (error: any) {
       if (error instanceof BadRequestError) {
         this.sendBadRequestResponse(res, { success: false, message: error.message });
+        logger.log("saveFood: bad request error", error);
       } else {
         this.sendServerErrorResponse(res, {success: false, message: error.message});
+        logger.log("saveFood: server error", error);
       }
     }
   }

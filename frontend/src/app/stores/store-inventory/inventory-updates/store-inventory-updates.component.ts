@@ -41,21 +41,28 @@ export class StoreInventoryUpdatesComponent {
   }
 
   async onSubmit() {
-    // Disable submit button until form valid
-    this.detailedFood.categoryIDs = this.categoriesCheckboxRef.flatMap((assigned, index) => {
-      if (assigned) {
-        return this.allFoodCategories[index].id!;
+    try {
+      // Disable submit button until form valid
+      this.detailedFood.categoryIDs = this.categoriesCheckboxRef.flatMap((assigned, index) => {
+        if (assigned) {
+          return this.allFoodCategories[index].id!;
+        }
+        return [];
+      });
+      if (this.isNewFood) {
+        this.detailedFood.food!.currentQuantity = this.detailedFood.food!.initialQuantity;
       }
-      return [];
-    });
-    if (this.isNewFood) {
-      this.detailedFood.food!.currentQuantity = this.detailedFood.food!.initialQuantity;
-    }
-    const response = await this.xapiService.saveFood(this.detailedFood);
-    if (!response.success) {
-      this.errorMessage = response.message!;
-    } else {
+      const response = await this.xapiService.saveFood(this.detailedFood);
+      console.log("onSubmit: response=", response);
       this.router.navigateByUrl('/stores/inventory/details');
+    } catch (error: any) {
+      console.log("onSubmit: error=", error);
+      if (error.error) {
+        this.errorMessage = error.error.message;
+      } else {
+        this.errorMessage = "Unknown error";
+      }
     }
+
   }
 }
