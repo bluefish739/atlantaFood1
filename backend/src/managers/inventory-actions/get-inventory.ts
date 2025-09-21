@@ -8,7 +8,7 @@ export class GetInventoryManager {
         try {
             const organizationID = requestContext.getCurrentOrganizationID()!;
             const foods = await foodDAO.getFoodsByOrganizationID(organizationID);
-            const detailedFoodList = await Promise.all(foods.map(async food => {
+            const detailedFoods = (await Promise.all(foods.map(async food => {
                 const detailedFood = new DetailedFood();
                 detailedFood.food = new Food();
                 detailedFood.food.id = food.id;
@@ -17,13 +17,24 @@ export class GetInventoryManager {
                 detailedFood.food.entryDate = food.entryDate;
                 detailedFood.food.expirationDate = food.expirationDate;
                 detailedFood.food.units = food.units;
+                detailedFood.categoryIDs = await this.getCategoriesByFoodID(food.id!);
 
                 return detailedFood;
-            }));
-            return detailedFoodList;
+            }))).filter(detailedFood => {
+                return detailedFood.categoryIDs.some(categoryID => categoryIDs.includes(categoryID));
+            });
+            return detailedFoods;
         } catch (error: any) {
             logger.log("getStoreInventory: failed", error);
             throw error;
         }
     }
+
+    private async getCategoriesByFoodID(foodID: string) {
+        const categories = await Promise.all(
+          (await foodDAO.getFoodCategoryAssociationsByFoodID(foodID))
+            .map(async foodCategoryAssociation => { return foodCategoryAssociation.foodCategoryID! })
+        );
+        return categories;
+      }
 }
