@@ -47,29 +47,6 @@
   box-shadow: 0 0 5px rgba(46, 125, 50, 0.3);
 }
 
-button {
-  display: inline-block;
-  padding: 1rem 2rem;
-  background-color: #2E7D32;
-  color: white;
-  text-decoration: none;
-  border: none;
-  border-radius: 5px;
-  font-weight: bold;
-  font-size: 1rem;
-  cursor: pointer;
-  width: 100%;
-}
-
-button:hover {
-  background-color: #1B5E20;
-}
-
-button:disabled {
-  background-color: #B0BEC5;
-  cursor: not-allowed;
-}
-
 .message {
   display: none;
   padding: 0.8rem;
@@ -128,4 +105,57 @@ button:disabled {
   color: #2E7D32;
   font-weight: bold;
   margin-bottom: 0.5rem;
+}
+
+.toolbar {
+  display: flex;
+}
+
+.submit-button {
+  background-color: #2E7D32;
+  color: white;
+}
+
+.submit-button:hover {
+  background-color: #1B5E20;
+}
+
+.cancel-button {
+  color: black;
+}
+
+.cancel-button:hover {
+  background-color: rgb(233, 233, 233);
+}
+
+.form-button {
+  display: inline-block;
+  padding: 1rem 2rem;
+  text-decoration: none;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.form-button:disabled {
+  background-color: #B0BEC5;
+  cursor: not-allowed;
+}
+
+.delete-button {
+  color: rgb(157, 0, 0);
+}
+
+.delete-button:hover {
+  background-color: rgb(255, 193, 193);
+}
+
+.spacer {
+  width: 10px;
+}
+
+.filler {
+  flex: 1 1 auto;
 }

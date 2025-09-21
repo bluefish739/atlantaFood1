@@ -50,9 +50,4 @@ export class StoreInventoryDetailsComponent {
       console.log("Error: ", error);
     }
   }
-
-  async removeEntry(foodID: string) {
-    const success = await this.xapiService.deleteFood(foodID);
-    this.inventoryData = this.inventoryData.filter(detailedFood => detailedFood.food!.id != foodID);
-  }
 }

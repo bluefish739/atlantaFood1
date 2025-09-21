@@ -22,7 +22,6 @@
           <tr *ngFor="let entry of inventoryData; let idx=index">
             <td>
               {{ idx + 1 }}
-              <button class="action-button remove-button" (click)="removeEntry(entry.food!.id!)">Remove</button>
             </td>
             <td><a [routerLink]="['/stores/inventory/updates', entry.food!.id!]">{{ entry.food!.name! }}</a></td>
             <td>{{ entry.food!.currentQuantity! }} {{ entry.food!.units! }}</td>
