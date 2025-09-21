@@ -3,7 +3,7 @@ import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
 import { foodDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
-import { BadRequestError, DetailedFood, GeneralConfirmationResponse, RequestContext } from "../../../shared/src/kinds";
+import { BadRequestError, DetailedFood, GeneralConfirmationResponse, InventoryQuery, RequestContext } from "../../../shared/src/kinds";
 import { deleteFoodManager, getInventoryManager, saveFoodManager } from "../managers/manager-factory";
 
 
@@ -48,8 +48,8 @@ export class FoodRouter extends BaseRouter {
 
   async getInventory(req: Request, res: Response) {
     try {
-      const categoryIDs: string[] = req.body || [];
-      const detailedFoodList = await getInventoryManager.getInventory(new RequestContext(req), categoryIDs);
+      const inventoryQuery: InventoryQuery = req.body || new InventoryQuery();
+      const detailedFoodList = await getInventoryManager.getInventory(new RequestContext(req), inventoryQuery);
       this.sendNormalResponse(res, detailedFoodList);
     } catch (error: any) {
       this.sendServerErrorResponse(res, {success: false, message: error.message});

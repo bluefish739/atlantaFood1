@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { XapiService } from '../../../xapi.service';
-import { DetailedFood, FoodCategory } from '../../../../../../shared/src/kinds';
+import { DetailedFood, FoodCategory, InventoryQuery } from '../../../../../../shared/src/kinds';
 
 @Component({
   selector: 'store-inventory-details',
@@ -23,6 +23,7 @@ export class StoreInventoryDetailsComponent {
   }
 
   async ngOnInit() {
+    this.inventoryData = await this.xapiService.getInventory(new InventoryQuery());
     this.foodCategories = await this.xapiService.getFoodCategories();
   }
 
@@ -42,7 +43,9 @@ export class StoreInventoryDetailsComponent {
           const id = this.foodCategories.find(foodCategory => foodCategory.name?.toLowerCase() == cleanCategoryName)?.id;
           return id || "";
         }).filter(filterCategoryID => !!filterCategoryID);
-      this.inventoryData = await this.xapiService.getInventory(filterCategoryIDs);
+      const inventoryQuery = new InventoryQuery();
+      inventoryQuery.categoryIDs = filterCategoryIDs;
+      this.inventoryData = await this.xapiService.getInventory(inventoryQuery);
     } catch (error: any) {
       console.log("Error: ", error);
     }
