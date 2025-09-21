@@ -40,13 +40,19 @@ class SessionAuthenticator {
     }
 
     public saveLoginSession(loginResponse: LoginResponse) {
-        this.setCookie("sessionID", loginResponse.sessionID!, 600);
-        this.setCookie("userID", loginResponse.userID!, 600);
-        this.setCookie("userType", loginResponse.userType!, 600);
+        this.setCookie("sessionID", loginResponse.sessionID!, 60);
+        this.setCookie("userID", loginResponse.userID!, 60);
+        this.setCookie("userType", loginResponse.userType!, 60);
     }
 
     public clearCurrentSession() {
         this.deleteCookie("sessionID");
+    }
+
+    public refreshBrowserCookies() {
+        this.setCookie("sessionID", this.getSessionID()!, 60);
+        this.setCookie("userID", this.getUserID()!, 60);
+        this.setCookie("userType", this.getUserType()!, 60);
     }
 }
 

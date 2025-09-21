@@ -21,7 +21,7 @@ export class XapiService {
 
   constructor(private http: HttpClient) { }
 
-  public buildAuthenticationHeader() {
+  private buildAuthenticationHeader() {
     const sessionID = sessionAuthenticator.getSessionID();
     return new HttpHeaders({
       'Authentication': sessionID
@@ -30,17 +30,19 @@ export class XapiService {
 
   getResponse = async <T>(path: string): Promise<T> => {
     const headers = this.buildAuthenticationHeader();
+    sessionAuthenticator.refreshBrowserCookies();
     return await firstValueFrom(this.http.get<T>(path, { headers }));
   };
 
   postResponse = async <T>(path: string, postData: any): Promise<T> => {
-    console.log("postResponse path=" + path, postData);
     const headers = this.buildAuthenticationHeader();
+    sessionAuthenticator.refreshBrowserCookies();
     return await firstValueFrom(this.http.post<T>(path, postData, { headers }));
   };
 
   deleteResponse = async <T>(path: string): Promise<T> => {
     const headers = this.buildAuthenticationHeader();
+    sessionAuthenticator.refreshBrowserCookies();
     return await firstValueFrom(this.http.delete<T>(path, { headers }));
   };
   
