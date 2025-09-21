@@ -20,9 +20,10 @@ export class GetInventoryManager {
                 detailedFood.categoryIDs = await this.getCategoriesByFoodID(food.id!);
 
                 return detailedFood;
-            }))).filter(detailedFood => {
-                return detailedFood.categoryIDs.some(categoryID => categoryIDs.includes(categoryID));
-            });
+            })));
+            if (categoryIDs.length > 0) {
+                return detailedFoods.filter(detailedFood => detailedFood.categoryIDs.some(categoryID => categoryIDs.includes(categoryID)));
+            }
             return detailedFoods;
         } catch (error: any) {
             logger.log("getStoreInventory: failed", error);

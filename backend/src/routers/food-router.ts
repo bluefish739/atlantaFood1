@@ -48,7 +48,7 @@ export class FoodRouter extends BaseRouter {
 
   async getInventory(req: Request, res: Response) {
     try {
-      const categoryIDs: string[] = req.body;
+      const categoryIDs: string[] = req.body || [];
       const detailedFoodList = await getInventoryManager.getInventory(new RequestContext(req), categoryIDs);
       this.sendNormalResponse(res, detailedFoodList);
     } catch (error: any) {

@@ -32,22 +32,19 @@ export class StoreInventoryDetailsComponent {
 
   async runQuery() {
     try {
-      if (this.filterCategoriesInput == "") {
-        this.inventoryData = await this.xapiService.getInventory([]);
-        return;
-      }
       const filterCategoryIDs = this.filterCategoriesInput
         .split(",")
         .map(categoryName => {
-          const id = this.foodCategories.find(foodCategory => foodCategory.name?.toLowerCase() == categoryName.trim().toLowerCase())?.id;
-          if (id == undefined) {
-            throw new Error("Category not found");
+          const cleanCategoryName = categoryName.trim().toLowerCase();
+          if (!cleanCategoryName) {
+            return "";
           }
-          return id;
-        });
+          const id = this.foodCategories.find(foodCategory => foodCategory.name?.toLowerCase() == cleanCategoryName)?.id;
+          return id || "";
+        }).filter(filterCategoryID => !!filterCategoryID);
       this.inventoryData = await this.xapiService.getInventory(filterCategoryIDs);
     } catch (error: any) {
-      console.log("Error: category not found");
+      console.log("Error: ", error);
     }
   }
 
