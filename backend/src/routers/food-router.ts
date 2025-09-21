@@ -48,7 +48,8 @@ export class FoodRouter extends BaseRouter {
 
   async getInventory(req: Request, res: Response) {
     try {
-      const detailedFoodList = await getInventoryManager.getInventory(new RequestContext(req));
+      const categoryIDs: string[] = req.body;
+      const detailedFoodList = await getInventoryManager.getInventory(new RequestContext(req), categoryIDs);
       this.sendNormalResponse(res, detailedFoodList);
     } catch (error: any) {
       this.sendServerErrorResponse(res, {success: false, message: error.message});
@@ -90,7 +91,7 @@ export class FoodRouter extends BaseRouter {
     return express.Router()
       .get('/get-food-categories', authenticator([]), foodRouter.getFoodCategories.bind(foodRouter))
       .post('/post-food', authenticator([]), foodRouter.saveFood.bind(foodRouter))
-      .get('/get-inventory', authenticator([]), foodRouter.getInventory.bind(foodRouter))
+      .post('/get-inventory', authenticator([]), foodRouter.getInventory.bind(foodRouter))
       .get('/get-detailed-food/:foodID', authenticator([]), foodRouter.getDetailedFoodByID.bind(foodRouter))
       .delete('/delete-food/:foodID', authenticator([]), foodRouter.deleteFood.bind(foodRouter));
   }

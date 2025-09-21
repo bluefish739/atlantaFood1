@@ -3,7 +3,8 @@ import { foodDAO } from "../../daos/dao-factory";
 import * as logger from "firebase-functions/logger";
 
 export class GetInventoryManager {
-    async getInventory(requestContext: RequestContext) {
+    async getInventory(requestContext: RequestContext, categoryIDs: string[]) {
+        logger.log("getInventory: categoryIDs: ", categoryIDs);
         try {
             const organizationID = requestContext.getCurrentOrganizationID()!;
             const foods = await foodDAO.getFoodsByOrganizationID(organizationID);

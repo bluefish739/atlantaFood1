@@ -164,8 +164,8 @@ export class XapiService {
   //============================================================================================
   // Food/Inventory API Requests
   //============================================================================================
-  public async getInventory() {
-    return this.getResponse<DetailedFood[]>(`/xapi/food/get-inventory`);
+  public async getInventory(categoryIDs: string[]) {
+    return this.postResponse<DetailedFood[]>(`/xapi/food/get-inventory`, categoryIDs);
   }
 
   public async saveFood(detailedFood: DetailedFood) {
