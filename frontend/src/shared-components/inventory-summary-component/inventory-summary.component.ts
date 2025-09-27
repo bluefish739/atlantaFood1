@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { AuthService } from '../../app/auth.service';
 import { CommonModule } from '@angular/common';
 import { XapiService } from '../../app/xapi.service';
-import { InventoryQuery, InventorySummaryRow } from '../../../../shared/src/kinds';
+import { DetailedFood, InventoryQuery, InventorySummaryRow } from '../../../../shared/src/kinds';
 
 @Component({
   selector: 'inventory-summary',
@@ -27,10 +27,14 @@ export class InventorySummaryComponent {
     this.inventorySummaryData = foodCategories.map(foodCategory => {
       const inventorySummaryRow = new InventorySummaryRow();
       inventorySummaryRow.categoryName = foodCategory.name!;
-      inventorySummaryRow.quantitySummary = inventoryData
-        .filter(detailedFood => detailedFood.categoryIDs.includes(foodCategory.id!))
-        .map(detailedFood => detailedFood.food!.currentQuantity! + " " + detailedFood.food!.units!)
-        .join(", ");
+      const filteredInventory = inventoryData.filter(v => v.categoryIDs.includes(foodCategory.id!));
+      const unitsList = new Set(filteredInventory.map(v => v.food!.units!));
+      inventorySummaryRow.quantitySummary = [...unitsList]
+      .map(units =>
+        filteredInventory
+          .filter(v => v.food!.units == units)
+          .reduce((accumulator, v) => accumulator += v.food!.currentQuantity!, 0) + " " + units
+      ).join(", ");
       return inventorySummaryRow;
     });
   }
