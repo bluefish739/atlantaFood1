@@ -4,10 +4,11 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { XapiService } from '../../../xapi.service';
 import { DetailedFood, FoodCategory, InventoryQuery } from '../../../../../../shared/src/kinds';
+import { HeaderComponent } from '../../../../shared-components/header-component/header.component';
 
 @Component({
   selector: 'store-inventory-details',
-  imports: [RouterModule, FormsModule, CommonModule],
+  imports: [RouterModule, FormsModule, CommonModule, HeaderComponent],
   templateUrl: './store-inventory-details.component.html',
   styleUrl: './store-inventory-details.component.scss'
 })
