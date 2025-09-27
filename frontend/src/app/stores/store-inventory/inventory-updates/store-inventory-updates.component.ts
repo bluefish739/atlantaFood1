@@ -40,6 +40,23 @@ export class StoreInventoryUpdatesComponent {
     this.categoriesCheckboxRef = this.allFoodCategories.map(foodCategory => this.detailedFood.categoryIDs.includes(foodCategory.id!));
   }
 
+  private navigateToDetails() {
+    this.router.navigateByUrl('/stores/inventory/details');
+  }
+
+  cancelButtonClicked() {
+    this.navigateToDetails();
+  }
+
+  async deleteButtonClicked() {
+    const response = await this.xapiService.deleteFood(this.detailedFood.food!.id!);
+    if (!response.success) {
+      this.errorMessage = response.message || "Unknown Error";
+      return;
+    }
+    this.navigateToDetails();
+  }
+
   async onSubmit() {
     try {
       // Disable submit button until form valid
@@ -52,7 +69,7 @@ export class StoreInventoryUpdatesComponent {
       }
       const response = await this.xapiService.saveFood(this.detailedFood);
       console.log("onSubmit: response=", response);
-      this.router.navigateByUrl('/stores/inventory/details');
+      this.navigateToDetails();
     } catch (error: any) {
       console.log("onSubmit: error=", error);
       if (error.error) {

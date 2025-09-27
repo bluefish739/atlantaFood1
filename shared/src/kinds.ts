@@ -124,6 +124,10 @@ export class FoodCategoryAssociation {
     foodCategoryID: string | undefined;
 }
 
+export class InventoryQuery {
+    categoryIDs: string[] = [];
+}
+
 export class FoodCategory {
     id: string | undefined;
     name: string | undefined;

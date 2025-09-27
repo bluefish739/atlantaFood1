@@ -42,7 +42,13 @@
         <input type="date" id="expirationDate" name="expirationDate" required [(ngModel)]="food.expirationDate"
           class="text-input">
       </div>
-      <button type="submit">Submit Update</button>
+      <div class="toolbar">
+        <button class="form-button delete-button" *ngIf="!isNewFood" (click)="deleteButtonClicked()">Delete</button>
+        <div class="filler"></div>
+        <button class="form-button cancel-button" (click)="cancelButtonClicked()">Cancel</button>
+        <div class="spacer"></div>
+        <button class="form-button submit-button" type="submit">Submit Update</button>
+      </div>
     </form>
   </div>
 </section>

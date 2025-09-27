@@ -3,16 +3,19 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { XapiService } from '../../../xapi.service';
-import { DetailedFood } from '../../../../../../shared/src/kinds';
+import { DetailedFood, FoodCategory, InventoryQuery } from '../../../../../../shared/src/kinds';
+import { HeaderComponent } from '../../../../shared-components/header-component/header.component';
 
 @Component({
   selector: 'store-inventory-details',
-  imports: [RouterModule, FormsModule, CommonModule],
+  imports: [RouterModule, FormsModule, CommonModule, HeaderComponent],
   templateUrl: './store-inventory-details.component.html',
   styleUrl: './store-inventory-details.component.scss'
 })
 export class StoreInventoryDetailsComponent {
   inventoryData: DetailedFood[] = [];
+  foodCategories: FoodCategory[] = [];
+  filterCategoriesInput = "";
   constructor(
     private xapiService: XapiService,
     private activatedRoute: ActivatedRoute,
@@ -21,15 +24,31 @@ export class StoreInventoryDetailsComponent {
   }
 
   async ngOnInit() {
-    this.inventoryData = await this.xapiService.getInventory();
+    this.inventoryData = await this.xapiService.getInventory(new InventoryQuery());
+    this.foodCategories = await this.xapiService.getFoodCategories();
   }
 
   navigateToInventoryUpdates() {
     this.router.navigateByUrl('/stores/inventory/updates/new');
   }
 
-  async removeEntry(foodID: string) {
-    const success = await this.xapiService.deleteFood(foodID);
-    this.inventoryData = this.inventoryData.filter(detailedFood => detailedFood.food!.id != foodID);
+  async runQuery() {
+    try {
+      const filterCategoryIDs = this.filterCategoriesInput
+        .split(",")
+        .map(categoryName => {
+          const cleanCategoryName = categoryName.trim().toLowerCase();
+          if (!cleanCategoryName) {
+            return "";
+          }
+          const id = this.foodCategories.find(foodCategory => foodCategory.name?.toLowerCase() == cleanCategoryName)?.id;
+          return id || "";
+        }).filter(filterCategoryID => !!filterCategoryID);
+      const inventoryQuery = new InventoryQuery();
+      inventoryQuery.categoryIDs = filterCategoryIDs;
+      this.inventoryData = await this.xapiService.getInventory(inventoryQuery);
+    } catch (error: any) {
+      console.log("Error: ", error);
+    }
   }
 }

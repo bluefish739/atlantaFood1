@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent, HttpHandlerFn, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Store, Charity, StoreLocation, CharityLocation, Role, User, VerificationResponse, SignupData, GeneralConfirmationResponse, LoginRequest, LoginResponse, DetailedUser, Food, DetailedFood, FoodCategory } from '../../../shared/src/kinds';
+import { Store, Charity, StoreLocation, CharityLocation, Role, User, VerificationResponse, SignupData, GeneralConfirmationResponse, LoginRequest, LoginResponse, DetailedUser, Food, DetailedFood, FoodCategory, InventoryQuery } from '../../../shared/src/kinds';
 import { first, firstValueFrom, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { sessionAuthenticator } from './utilities/session-authentication';
@@ -21,7 +21,7 @@ export class XapiService {
 
   constructor(private http: HttpClient) { }
 
-  public buildAuthenticationHeader() {
+  private buildAuthenticationHeader() {
     const sessionID = sessionAuthenticator.getSessionID();
     return new HttpHeaders({
       'Authentication': sessionID
@@ -30,17 +30,19 @@ export class XapiService {
 
   getResponse = async <T>(path: string): Promise<T> => {
     const headers = this.buildAuthenticationHeader();
+    sessionAuthenticator.refreshBrowserCookies();
     return await firstValueFrom(this.http.get<T>(path, { headers }));
   };
 
   postResponse = async <T>(path: string, postData: any): Promise<T> => {
-    console.log("postResponse path=" + path, postData);
     const headers = this.buildAuthenticationHeader();
+    sessionAuthenticator.refreshBrowserCookies();
     return await firstValueFrom(this.http.post<T>(path, postData, { headers }));
   };
 
   deleteResponse = async <T>(path: string): Promise<T> => {
     const headers = this.buildAuthenticationHeader();
+    sessionAuthenticator.refreshBrowserCookies();
     return await firstValueFrom(this.http.delete<T>(path, { headers }));
   };
   
@@ -164,8 +166,8 @@ export class XapiService {
   //============================================================================================
   // Food/Inventory API Requests
   //============================================================================================
-  public async getInventory() {
-    return this.getResponse<DetailedFood[]>(`/xapi/food/get-inventory`);
+  public async getInventory(inventoryQuery: InventoryQuery) {
+    return this.postResponse<DetailedFood[]>(`/xapi/food/get-inventory`, inventoryQuery);
   }
 
   public async saveFood(detailedFood: DetailedFood) {
