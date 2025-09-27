@@ -5,23 +5,11 @@
         <tr>
             <th>Item</th>
             <th>Quantity</th>
-            <th>Expiration-Date</th>
         </tr>
-        <tr>
-            <td>Canned Goods</td>
-            <td>200 units</td>
-            <td>2025-12-31</td>
-        </tr>
-        <tr>
-            <td>Fresh Produce</td>
-            <td>150 lbs</td>
-            <td>2025-07-30</td>
-        </tr>
-        <tr>
-            <td>Baked Goods</td>
-            <td>50 units</td>
-            <td>2025-07-20</td>
-        </tr>
+        <tr *ngFor="let entry of inventorySummaryData; let idx=index">
+            <td>{{ entry.categoryName! }}</td>
+            <td>{{ entry.quantitySummary! }}</td>
+          </tr>
     </table> <br>
     <section class="inventory-actions-container">
         <button class="inventory-action" (click)="navigateToInventoryDetails()">View Details</button>

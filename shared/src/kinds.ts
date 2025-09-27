@@ -196,3 +196,8 @@ export class RequestContext {
         return (this.req).organizationID;
     }
 }
+
+export class InventorySummaryRow {
+    categoryName: string | undefined;
+    quantitySummary: string | undefined;
+}
