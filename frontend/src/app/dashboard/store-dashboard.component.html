@@ -1,16 +1,8 @@
 <div class="dashboard-section">
     <h2>Store Employee Dashboard</h2>
     <h3>Donatable Inventory Summary</h3>
-    <table class="inventory-table">
-        <tr>
-            <th>Item</th>
-            <th>Quantity</th>
-        </tr>
-        <tr *ngFor="let entry of inventorySummaryData; let idx=index">
-            <td>{{ entry.categoryName! }}</td>
-            <td>{{ entry.quantitySummary! }}</td>
-          </tr>
-    </table> <br>
+    <inventory-summary></inventory-summary>
+    <br>
     <section class="inventory-actions-container">
         <button class="inventory-action" (click)="navigateToInventoryDetails()">View Details</button>
         <button class="inventory-action" (click)="navigateToInventoryUpdates()">Update Inventory</button>

@@ -1,0 +1,31 @@
+
+.inventory-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #A8D5BA;
+    
+}
+
+.inventory-table .inventory-table-header,
+.inventory-table .inventory-table-entry {
+    padding: 0.8rem;
+    border: 1px solid #A8D5BA;
+    text-align: left;
+}
+
+.inventory-table .inventory-table-header {
+    color: #2E7D32;
+    font-weight: bold;
+}
+
+.inventory-table .inventory-table-entry{
+    background-color: white;
+}
+
+@media (max-width: 768px) {
+    .inventory-table .inventory-table-header,
+    .inventory-table .inventory-table-entry {
+        font-size: 0.9rem;
+        padding: 0.5rem;
+    }
+}
