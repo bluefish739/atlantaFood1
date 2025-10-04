@@ -5,6 +5,7 @@ import { AuthService } from '../../app/auth.service';
 import { CommonModule } from '@angular/common';
 import { XapiService } from '../../app/xapi.service';
 import { DetailedFood, InventoryQuery, InventorySummaryRow } from '../../../../shared/src/kinds';
+import { Input } from '@angular/core';
 
 @Component({
   selector: 'inventory-summary',
@@ -13,7 +14,7 @@ import { DetailedFood, InventoryQuery, InventorySummaryRow } from '../../../../s
   styleUrl: './inventory-summary.component.scss'
 })
 export class InventorySummaryComponent {
-  organizationID = "BLANK";
+  @Input() organizationID = "BLANK";
   inventorySummaryData: InventorySummaryRow[] = [];
   constructor(
     public authService: AuthService,
@@ -22,6 +23,7 @@ export class InventorySummaryComponent {
   }
 
   async ngOnInit() {
+    console.log(this.organizationID);
     this.inventorySummaryData = await this.xapiService.getInventorySummary(this.organizationID);
   }
 }
