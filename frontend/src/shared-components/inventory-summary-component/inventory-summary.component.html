@@ -1,4 +1,4 @@
-<table class="inventory-table">
+<table class="inventory-table" *ngIf="inventorySummaryData.length > 0">
     <tr>
         <th class="inventory-table-header">Category</th>
         <th class="inventory-table-header">Quantity</th>
@@ -8,3 +8,6 @@
         <td class="inventory-table-entry">{{ entry.quantitySummary! }}</td>
       </tr>
 </table>
+<div class="empty-inventory-note" *ngIf="inventorySummaryData.length === 0">
+    Inventory empty, check back later!
+</div>
