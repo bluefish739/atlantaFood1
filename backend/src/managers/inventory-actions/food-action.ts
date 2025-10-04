@@ -1,11 +1,11 @@
-import { BadRequestError, DetailedFood, Food, FoodCategoryAssociation, RequestContext, ServerError } from "../../../../shared/src/kinds";
+import { BadRequestError, DetailedFood, Food, FoodCategoryAssociation, GeneralConfirmationResponse, RequestContext, ServerError } from "../../../../shared/src/kinds";
 import * as logger from "firebase-functions/logger";
 import { generateId } from "../../shared/idutilities";
 import { foodDAO } from "../../daos/dao-factory";
 import { datastore } from "../../daos/data-store-factory";
 import { FoodDAO } from "../../daos/food-dao";
 
-export class SaveFoodManager {
+export class FoodActionManager {
     async saveFood(requestContext: RequestContext, detailedFood: DetailedFood) {
         const organizationID = requestContext.getCurrentOrganizationID()!;
         let foodBeingSaved: Food;
@@ -37,6 +37,11 @@ export class SaveFoodManager {
             const idsOfFoodCategoryAssociationsToDelete = oldFoodCategoryIDs.filter(foodCategoryID => !detailedFood.categoryIDs.includes(foodCategoryID!));
             const idsOfFoodCategoryAssociationsToSave = detailedFood.categoryIDs.filter(foodCategoryID => !oldFoodCategoryIDs.includes(foodCategoryID));
             this.saveFoodToDatabase(foodBeingSaved, idsOfFoodCategoryAssociationsToSave, idsOfFoodCategoryAssociationsToDelete);
+
+            const generalConfirmationResponse = new GeneralConfirmationResponse();
+            generalConfirmationResponse.success = true;
+            generalConfirmationResponse.message = "Food added successfully!";
+            return generalConfirmationResponse;
         } catch (error: any) {
             logger.log("Failed to add a food", error);
             throw new ServerError(error.message);
@@ -117,5 +122,42 @@ export class SaveFoodManager {
             logger.log('saveFood: Transaction failed ', error);
             return false;
         }
+    }
+
+    async deleteFood(requestContext: RequestContext, foodID: string) {
+        try {
+            await this.validateDeleteRequest(foodID, requestContext.getCurrentOrganizationID()!);
+            const foodCategoryAssociations = await foodDAO.getFoodCategoryAssociationsByFoodID(foodID);
+
+            const transaction = datastore.transaction();
+            const keys = [
+                datastore.key([FoodDAO.FOOD_KIND, foodID])
+            ];
+
+            foodCategoryAssociations.forEach(
+                foodCategoryAssociation => keys.push(datastore.key([FoodDAO.FOOD_CATEGORY_ASSOCIATION_KIND, foodID + "|" + foodCategoryAssociation.foodCategoryID]))
+            );
+
+            await transaction.run();
+            transaction.delete(keys);
+            await transaction.commit();
+        } catch (error: any) {
+            throw error;
+        }
+    }
+
+    private async validateDeleteRequest(foodID: string, organizationID: string) {
+        const food = await foodDAO.getFoodByID(foodID);
+        if (!food) {
+            throw new BadRequestError("Food not found");
+        }
+
+        if (food.organizationID != organizationID) {
+            throw new BadRequestError("Food not owned by user organization");
+        }
+    }
+
+    async getDetailedFoodByID(){
+
     }
 }
