@@ -58,4 +58,15 @@ export class GetInventoryManager {
         });
         return inventorySummaryData;
     }
+
+    async getDetailedFoodByID(requestContext: RequestContext, foodID: string) {
+        const detailedFood = new DetailedFood();
+        detailedFood.food = await foodDAO.getFoodByID(foodID);
+        detailedFood.categoryIDs = await this.getCategoriesByFoodID(foodID);
+        return detailedFood;
+    }
+
+    async getAllFoodCategories(requestContext: RequestContext) {
+        return await foodDAO.getAllFoodCategories();
+    }
 }

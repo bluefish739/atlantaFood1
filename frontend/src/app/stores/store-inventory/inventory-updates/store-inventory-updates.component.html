@@ -5,7 +5,7 @@
     <div class="message error" [class.show]="errorMessage" aria-live="polite">
       {{ errorMessage }}
     </div>
-    <form #inventoryUpdateForm="ngForm" (ngSubmit)="onSubmit()" *ngIf="detailedFood.food as food">
+    <form #inventoryUpdateForm="ngForm" *ngIf="detailedFood.food as food">
       <div class="form-group">
         <label for="foodType" class="text-input-label">Food Name</label>
         <input type="text" id="foodName" name="foodName" required [(ngModel)]="food.name"
@@ -47,7 +47,7 @@
         <div class="filler"></div>
         <button class="form-button cancel-button" (click)="cancelButtonClicked()">Cancel</button>
         <div class="spacer"></div>
-        <button class="form-button submit-button" type="submit">Submit Update</button>
+        <button class="form-button submit-button" (click)="submitButtonClicked()"  type="submit">Submit Update</button>
       </div>
     </form>
   </div>
