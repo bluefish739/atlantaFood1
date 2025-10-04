@@ -2,16 +2,15 @@ import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { User } from '../../../../shared/src/kinds';
-import { XapiService } from '../xapi.service';
-import { HomeHeaderComponent } from '../../shared-components/home-header/home-header.component';
+import { XapiService } from '../../app/xapi.service';
 
 @Component({
-  selector: 'app-home',
-  imports: [CommonModule, RouterModule, HomeHeaderComponent],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+  selector: 'home-header',
+  imports: [CommonModule, RouterModule],
+  templateUrl: './home-header.component.html',
+  styleUrl: './home-header.component.scss'
 })
-export class HomeComponent {
+export class HomeHeaderComponent {
   loggedInState = "";
   user!: User;
   constructor(
@@ -23,9 +22,9 @@ export class HomeComponent {
   async ngOnInit() {
     const verificationResponse = await this.xapiService.verifyUserBySession();
     if (verificationResponse?.hasSession) {
-      this.loggedInState = "logged in";
+      this.loggedInState = "LOGGED_IN";
     } else {
-      this.loggedInState = "logged out";
+      this.loggedInState = "LOGGED_OUT";
     }
   }
 }
