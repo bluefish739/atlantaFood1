@@ -20,8 +20,7 @@ export class HomeComponent {
   }
 
   async ngOnInit() {
-    let verificationResponse = await this.xapiService.verifyUserBySession();
-    console.log("Response from backend for verify user by session:", verificationResponse);
+    const verificationResponse = await this.xapiService.verifyUserBySession();
     if (verificationResponse?.hasSession) {
       this.loggedInState = "logged in";
     } else {
