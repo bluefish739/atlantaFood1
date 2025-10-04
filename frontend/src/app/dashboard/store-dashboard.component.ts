@@ -21,21 +21,6 @@ export class StoreDashboardComponent {
     private xapiService: XapiService,
     private router: Router
   ) {
-    this.getInventorySummaryData();
-  }
-
-  async getInventorySummaryData() {
-    const foodCategories = await this.xapiService.getFoodCategories();
-    const inventoryData = await this.xapiService.getInventory(new InventoryQuery());
-    this.inventorySummaryData = foodCategories.map(foodCategory => {
-      const inventorySummaryRow = new InventorySummaryRow();
-      inventorySummaryRow.categoryName = foodCategory.name!;
-      inventorySummaryRow.quantitySummary = inventoryData
-        .filter(detailedFood => detailedFood.categoryIDs.includes(foodCategory.id!))
-        .map(detailedFood => detailedFood.food!.currentQuantity! + " " + detailedFood.food!.units!)
-        .join(", ");
-      return inventorySummaryRow;
-    });
   }
 
   navigateToInventoryDetails() {

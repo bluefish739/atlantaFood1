@@ -32,7 +32,7 @@ export class FoodRouter extends BaseRouter {
         this.sendBadRequestResponse(res, { success: false, message: error.message });
         logger.log("saveFood: bad request error", error);
       } else {
-        this.sendServerErrorResponse(res, {success: false, message: error.message});
+        this.sendServerErrorResponse(res, { success: false, message: error.message });
         logger.log("saveFood: server error", error);
       }
     }
@@ -52,7 +52,7 @@ export class FoodRouter extends BaseRouter {
       const detailedFoodList = await getInventoryManager.getInventory(new RequestContext(req), inventoryQuery);
       this.sendNormalResponse(res, detailedFoodList);
     } catch (error: any) {
-      this.sendServerErrorResponse(res, {success: false, message: error.message});
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }
 
@@ -81,8 +81,18 @@ export class FoodRouter extends BaseRouter {
       if (error instanceof BadRequestError) {
         this.sendBadRequestResponse(res, { success: false, message: error.message });
       } else {
-        this.sendServerErrorResponse(res, {success: false, message: error.message});
+        this.sendServerErrorResponse(res, { success: false, message: error.message });
       }
+    }
+  }
+
+  async getInventorySummary(req: Request, res: Response) {
+    try {
+      const inventorySummaryData = await getInventoryManager.getInventorySummary(new RequestContext(req));
+      this.sendNormalResponse(res, inventorySummaryData);
+    } catch (error: any) {
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
+      logger.log("saveFood: server error", error);
     }
   }
 
@@ -93,6 +103,7 @@ export class FoodRouter extends BaseRouter {
       .post('/post-food', authenticator([]), foodRouter.saveFood.bind(foodRouter))
       .post('/get-inventory', authenticator([]), foodRouter.getInventory.bind(foodRouter))
       .get('/get-detailed-food/:foodID', authenticator([]), foodRouter.getDetailedFoodByID.bind(foodRouter))
-      .delete('/delete-food/:foodID', authenticator([]), foodRouter.deleteFood.bind(foodRouter));
+      .delete('/delete-food/:foodID', authenticator([]), foodRouter.deleteFood.bind(foodRouter))
+      .get('/get-inventory-summary', authenticator([]), foodRouter.getInventorySummary.bind(foodRouter));
   }
 }

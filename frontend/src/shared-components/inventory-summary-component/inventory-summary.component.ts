@@ -18,24 +18,9 @@ export class InventorySummaryComponent {
     public authService: AuthService,
     private xapiService: XapiService,
   ) {
-    this.getInventorySummaryData();
   }
 
-  async getInventorySummaryData() {
-    const foodCategories = await this.xapiService.getFoodCategories();
-    const inventoryData = await this.xapiService.getInventory(new InventoryQuery());
-    this.inventorySummaryData = foodCategories.map(foodCategory => {
-      const inventorySummaryRow = new InventorySummaryRow();
-      inventorySummaryRow.categoryName = foodCategory.name!;
-      const filteredInventory = inventoryData.filter(v => v.categoryIDs.includes(foodCategory.id!));
-      const unitsList = new Set(filteredInventory.map(v => v.food!.units!));
-      inventorySummaryRow.quantitySummary = [...unitsList]
-      .map(units =>
-        filteredInventory
-          .filter(v => v.food!.units == units)
-          .reduce((accumulator, v) => accumulator += v.food!.currentQuantity!, 0) + " " + units
-      ).join(", ");
-      return inventorySummaryRow;
-    });
+  async ngOnInit() {
+    this.inventorySummaryData = await this.xapiService.getInventorySummary();
   }
 }

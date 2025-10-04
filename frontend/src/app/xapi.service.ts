@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent, HttpHandlerFn, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Store, Charity, StoreLocation, CharityLocation, Role, User, VerificationResponse, SignupData, GeneralConfirmationResponse, LoginRequest, LoginResponse, DetailedUser, Food, DetailedFood, FoodCategory, InventoryQuery } from '../../../shared/src/kinds';
+import { Store, Charity, StoreLocation, CharityLocation, Role, User, VerificationResponse, SignupData, GeneralConfirmationResponse, LoginRequest, LoginResponse, DetailedUser, Food, DetailedFood, FoodCategory, InventoryQuery, InventorySummaryRow } from '../../../shared/src/kinds';
 import { first, firstValueFrom, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { sessionAuthenticator } from './utilities/session-authentication';
@@ -184,5 +184,9 @@ export class XapiService {
 
   public async deleteFood(foodID: string) {
     return this.deleteResponse<GeneralConfirmationResponse>(`/xapi/food/delete-food/` + foodID);
+  }
+
+  public async getInventorySummary() {
+    return this.getResponse<InventorySummaryRow[]>(`/xapi/food/get-inventory-summary/`);
   }
 }

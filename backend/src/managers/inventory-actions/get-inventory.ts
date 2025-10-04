@@ -1,4 +1,4 @@
-import { DetailedFood, Food, InventoryQuery, RequestContext } from "../../../../shared/src/kinds";
+import { DetailedFood, Food, InventoryQuery, InventorySummaryRow, RequestContext } from "../../../../shared/src/kinds";
 import { foodDAO } from "../../daos/dao-factory";
 import * as logger from "firebase-functions/logger";
 
@@ -38,5 +38,24 @@ export class GetInventoryManager {
                 .map(async foodCategoryAssociation => { return foodCategoryAssociation.foodCategoryID! })
         );
         return categories;
+    }
+
+    async getInventorySummary(requestContext: RequestContext) {
+        const inventoryData = await this.getInventory(requestContext, new InventoryQuery());
+        const foodCategories = await foodDAO.getAllFoodCategories();
+        const inventorySummaryData = foodCategories.map(foodCategory => {
+            const inventorySummaryRow = new InventorySummaryRow();
+            inventorySummaryRow.categoryName = foodCategory.name!;
+            const filteredInventory = inventoryData.filter(v => v.categoryIDs.includes(foodCategory.id!));
+            const unitsList = new Set(filteredInventory.map(v => v.food!.units!));
+            inventorySummaryRow.quantitySummary = [...unitsList]
+                .map(units =>
+                    filteredInventory
+                        .filter(v => v.food!.units == units)
+                        .reduce((accumulator, v) => accumulator += v.food!.currentQuantity!, 0) + " " + units
+                ).join(", ");
+            return inventorySummaryRow;
+        });
+        return inventorySummaryData;
     }
 }
