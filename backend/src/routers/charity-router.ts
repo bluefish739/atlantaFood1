@@ -23,20 +23,13 @@ export class CharityRouter extends BaseRouter {
   }
 
   async getAllCharities(req: Request, res: Response) {
-    /*
     try {
       const charities = await charityDAO.getAllCharities();
-      const locations = await charityLocationDAO.getAllLocations();
-      for (let charity of charities) {
-        //charity.locations = locations.filter((location) => location.charityID == charity.id);
-      }
-      logger.log("Charities successfully fetched!");
       this.sendNormalResponse(res, charities);
     } catch (error: any) {
       logger.log(`Error: charities could not be fetched! ${error}`);
       this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
-      */
   }
 
   async getCharity(req: Request, res: Response) {

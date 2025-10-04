@@ -25,10 +25,6 @@ export class StoreRouter extends BaseRouter {
   async getAllStores(req: Request, res: Response) {
     try {
       const stores = await storeDAO.getAllStores();
-      const locations = await storeLocationDAO.getAllLocations();
-      for (let store of stores) {
-        store.locations = locations.filter((location) => location.storeID == store.id);
-      }
       this.sendNormalResponse(res, stores);
     } catch (error: any) {
       this.sendServerErrorResponse(res, { success: false, message: error.message });

@@ -1,22 +1,36 @@
 
+export class Organization {
+    id: string | undefined;
+    name: string | undefined;
+    contact: string | undefined;
+    organizationType: string | undefined;
+}
+
+export class Site {
+    id: string | undefined;
+    name: string | undefined;
+    state: string | undefined;
+    city: string | undefined;
+    addressLine1: string | undefined;
+    addressLine2: string | undefined;
+    contact: string | undefined;
+    organizationID: string | undefined;
+}
+
 export class Store {
     id: string | undefined;
     name: string | undefined;
     contact: string | undefined;
-    locations: StoreLocation[] = [];
 }
 
 export class StoreLocation {
     id: string | undefined;
+    name: string | undefined;
     state: string | undefined;
     city: string | undefined;
     streetName: string | undefined;
     streetNumber: number | undefined;
     storeID: string | undefined;
-    inventory: {
-        foodID: string;
-        units: number;
-    }[] = [];
 }
 
 export class StoreEmployee {
@@ -32,17 +46,12 @@ export class Charity {
 
 export class CharityLocation {
     id: string | undefined;
+    name: string | undefined;
     state: string | undefined;
     city: string | undefined;
     streetName: string | undefined;
     streetNumber: number | undefined;
     charityID: string | undefined;
-    inventory: {
-        foodID: string | undefined;
-        units: number | undefined;
-        expirationDate: string | undefined;
-        source: string | undefined;
-    }[] = [];
 }
 
 export class CharityEmployee {
