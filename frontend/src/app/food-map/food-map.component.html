@@ -1,1 +1,19 @@
 <home-header></home-header>
+
+<!-- food-pantries-list.component.html -->
+<mat-accordion class="food-pantries-accordion">
+    <mat-expansion-panel *ngFor="let site of sites; let i = index" (opened)="onPanelOpened(i)" hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ site.name }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="summary-container">
+        <!--
+        TODO: implement this
+        <app-pantry-summary [pantry]="pantry"></app-pantry-summary>
+        <a class="full-inventory-link" [routerLink]="['/full-inventory', site.id]">See full inventory</a>
+        -->
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
