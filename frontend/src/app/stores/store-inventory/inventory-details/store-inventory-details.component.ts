@@ -24,7 +24,7 @@ export class StoreInventoryDetailsComponent {
   }
 
   async ngOnInit() {
-    this.inventoryData = await this.xapiService.getInventory(new InventoryQuery());
+    this.inventoryData = await this.xapiService.getInventory(new InventoryQuery(), "BLANK");
     this.foodCategories = await this.xapiService.getFoodCategories();
   }
 
@@ -46,7 +46,7 @@ export class StoreInventoryDetailsComponent {
         }).filter(filterCategoryID => !!filterCategoryID);
       const inventoryQuery = new InventoryQuery();
       inventoryQuery.categoryIDs = filterCategoryIDs;
-      this.inventoryData = await this.xapiService.getInventory(inventoryQuery);
+      this.inventoryData = await this.xapiService.getInventory(inventoryQuery, "BLANK");
     } catch (error: any) {
       console.log("Error: ", error);
     }

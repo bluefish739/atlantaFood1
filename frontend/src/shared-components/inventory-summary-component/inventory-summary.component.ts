@@ -13,6 +13,7 @@ import { DetailedFood, InventoryQuery, InventorySummaryRow } from '../../../../s
   styleUrl: './inventory-summary.component.scss'
 })
 export class InventorySummaryComponent {
+  organizationID = "BLANK";
   inventorySummaryData: InventorySummaryRow[] = [];
   constructor(
     public authService: AuthService,
@@ -21,6 +22,6 @@ export class InventorySummaryComponent {
   }
 
   async ngOnInit() {
-    this.inventorySummaryData = await this.xapiService.getInventorySummary();
+    this.inventorySummaryData = await this.xapiService.getInventorySummary(this.organizationID);
   }
 }

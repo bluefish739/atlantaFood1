@@ -166,8 +166,8 @@ export class XapiService {
   //============================================================================================
   // Food/Inventory API Requests
   //============================================================================================
-  public async getInventory(inventoryQuery: InventoryQuery) {
-    return this.postResponse<DetailedFood[]>(`/xapi/food/get-inventory`, inventoryQuery);
+  public async getInventory(inventoryQuery: InventoryQuery, organizationID: string) {
+    return this.postResponse<DetailedFood[]>(`/xapi/food/get-inventory/` + organizationID, inventoryQuery);
   }
 
   public async saveFood(detailedFood: DetailedFood) {
@@ -186,7 +186,7 @@ export class XapiService {
     return this.deleteResponse<GeneralConfirmationResponse>(`/xapi/food/delete-food/` + foodID);
   }
 
-  public async getInventorySummary() {
-    return this.getResponse<InventorySummaryRow[]>(`/xapi/food/get-inventory-summary/`);
+  public async getInventorySummary(organizationID: string) {
+    return this.getResponse<InventorySummaryRow[]>(`/xapi/food/get-inventory-summary/` + organizationID);
   }
 }

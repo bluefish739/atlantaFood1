@@ -35,8 +35,9 @@ export class FoodRouter extends BaseRouter {
 
   async getInventory(req: Request, res: Response) {
     try {
+      const organizationID = req.params.organizationID as string;
       const inventoryQuery: InventoryQuery = req.body || new InventoryQuery();
-      const detailedFoodList = await getInventoryManager.getInventory(new RequestContext(req), inventoryQuery);
+      const detailedFoodList = await getInventoryManager.getInventory(new RequestContext(req), inventoryQuery, organizationID);
       this.sendNormalResponse(res, detailedFoodList);
     } catch (error: any) {
       this.sendServerErrorResponse(res, { success: false, message: error.message });
@@ -73,7 +74,8 @@ export class FoodRouter extends BaseRouter {
 
   async getInventorySummary(req: Request, res: Response) {
     try {
-      const inventorySummaryData = await getInventoryManager.getInventorySummary(new RequestContext(req));
+      const organizationID = req.params.organizationID as string;
+      const inventorySummaryData = await getInventoryManager.getInventorySummary(new RequestContext(req), organizationID);
       this.sendNormalResponse(res, inventorySummaryData);
     } catch (error: any) {
       this.sendServerErrorResponse(res, { success: false, message: error.message });
@@ -86,9 +88,9 @@ export class FoodRouter extends BaseRouter {
     return express.Router()
       .get('/get-food-categories', authenticator([]), foodRouter.getFoodCategories.bind(foodRouter))
       .post('/post-food', authenticator([]), foodRouter.saveFood.bind(foodRouter))
-      .post('/get-inventory', authenticator([]), foodRouter.getInventory.bind(foodRouter))
+      .post('/get-inventory/:organizationID', authenticator([]), foodRouter.getInventory.bind(foodRouter))
       .get('/get-detailed-food/:foodID', authenticator([]), foodRouter.getDetailedFoodByID.bind(foodRouter))
       .delete('/delete-food/:foodID', authenticator([]), foodRouter.deleteFood.bind(foodRouter))
-      .get('/get-inventory-summary', authenticator([]), foodRouter.getInventorySummary.bind(foodRouter));
+      .get('/get-inventory-summary/:organizationID', authenticator([]), foodRouter.getInventorySummary.bind(foodRouter));
   }
 }

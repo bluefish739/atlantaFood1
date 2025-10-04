@@ -1,13 +1,16 @@
+
 import { DetailedFood, Food, InventoryQuery, InventorySummaryRow, RequestContext } from "../../../../shared/src/kinds";
 import { foodDAO } from "../../daos/dao-factory";
 import * as logger from "firebase-functions/logger";
 
 export class GetInventoryManager {
-    async getInventory(requestContext: RequestContext, inventoryQuery: InventoryQuery) {
+    async getInventory(requestContext: RequestContext, inventoryQuery: InventoryQuery, organizationID: string) {
         try {
+            if (organizationID == "BLANK") {
+                organizationID = requestContext.getCurrentOrganizationID()!;
+            }
             const categoryIDs = inventoryQuery.categoryIDs;
             logger.log("getInventory: categoryIDs: ", categoryIDs);
-            const organizationID = requestContext.getCurrentOrganizationID()!;
             const foods = await foodDAO.getFoodsByOrganizationID(organizationID);
             const detailedFoods = (await Promise.all(foods.map(async food => {
                 const detailedFood = new DetailedFood();
@@ -40,8 +43,11 @@ export class GetInventoryManager {
         return categories;
     }
 
-    async getInventorySummary(requestContext: RequestContext) {
-        const inventoryData = await this.getInventory(requestContext, new InventoryQuery());
+    async getInventorySummary(requestContext: RequestContext, organizationID: string) {
+        if (organizationID == "BLANK") {
+            organizationID = requestContext.getCurrentOrganizationID()!;
+        }
+        const inventoryData = await this.getInventory(requestContext, new InventoryQuery(), organizationID);
         const foodCategories = await foodDAO.getAllFoodCategories();
         const inventorySummaryData = foodCategories.map(foodCategory => {
             const inventorySummaryRow = new InventorySummaryRow();
