@@ -23,7 +23,6 @@ export class InventorySummaryComponent {
   }
 
   async ngOnInit() {
-    console.log(this.organizationID);
     this.inventorySummaryData = await this.xapiService.getInventorySummary(this.organizationID);
   }
 }

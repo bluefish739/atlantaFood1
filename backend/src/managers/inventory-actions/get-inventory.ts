@@ -1,5 +1,5 @@
 
-import { DetailedFood, Food, InventoryQuery, InventorySummaryRow, RequestContext } from "../../../../shared/src/kinds";
+import { DetailedFood, Food, FoodCategory, InventoryQuery, InventorySummaryRow, RequestContext } from "../../../../shared/src/kinds";
 import { foodDAO } from "../../daos/dao-factory";
 import * as logger from "firebase-functions/logger";
 
@@ -43,26 +43,45 @@ export class GetInventoryManager {
         return categories;
     }
 
+    private summarizeRow(foodCategory: FoodCategory, inventoryData: DetailedFood[]) {
+        const inventorySummaryRow = new InventorySummaryRow();
+        inventorySummaryRow.categoryName = foodCategory.name;
+        const filteredInventory = inventoryData.filter(v => v.categoryIDs.includes(foodCategory.id!));
+        const unitsList = new Set(filteredInventory.map(v => v.food!.units!));
+        inventorySummaryRow.quantitySummary = [...unitsList]
+            .map(units =>
+                filteredInventory
+                    .filter(v => v.food!.units == units)
+                    .reduce((accumulator, v) => accumulator += v.food!.currentQuantity!, 0) + " " + units
+            ).join(", ");
+        return inventorySummaryRow;
+    }
+
+    private summarizeMiscellaneousRow(inventoryData: DetailedFood[]) {
+        const inventorySummaryRow = new InventorySummaryRow();
+        inventorySummaryRow.categoryName = "Other";
+        const filteredInventory = inventoryData.filter(v => v.categoryIDs.length === 0);
+        const unitsList = new Set(filteredInventory.map(v => v.food!.units!));
+        inventorySummaryRow.quantitySummary = [...unitsList]
+            .map(units =>
+                filteredInventory
+                    .filter(v => v.food!.units == units)
+                    .reduce((accumulator, v) => accumulator += v.food!.currentQuantity!, 0) + " " + units
+            ).join(", ");
+        return inventorySummaryRow;
+    }
+
     async getInventorySummary(requestContext: RequestContext, organizationID: string) {
         if (organizationID == "BLANK") {
             organizationID = requestContext.getCurrentOrganizationID()!;
         }
         const inventoryData = await this.getInventory(requestContext, new InventoryQuery(), organizationID);
         const foodCategories = await foodDAO.getAllFoodCategories();
-        const inventorySummaryData = foodCategories.map(foodCategory => {
-            const inventorySummaryRow = new InventorySummaryRow();
-            inventorySummaryRow.categoryName = foodCategory.name!;
-            const filteredInventory = inventoryData.filter(v => v.categoryIDs.includes(foodCategory.id!));
-            const unitsList = new Set(filteredInventory.map(v => v.food!.units!));
-            inventorySummaryRow.quantitySummary = [...unitsList]
-                .map(units =>
-                    filteredInventory
-                        .filter(v => v.food!.units == units)
-                        .reduce((accumulator, v) => accumulator += v.food!.currentQuantity!, 0) + " " + units
-                ).join(", ");
-            return inventorySummaryRow;
-        });
-        return inventorySummaryData;
+
+        const inventorySummaryData = foodCategories.map(foodCategory => this.summarizeRow(foodCategory, inventoryData));
+        inventorySummaryData.push(this.summarizeMiscellaneousRow(inventoryData));
+        const filteredInventorySummaryData = inventorySummaryData.filter(r => r.quantitySummary);
+        return filteredInventorySummaryData;
     }
 
     async getDetailedFoodByID(requestContext: RequestContext, foodID: string) {
