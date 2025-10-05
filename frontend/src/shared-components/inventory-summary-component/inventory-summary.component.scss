@@ -30,10 +30,13 @@
 }
 
 .empty-inventory-note {
-    width: 100%;
     background-color: #A8D5BA;
     color: #2E7D32;
     font-weight: bold;
     padding: 2rem;
     text-align: center;
+}
+
+.buffer-bar {
+    padding: 2rem, 0rem;
 }
