@@ -21,6 +21,13 @@ export class XapiService {
 
   constructor(private http: HttpClient) { }
 
+  private getServiceAddress() {
+    if(window.location.port=='4200') {
+      return 'http://127.0.0.1:5001/atlantafoodhub/us-central1/xapi';
+    }
+    return ''
+  }
+
   private buildAuthenticationHeader() {
     const sessionID = sessionAuthenticator.getSessionID();
     return new HttpHeaders({
@@ -148,12 +155,12 @@ export class XapiService {
   }
 
   public async login(loginRequest: LoginRequest) {
-    return this.postResponse<LoginResponse>(`/xapi/users/login`, loginRequest);
+    return this.postResponse<LoginResponse>(this.getServiceAddress() + `/xapi/users/login`, loginRequest);
   }
 
   public async verifyUserBySession() {
     const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<VerificationResponse>(`/xapi/users/verify-user-by-session`, { headers }));
+    return await firstValueFrom(this.http.get<VerificationResponse>(this.getServiceAddress() + `/xapi/users/verify-user-by-session`, { headers }));
   }
 
   public async signupUser(signupData: SignupData) {
