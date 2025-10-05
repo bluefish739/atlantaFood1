@@ -16,6 +16,7 @@ import { InventorySummaryComponent } from '../../shared-components/inventory-sum
 export class FoodMapComponent {
     sites: any[] = [];
     filterCategoriesInput = "";
+    hiddenFullInventoryLinkIndices: Set<number> = new Set();
     constructor(
         private xapiService: XapiService,
         private router: Router
@@ -34,5 +35,9 @@ export class FoodMapComponent {
 
     async runQuery() {
 
+    }
+
+    onEmptyInventory(idx: number) {
+        this.hiddenFullInventoryLinkIndices.add(idx);
     }
 }

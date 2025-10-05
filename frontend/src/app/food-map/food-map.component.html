@@ -20,9 +20,9 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <div class="summary-container">
-                <!--TODO: implement this-->
-                <inventory-summary [organizationID]="site.id!"></inventory-summary>
-                <a class="full-inventory-link" routerLink="/home">See full inventory</a>
+                <inventory-summary [organizationID]="site.id!" (onEmptyInventory)="onEmptyInventory(i)"></inventory-summary>
+                <!--Link this something useful-->
+                <a class="full-inventory-link" id="full-inventory-link-{{i}}" routerLink="/home" *ngIf="!hiddenFullInventoryLinkIndices.has(i)">See full inventory</a>
             </div>
         </mat-expansion-panel>
     </mat-accordion>

@@ -1,11 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../app/auth.service';
 import { CommonModule } from '@angular/common';
 import { XapiService } from '../../app/xapi.service';
 import { DetailedFood, InventoryQuery, InventorySummaryRow } from '../../../../shared/src/kinds';
-import { Input } from '@angular/core';
 
 @Component({
   selector: 'inventory-summary',
@@ -15,6 +14,7 @@ import { Input } from '@angular/core';
 })
 export class InventorySummaryComponent {
   @Input() organizationID = "BLANK";
+  @Output() onEmptyInventory = new EventEmitter<boolean>();
   inventorySummaryData: InventorySummaryRow[] = [];
   constructor(
     public authService: AuthService,
@@ -24,5 +24,8 @@ export class InventorySummaryComponent {
 
   async ngOnInit() {
     this.inventorySummaryData = await this.xapiService.getInventorySummary(this.organizationID);
+    if (this.inventorySummaryData.length === 0) {
+      this.onEmptyInventory.emit(true);
+    }
   }
 }
