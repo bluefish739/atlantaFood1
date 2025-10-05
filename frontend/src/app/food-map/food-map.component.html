@@ -22,7 +22,7 @@
             <div class="summary-container">
                 <inventory-summary [organizationID]="site.id!" (onEmptyInventory)="onEmptyInventory(i)"></inventory-summary>
                 <!--Link this something useful-->
-                <a class="full-inventory-link" id="full-inventory-link-{{i}}" routerLink="/home" *ngIf="!hiddenFullInventoryLinkIndices.has(i)">See full inventory</a>
+                <a class="full-inventory-link" id="full-inventory-link-{{i}}" (click)="onClickFullInventoryLink(i)" *ngIf="!hiddenFullInventoryLinkIndices.has(i)">See full inventory</a>
             </div>
         </mat-expansion-panel>
     </mat-accordion>

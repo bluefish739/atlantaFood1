@@ -40,4 +40,8 @@ export class FoodMapComponent {
     onEmptyInventory(idx: number) {
         this.hiddenFullInventoryLinkIndices.add(idx);
     }
+
+    onClickFullInventoryLink(idx: number) {
+        // TODO: either redirect user to page containing full inventory or open dialog box with full inventory
+    }
 }
