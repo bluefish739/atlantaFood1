@@ -17,7 +17,7 @@ export class InventorySummaryComponent {
   @Input() organizationID = "BLANK";
   @Output() onEmptyInventory = new EventEmitter<boolean>();
   inventorySummaryData: InventorySummaryRow[] = [];
-  inventoryStatus = "LOADING";
+  inventoryStatus = "";
   constructor(
     public authService: AuthService,
     private xapiService: XapiService,
@@ -25,6 +25,7 @@ export class InventorySummaryComponent {
   }
 
   async ngOnInit() {
+    this.inventoryStatus = "LOADING";
     this.inventorySummaryData = await this.xapiService.getInventorySummary(this.organizationID);
     if (this.inventorySummaryData.length === 0) {
       this.inventoryStatus = "EMPTY";
