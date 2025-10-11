@@ -1,8 +1,8 @@
 import express, { Request, Response, Router } from "express";
 import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
-import { ADMIN_ROLE_NAME, Charity, CharityEmployee, DetailedUser, LoginRequest, LoginResponse, Role, SignupData, Store, StoreEmployee, TransportVolunteer, User, UserRole, VolunteerOrganization } from "../../../shared/src/kinds";
-import { charityDAO, roleDAO, storeDAO, userDAO, volunteerDAO } from "../daos/dao-factory";
+import { ADMIN_ROLE_NAME, Organization, DetailedUser, LoginRequest, LoginResponse, Role, SignupData, Store, StoreEmployee, TransportVolunteer, User, UserRole, VolunteerOrganization, OrganizationEmployee } from "../../../shared/src/kinds";
+import { organizationDAO, roleDAO, storeDAO, userDAO, volunteerDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
 import { generateId } from "../shared/idutilities";
 import { employeeHelpers } from "../shared/employee-helpers";
@@ -103,7 +103,7 @@ export class UserRouter extends BaseRouter {
       if (userType == "Store") {
         userIDs = (await storeDAO.getEmployeesOfStoreByOrganizationID(organizationID)).map(v => v.userID!);
       } else if (userType == "Pantry") {
-        userIDs = (await charityDAO.getEmployeesOfPantryByOrganizationID(organizationID)).map(v => v.userID!);
+        userIDs = (await organizationDAO.getEmployeesByOrganizationID(organizationID)).map(v => v.userID!);
       } else if (userType == "Volunteer") {
         userIDs = (await volunteerDAO.getVolunteersByOrganizationID(organizationID)).map(v => v.userID!);
       } else if (userType == "Admin") {
@@ -266,7 +266,7 @@ export class UserRouter extends BaseRouter {
       if (user.userType == "Store") {
         this.createNewStore(user.userID!, organizationID);
       } else if (user.userType == "Pantry") {
-        this.createNewCharity(user.userID!, organizationID);
+        this.createNewOrganization(user.userID!, organizationID);
       } else if (user.userType == "Volunteer") {
         this.createNewVolunteer(user.userID!, organizationID);
       }
@@ -317,17 +317,18 @@ export class UserRouter extends BaseRouter {
     logger.log("Created user role: ", userRole);
   }
 
-  private async createNewCharity(userID: string, organizationID: string) {
-    const charity = new Charity();
-    charity.id = organizationID;
-    await charityDAO.saveCharity(charity);
-    logger.log("Created charity: ", charity);
+  private async createNewOrganization(userID: string, organizationID: string) {
+    const organization = new Organization();
+    organization.id = organizationID;
+    organization.organizationType = "PANTRY";
+    await organizationDAO.saveOrganization(organization);
+    logger.log("Created organization: ", organization);
 
-    const charityEmployee = new CharityEmployee();
-    charityEmployee.userID = userID;
-    charityEmployee.organizationID = organizationID;
-    await charityDAO.saveCharityEmployee(charityEmployee);
-    logger.log("Created charity employee: ", charityEmployee);
+    const organizationEmployee = new OrganizationEmployee();
+    organizationEmployee.userID = userID;
+    organizationEmployee.organizationID = organizationID;
+    await organizationDAO.saveOrganizationEmployee(organizationEmployee);
+    logger.log("Created organization employee: ", organizationEmployee);
 
     const adminRole = new Role();
     adminRole.name = ADMIN_ROLE_NAME;

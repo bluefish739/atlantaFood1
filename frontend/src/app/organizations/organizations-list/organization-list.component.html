@@ -1,0 +1,12 @@
+<h1> Organization List </h1>
+<table *ngIf="organizations">
+    <tr>
+        <th>Details</th>
+        <th>Organization</th>
+    </tr>
+    <tr *ngFor="let organization of organizations; let idx=index">
+        <td><a [routerLink]="['/organizations/details', organization.id]">{{ idx + 1 }}</a></td>
+        <td>{{ organization.name }}</td>
+    </tr>
+</table>
+<a [routerLink]="['/organizations/details/new']">Create new organization</a>

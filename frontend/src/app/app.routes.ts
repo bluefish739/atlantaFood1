@@ -19,7 +19,7 @@ export const routes: Routes = [
     },
     {
         path: 'charities',
-        loadChildren: () => import('./charities/charities-routing.module').then(mod => mod.CharityRoutingModule)
+        loadChildren: () => import('./organizations/organizations-routing.module').then(mod => mod.OrganizationRoutingModule)
     },
     {
         path: 'roles',

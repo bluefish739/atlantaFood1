@@ -4,16 +4,14 @@ export class Organization {
     name: string | undefined;
     contact: string | undefined;
     organizationType: string | undefined;
-}
-
-export class Site {
-    id: string | undefined;
-    name: string | undefined;
     state: string | undefined;
     city: string | undefined;
     addressLine1: string | undefined;
     addressLine2: string | undefined;
-    contact: string | undefined;
+}
+
+export class OrganizationEmployee {
+    userID: string | undefined;
     organizationID: string | undefined;
 }
 
@@ -38,12 +36,6 @@ export class StoreEmployee {
     organizationID: string | undefined;
 }
 
-export class Charity {
-    id: string | undefined;
-    name: string | undefined;
-    contact: string | undefined;
-}
-
 export class CharityLocation {
     id: string | undefined;
     name: string | undefined;
@@ -52,11 +44,6 @@ export class CharityLocation {
     streetName: string | undefined;
     streetNumber: number | undefined;
     charityID: string | undefined;
-}
-
-export class CharityEmployee {
-    userID: string | undefined;
-    organizationID: string | undefined;
 }
 
 export class VolunteerOrganization {

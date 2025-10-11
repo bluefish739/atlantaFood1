@@ -1,12 +1,12 @@
-import { charityDAO, roleDAO, storeDAO, volunteerDAO } from "../daos/dao-factory";
+import { organizationDAO, roleDAO, storeDAO, volunteerDAO } from "../daos/dao-factory";
 import * as logger from "firebase-functions/logger";
 import { datastore } from "../daos/data-store-factory";
 import { RoleDAO } from "../daos/role-dao";
 import { UserDAO } from "../daos/user-dao";
 import { StoreDAO } from "../daos/store-dao";
-import { CharityEmployee, StoreEmployee, TransportVolunteer, User, UserRole, UserType } from "../../../shared/src/kinds";
-import { CharityDAO } from "../daos/charity-dao";
+import { OrganizationEmployee, StoreEmployee, TransportVolunteer, User, UserRole, UserType } from "../../../shared/src/kinds";
 import { VolunteerDAO } from "../daos/volunteer-dao";
+import { OrganizationDAO } from "../daos/organization-dao";
 
 class EmployeeHelpers {
     private async getOrganizationIDofStoreUser(userID: string): Promise<string | undefined> {
@@ -15,7 +15,7 @@ class EmployeeHelpers {
     }
 
     private async getOrganizationIDofPantryUser(userID: string): Promise<string | undefined> {
-        const employeeRecord = await charityDAO.getEmployeeRecordByUserID(userID);
+        const employeeRecord = await organizationDAO.getEmployeeRecordByUserID(userID);
         return employeeRecord?.organizationID;
     }
 
@@ -46,22 +46,19 @@ class EmployeeHelpers {
     public async removeUser(userID: string, userType: string) {
         const transaction = datastore.transaction();
         try {
-            // remove record of StoreEmployee/CharityEmployee/Volunteer
             const userRoles = await roleDAO.getUserRolesByUserID(userID);
             const keys = [
-                datastore.key([UserDAO.USER_KIND, userID]), // remove User
+                datastore.key([UserDAO.USER_KIND, userID]),
             ];
 
-            // Add key of UserRole entities to be removed
             for (let userRole of userRoles) {
                 keys.push(datastore.key([RoleDAO.USER_ROLE_KIND, userRole.userID + "|" + userRole.roleID]));
             }
 
-            // Add key of employee record entity to be removed
             if (userType == UserType.STORE) {
                 keys.push(datastore.key([StoreDAO.STORE_EMPLOYEE_KIND, userID]));
             } else if (userType == UserType.PANTRY) {
-                keys.push(datastore.key([CharityDAO.CHARITY_EMPLOYEE_KIND, userID]));
+                keys.push(datastore.key([OrganizationDAO.ORGANIZATION_EMPLOYEE_KIND, userID]));
             } else if (userType == UserType.VOLUNTEER) {
                 keys.push(datastore.key([VolunteerDAO.VOLUNTEER_KIND, userID]));
             } else if (userType == UserType.ADMIN) {
@@ -95,15 +92,15 @@ class EmployeeHelpers {
                 return [storeEmployeeEntity];
             }
             case UserType.PANTRY: {
-                const charityEmployee = new CharityEmployee();
-                charityEmployee.userID = userID;
-                charityEmployee.organizationID = organizationID;
-                const charityEmployeeKey = datastore.key([CharityDAO.CHARITY_EMPLOYEE_KIND, userID]);
-                const charityEmployeeEntity = {
-                    key: charityEmployeeKey,
-                    data: charityEmployee
+                const organizationEmployee = new OrganizationEmployee();
+                organizationEmployee.userID = userID;
+                organizationEmployee.organizationID = organizationID;
+                const organizationEmployeeKey = datastore.key([OrganizationDAO.ORGANIZATION_EMPLOYEE_KIND, userID]);
+                const organizationEmployeeEntity = {
+                    key: organizationEmployeeKey,
+                    data: organizationEmployee
                 };
-                return [charityEmployeeEntity];
+                return [organizationEmployeeEntity];
             }
             case UserType.VOLUNTEER: {
                 const volunteer = new TransportVolunteer();

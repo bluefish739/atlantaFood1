@@ -30,7 +30,7 @@ export class HeaderComponent {
                 pathHead = "stores"
                 break;
             case "Pantry":
-                pathHead = "charities"
+                pathHead = "organizations"
                 break;
             case "Volunteer":
                 pathHead = "volunteers"

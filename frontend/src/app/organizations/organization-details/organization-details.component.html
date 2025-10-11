@@ -1,14 +1,14 @@
 <button (click)="goBack()">←</button>
-<h1>Charity:</h1>
+<h1>Organization:</h1>
 
-<table *ngIf="charity">
+<table *ngIf="organization">
     <tr>
         <td>Name</td>
-        <td><input [(ngModel)]="charity.name" /></td>
+        <td><input [(ngModel)]="organization.name" /></td>
     </tr>
     <tr>
         <td>Contact</td>
-        <td><input [(ngModel)]="charity.contact" /></td>
+        <td><input [(ngModel)]="organization.contact" /></td>
     </tr>
     <tr>
         <td><button (click)="saveClicked()">Save</button></td>
@@ -16,7 +16,7 @@
     </tr>
     <tr>
         <td>Locations: </td>
-        <td><button (click)="viewCharityLocations()">View Locations</button></td>
+        <td><button (click)="viewOrganizationLocations()">View Locations</button></td>
     </tr>
 </table>
 

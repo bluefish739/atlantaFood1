@@ -25,8 +25,8 @@ export class FoodMapComponent {
 
     async ngOnInit() {
         const stores = await this.xapiService.getAllStores();
-        const charities = await this.xapiService.getAllCharities();
-        this.sites = [...stores, ...charities];
+        const organizations = await this.xapiService.getAllOrganizations();
+        this.sites = [...stores, ...organizations];
     }
 
     onPanelOpened(index: number): void {

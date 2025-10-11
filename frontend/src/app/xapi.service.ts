@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent, HttpHandlerFn, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Store, Charity, StoreLocation, CharityLocation, Role, User, VerificationResponse, SignupData, GeneralConfirmationResponse, LoginRequest, LoginResponse, DetailedUser, Food, DetailedFood, FoodCategory, InventoryQuery, InventorySummaryRow } from '../../../shared/src/kinds';
+import { Store, Organization, StoreLocation, CharityLocation, Role, User, VerificationResponse, SignupData, GeneralConfirmationResponse, LoginRequest, LoginResponse, DetailedUser, Food, DetailedFood, FoodCategory, InventoryQuery, InventorySummaryRow } from '../../../shared/src/kinds';
 import { first, firstValueFrom, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { sessionAuthenticator } from './utilities/session-authentication';
@@ -92,36 +92,21 @@ export class XapiService {
   }
   
   //============================================================================================
-  // Charity API Requests
+  // Organization API Requests
   //============================================================================================
-  public async getAllCharities() {
+  public async getAllOrganizations() {
     const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<Charity[]>(`/xapi/charities/all`, { headers }));
+    return await firstValueFrom(this.http.get<Organization[]>(`/xapi/organizations/all`, { headers }));
   }
 
-  public async saveCharity(charity: Charity) {
+  public async saveOrganization(organization: Organization) {
     const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.post<Charity>(`/xapi/charities/charity`, charity, { headers }));
+    return await firstValueFrom(this.http.post<Organization>(`/xapi/organizations/organization`, organization, { headers }));
   }
 
-  public async getCharity(id: string) {
+  public async getOrganization(id: string) {
     const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<Charity>(`/xapi/charities/charity/` + id, { headers }));
-  }
-
-  public async getCharityLocations(charityID: string) {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<CharityLocation[]>(`/xapi/charities/` + charityID + `/locations`, { headers }));
-  }
-
-  public async saveCharityLocation(charityLocation: CharityLocation) {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.post<CharityLocation>(`/xapi/charity-locations/location`, charityLocation, { headers }));
-  }
-
-  public async getCharityLocation(id: string) {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<CharityLocation>(`/xapi/charity-locations/location/` + id, { headers }));
+    return await firstValueFrom(this.http.get<Organization>(`/xapi/organizations/organization/` + id, { headers }));
   }
   //============================================================================================
   // Role API Requests
