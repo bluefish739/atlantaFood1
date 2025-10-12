@@ -15,47 +15,6 @@ export class OrganizationEmployee {
     organizationID: string | undefined;
 }
 
-export class Store {
-    id: string | undefined;
-    name: string | undefined;
-    contact: string | undefined;
-}
-
-export class StoreLocation {
-    id: string | undefined;
-    name: string | undefined;
-    state: string | undefined;
-    city: string | undefined;
-    streetName: string | undefined;
-    streetNumber: number | undefined;
-    storeID: string | undefined;
-}
-
-export class StoreEmployee {
-    userID: string | undefined;
-    organizationID: string | undefined;
-}
-
-export class CharityLocation {
-    id: string | undefined;
-    name: string | undefined;
-    state: string | undefined;
-    city: string | undefined;
-    streetName: string | undefined;
-    streetNumber: number | undefined;
-    charityID: string | undefined;
-}
-
-export class VolunteerOrganization {
-    id: string | undefined;
-    name: string | undefined;
-}
-
-export class TransportVolunteer {
-    userID: string | undefined;
-    organizationID: string | undefined;
-}
-
 export class Role {
     id: string | undefined;
     organizationID: string | undefined;

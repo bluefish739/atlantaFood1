@@ -1,8 +1,6 @@
 import { onRequest } from "firebase-functions/v2/https";
 import express from "express";
-import { StoreRouter } from './routers/store-router';
 import { OrganizationRouter } from "./routers/organization-router";
-import { StoreLocationRouter } from "./routers/store-location-router";
 import { RoleRouter } from "./routers/role-router";
 import { UserRouter } from "./routers/user-router";
 import { FoodRouter } from "./routers/food-router";
@@ -15,8 +13,6 @@ expressApp.use((req, res, next) => {
     next();
 });
 
-expressApp.use('/xapi/stores', StoreRouter.buildRouter());
-expressApp.use('/xapi/store-locations', StoreLocationRouter.buildRouter());
 expressApp.use('/xapi/organizations', OrganizationRouter.buildRouter());
 expressApp.use('/xapi/roles', RoleRouter.buildRouter());
 expressApp.use('/xapi/users', UserRouter.buildRouter());

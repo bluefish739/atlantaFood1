@@ -6,6 +6,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { HomeHeaderComponent } from '../../shared-components/home-header/home-header.component';
 import { FormsModule } from '@angular/forms';
 import { InventorySummaryComponent } from '../../shared-components/inventory-summary-component/inventory-summary.component';
+import { Organization } from '../../../../shared/src/kinds';
 
 @Component({
     selector: 'food-map',
@@ -14,7 +15,7 @@ import { InventorySummaryComponent } from '../../shared-components/inventory-sum
     styleUrl: './food-map.component.scss'
 })
 export class FoodMapComponent {
-    sites: any[] = [];
+    sites: Organization[] = [];
     filterCategoriesInput = "";
     hiddenFullInventoryLinkIndices: Set<number> = new Set();
     constructor(
@@ -24,13 +25,11 @@ export class FoodMapComponent {
     }
 
     async ngOnInit() {
-        const stores = await this.xapiService.getAllStores();
-        const organizations = await this.xapiService.getAllOrganizations();
-        this.sites = [...stores, ...organizations];
+        this.sites = await this.xapiService.getAllOrganizations();
     }
 
     onPanelOpened(index: number): void {
-        console.log('Opened pantry at index:' + index);
+        console.log('Opened organization at index:' + index);
     }
 
     async runQuery() {

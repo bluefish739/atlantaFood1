@@ -14,11 +14,7 @@ export const routes: Routes = [
         component: LoginComponent
     },
     {
-        path: 'stores',
-        loadChildren: () => import('./stores/stores-routing.module').then(mod => mod.StoreRoutingModule),
-    },
-    {
-        path: 'charities',
+        path: 'organizations',
         loadChildren: () => import('./organizations/organizations-routing.module').then(mod => mod.OrganizationRoutingModule)
     },
     {

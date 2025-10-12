@@ -1,8 +1,8 @@
 import express, { Request, Response, Router } from "express";
 import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
-import { ADMIN_ROLE_NAME, Organization, DetailedUser, LoginRequest, LoginResponse, Role, SignupData, Store, StoreEmployee, TransportVolunteer, User, UserRole, VolunteerOrganization, OrganizationEmployee } from "../../../shared/src/kinds";
-import { organizationDAO, roleDAO, storeDAO, userDAO, volunteerDAO } from "../daos/dao-factory";
+import { ADMIN_ROLE_NAME, Organization, DetailedUser, LoginRequest, LoginResponse, Role, SignupData, User, UserRole, OrganizationEmployee } from "../../../shared/src/kinds";
+import { organizationDAO, roleDAO, userDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
 import { generateId } from "../shared/idutilities";
 import { employeeHelpers } from "../shared/employee-helpers";
@@ -100,12 +100,8 @@ export class UserRouter extends BaseRouter {
       const user = (req as any).user;
       const userType = user.userType;
       let userIDs: string[] | undefined;
-      if (userType == "Store") {
-        userIDs = (await storeDAO.getEmployeesOfStoreByOrganizationID(organizationID)).map(v => v.userID!);
-      } else if (userType == "Pantry") {
+      if (userType == "Store" || userType == "Pantry" || userType == "Volunteer") {
         userIDs = (await organizationDAO.getEmployeesByOrganizationID(organizationID)).map(v => v.userID!);
-      } else if (userType == "Volunteer") {
-        userIDs = (await volunteerDAO.getVolunteersByOrganizationID(organizationID)).map(v => v.userID!);
       } else if (userType == "Admin") {
         //TODO: Implement this
         //userIDs = (await userDAO.getAdminsByOrganizationID(organizationID)).map(v => v.userID!);
@@ -263,13 +259,7 @@ export class UserRouter extends BaseRouter {
       const id = await userDAO.saveUser(user);
       logger.log("User added successfully! id=" + id);
 
-      if (user.userType == "Store") {
-        this.createNewStore(user.userID!, organizationID);
-      } else if (user.userType == "Pantry") {
-        this.createNewOrganization(user.userID!, organizationID);
-      } else if (user.userType == "Volunteer") {
-        this.createNewVolunteer(user.userID!, organizationID);
-      }
+      this.createNewOrganization(user.userID!, organizationID, user.userType!.toUpperCase());
 
       const loginResponse = new LoginResponse();
       loginResponse.success = true;
@@ -293,34 +283,10 @@ export class UserRouter extends BaseRouter {
     return userForFrontend;
   }
 
-  private async createNewStore(userID: string, organizationID: string) {
-    const store = new Store();
-    store.id = organizationID;
-    await storeDAO.saveStore(store);
-
-    const storeEmployee = new StoreEmployee();
-    storeEmployee.userID = userID;
-    storeEmployee.organizationID = organizationID;
-    await storeDAO.saveStoreEmployee(storeEmployee);
-
-    const adminRole = new Role();
-    adminRole.name = ADMIN_ROLE_NAME;
-    adminRole.organizationID = organizationID;
-    adminRole.description = "Administrator";
-    await roleDAO.saveRole(adminRole);
-    logger.log("Created admin role: ", adminRole);
-
-    const userRole = new UserRole();
-    userRole.userID = userID;
-    userRole.roleID = adminRole.id;
-    await roleDAO.saveUserRole(userRole);
-    logger.log("Created user role: ", userRole);
-  }
-
-  private async createNewOrganization(userID: string, organizationID: string) {
+  private async createNewOrganization(userID: string, organizationID: string, organizationType: string) {
     const organization = new Organization();
     organization.id = organizationID;
-    organization.organizationType = "PANTRY";
+    organization.organizationType = organizationType;
     await organizationDAO.saveOrganization(organization);
     logger.log("Created organization: ", organization);
 
@@ -341,32 +307,6 @@ export class UserRouter extends BaseRouter {
     userRole.userID = userID;
     userRole.roleID = adminRole.id;
     await roleDAO.saveUserRole(userRole);
-    logger.log("Created user role: ", userRole);
-  }
-
-  private createNewVolunteer(userID: string, organizationID: string) {
-    const volunteerOrganization = new VolunteerOrganization();
-    volunteerOrganization.id = organizationID;
-    volunteerDAO.saveOrganization(volunteerOrganization);
-    logger.log("Created volunteer organization: ", volunteerOrganization);
-
-    const volunteer = new TransportVolunteer();
-    volunteer.userID = userID;
-    volunteer.organizationID = organizationID;
-    volunteerDAO.saveVolunteer(volunteer);
-    logger.log("Created volunteer: ", volunteer);
-
-    const adminRole = new Role();
-    adminRole.name = ADMIN_ROLE_NAME;
-    adminRole.organizationID = organizationID;
-    adminRole.description = "Administrator";
-    roleDAO.saveRole(adminRole);
-    logger.log("Created admin role: ", adminRole);
-
-    const userRole = new UserRole();
-    userRole.userID = userID;
-    userRole.roleID = adminRole.id;
-    roleDAO.saveUserRole(userRole);
     logger.log("Created user role: ", userRole);
   }
 

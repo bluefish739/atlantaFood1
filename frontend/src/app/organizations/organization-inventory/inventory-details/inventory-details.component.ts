@@ -7,12 +7,12 @@ import { DetailedFood, FoodCategory, InventoryQuery } from '../../../../../../sh
 import { HeaderComponent } from '../../../../shared-components/header-component/header.component';
 
 @Component({
-  selector: 'store-inventory-details',
+  selector: 'inventory-details',
   imports: [RouterModule, FormsModule, CommonModule, HeaderComponent],
-  templateUrl: './store-inventory-details.component.html',
-  styleUrl: './store-inventory-details.component.scss'
+  templateUrl: './inventory-details.component.html',
+  styleUrl: './inventory-details.component.scss'
 })
-export class StoreInventoryDetailsComponent {
+export class InventoryDetailsComponent {
   inventoryData: DetailedFood[] = [];
   foodCategories: FoodCategory[] = [];
   filterCategoriesInput = "";
@@ -29,7 +29,7 @@ export class StoreInventoryDetailsComponent {
   }
 
   navigateToInventoryUpdates() {
-    this.router.navigateByUrl('/stores/inventory/updates/new');
+    this.router.navigateByUrl('/organizations/inventory/updates/new');
   }
 
   async runQuery() {

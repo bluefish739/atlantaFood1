@@ -6,12 +6,12 @@ import { Food, FoodCategory, GeneralConfirmationResponse, DetailedFood } from '.
 import { XapiService } from '../../../xapi.service';
 
 @Component({
-  selector: 'store-inventory-updates',
+  selector: 'inventory-updates',
   imports: [RouterModule, FormsModule, CommonModule],
-  templateUrl: './store-inventory-updates.component.html',
-  styleUrl: './store-inventory-updates.component.scss'
+  templateUrl: './inventory-updates.component.html',
+  styleUrl: './inventory-updates.component.scss'
 })
-export class StoreInventoryUpdatesComponent {
+export class InventoryUpdatesComponent {
   detailedFood = new DetailedFood();
   allFoodCategories: FoodCategory[] = [];
   categoriesCheckboxRef: boolean[];
@@ -41,7 +41,7 @@ export class StoreInventoryUpdatesComponent {
   }
 
   private navigateToDetails() {
-    this.router.navigateByUrl('/stores/inventory/details');
+    this.router.navigateByUrl('/organizations/inventory/details');
   }
 
   cancelButtonClicked() {

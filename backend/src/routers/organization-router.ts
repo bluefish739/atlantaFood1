@@ -24,10 +24,10 @@ export class OrganizationRouter extends BaseRouter {
 
   async getAllOrganizations(req: Request, res: Response) {
     try {
-      const charities = await organizationDAO.getAllOrganizations();
-      this.sendNormalResponse(res, charities);
+      const organizations = await organizationDAO.getAllOrganizations();
+      this.sendNormalResponse(res, organizations);
     } catch (error: any) {
-      logger.log(`Error: charities could not be fetched! ${error}`);
+      logger.log(`Error: organizations could not be fetched! ${error}`);
       this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
   }

@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent, HttpHandlerFn, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Store, Organization, StoreLocation, CharityLocation, Role, User, VerificationResponse, SignupData, GeneralConfirmationResponse, LoginRequest, LoginResponse, DetailedUser, Food, DetailedFood, FoodCategory, InventoryQuery, InventorySummaryRow } from '../../../shared/src/kinds';
+import { Organization, Role, User, VerificationResponse, SignupData, GeneralConfirmationResponse, LoginRequest, LoginResponse, DetailedUser, Food, DetailedFood, FoodCategory, InventoryQuery, InventorySummaryRow } from '../../../shared/src/kinds';
 import { first, firstValueFrom, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { sessionAuthenticator } from './utilities/session-authentication';
@@ -52,45 +52,6 @@ export class XapiService {
     sessionAuthenticator.refreshBrowserCookies();
     return await firstValueFrom(this.http.delete<T>(path, { headers }));
   };
-  
-  //============================================================================================
-  // Store API Requests
-  //============================================================================================
-  public async getStore(id: string) {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<Store>(`/xapi/stores/store/` + id, { headers }));
-  }
-
-  public async getAllStores() {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<Store[]>(`/xapi/stores/all`, { headers }));
-  }
-
-  public async saveStore(store: Store) {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.post<Store>(`/xapi/stores/store`, store, { headers }));
-  }
-
-  public async saveStoreLocation(storeLocation: StoreLocation) {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.post<StoreLocation>(`/xapi/store-locations/location`, storeLocation, { headers }));
-  }
-
-  public async getAllStoreLocations() {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<StoreLocation[]>(`/xapi/store-locations/all`, { headers }));
-  }
-
-  public async getStoreLocations(storeID: string) {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<StoreLocation[]>(`/xapi/stores/` + storeID + `/locations`, { headers }));
-  }
-
-  public async getStoreLocation(id: string) {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<StoreLocation>(`/xapi/store-locations/location/` + id, { headers }));
-  }
-  
   //============================================================================================
   // Organization API Requests
   //============================================================================================
