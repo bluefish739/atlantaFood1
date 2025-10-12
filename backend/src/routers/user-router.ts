@@ -1,11 +1,13 @@
 import express, { Request, Response, Router } from "express";
 import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
-import { ADMIN_ROLE_NAME, Organization, DetailedUser, LoginRequest, LoginResponse, Role, SignupData, User, UserRole, OrganizationEmployee } from "../../../shared/src/kinds";
+import { DetailedUser, LoginRequest, SignupData, User, RequestContext } from "../../../shared/src/kinds";
 import { organizationDAO, roleDAO, userDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
 import { generateId } from "../shared/idutilities";
 import { employeeHelpers } from "../shared/employee-helpers";
+import { registrationManager } from "../managers/manager-factory";
+import { checkDuplicatedUsername } from "../utility-functions";
 
 export class UserRouter extends BaseRouter {
   async saveUser(req: Request, res: Response) {
@@ -84,7 +86,7 @@ export class UserRouter extends BaseRouter {
     }
 
     if (user.username) {
-      const isUsernameTaken = await this.checkDuplicatedUsername(user.username);
+      const isUsernameTaken = await checkDuplicatedUsername(user.username);
       if (isUsernameTaken) {
         throw 'USERNAME_TAKEN';
       }
@@ -147,44 +149,11 @@ export class UserRouter extends BaseRouter {
   async login(req: Request, res: Response) {
     try {
       const loginRequest = req.body as LoginRequest;
-      const loginRequestValid = this.validateLoginRequest(loginRequest);
-      const loginResponse = new LoginResponse();
-      if (!loginRequestValid) {
-        loginResponse.success = false;
-        loginResponse.message = "Login failed. Please provide both username and password.";
-        this.sendNormalResponse(res, loginResponse);
-        return;
-      }
-
-      const user = await userDAO.verifyUser(loginRequest.username!, loginRequest.password!);
-      if (!user) {
-        loginResponse.success = false;
-        loginResponse.message = "Login failed. Username or password is incorrect.";
-        this.sendNormalResponse(res, loginResponse);
-        return;
-      }
-
-      user.sessionID = generateId();
-      await userDAO.saveUser(user);
-      loginResponse.success = true;
-      loginResponse.sessionID = user.sessionID;
-      loginResponse.userID = user.userID;
-      loginResponse.userType = user.userType;
+      const loginResponse = await registrationManager.login(new RequestContext(req), loginRequest);
       this.sendNormalResponse(res, loginResponse);
     } catch (error: any) {
       this.sendServerErrorResponse(res, { success: false, message: error.message });
     }
-  }
-
-  private validateLoginRequest(loginRequest: LoginRequest) {
-    if (!loginRequest) {
-      logger.log("validateLoginRequest: login data not provided", loginRequest);
-      return false;
-    } else if (!loginRequest.username || !loginRequest.password) {
-      logger.log("validateLoginRequest: username or password not provided", loginRequest);
-      return false
-    }
-    return true;
   }
 
   async verifyUserBySession(req: Request, res: Response) {
@@ -200,72 +169,10 @@ export class UserRouter extends BaseRouter {
     }
   }
 
-  private validateSignupData(signupData: SignupData) {
-    if (!(signupData.username && signupData.password && signupData.userType)) {
-      logger.log("Signup data incomplete", signupData);
-      return false;
-    }
-
-    const usernameRegex: RegExp = /[a-zA-Z0-9]{4,}/;
-    if (!usernameRegex.test(signupData.username)) {
-      logger.log("Username invalid", signupData);
-      return false;
-    }
-
-    if (signupData.password.length < 6) {
-      logger.log("Password invalid", signupData);
-      return false;
-    }
-
-    if (!["Store", "Pantry", "Volunteer"].includes(signupData.userType)) {
-      logger.log("User type invalid", signupData);
-      return false;
-    }
-
-    return true;
-  }
-
-  private async checkDuplicatedUsername(username: string) {
-    return await userDAO.usernameTaken(username);
-  }
-
   async signupUser(req: Request, res: Response) {
     const signupData = req.body as SignupData;
     try {
-      if (!signupData) {
-        logger.log("Signup data is not provided", signupData);
-        this.sendBadRequestResponse(res, { success: false, message: "Signup data is not provided" });
-        return;
-      }
-
-      if (!this.validateSignupData(signupData)) {
-        logger.log("Signup data incomplete", signupData);
-        this.sendBadRequestResponse(res, { success: false, message: "Signup data incomplete" });
-        return;
-      }
-
-      if (await this.checkDuplicatedUsername(signupData.username!)) {
-        logger.log("Username already taken, please choose another", signupData);
-        this.sendNormalResponse(res, { success: false, message: "Username already taken, please choose another" });
-        return;
-      }
-
-      const organizationID = generateId();
-      const user = new User();
-      user.username = signupData.username;
-      user.password = signupData.password;
-      user.userType = signupData.userType;
-      user.sessionID = generateId();
-      const id = await userDAO.saveUser(user);
-      logger.log("User added successfully! id=" + id);
-
-      this.createNewOrganization(user.userID!, organizationID, user.userType!.toUpperCase());
-
-      const loginResponse = new LoginResponse();
-      loginResponse.success = true;
-      loginResponse.sessionID = user.sessionID;
-      loginResponse.userID = user.userID;
-      loginResponse.userType = user.userType;
+      const loginResponse = await registrationManager.signupUser(new RequestContext(req), signupData);
       this.sendNormalResponse(res, loginResponse);
     } catch (error: any) {
       logger.log("Failed to add a user", error);
@@ -281,33 +188,6 @@ export class UserRouter extends BaseRouter {
     userForFrontend.lastName = user.lastName;
     userForFrontend.phoneNumber = user.phoneNumber;
     return userForFrontend;
-  }
-
-  private async createNewOrganization(userID: string, organizationID: string, organizationType: string) {
-    const organization = new Organization();
-    organization.id = organizationID;
-    organization.organizationType = organizationType;
-    await organizationDAO.saveOrganization(organization);
-    logger.log("Created organization: ", organization);
-
-    const organizationEmployee = new OrganizationEmployee();
-    organizationEmployee.userID = userID;
-    organizationEmployee.organizationID = organizationID;
-    await organizationDAO.saveOrganizationEmployee(organizationEmployee);
-    logger.log("Created organization employee: ", organizationEmployee);
-
-    const adminRole = new Role();
-    adminRole.name = ADMIN_ROLE_NAME;
-    adminRole.organizationID = organizationID;
-    adminRole.description = "Administrator";
-    await roleDAO.saveRole(adminRole);
-    logger.log("Created admin role: ", adminRole);
-
-    const userRole = new UserRole();
-    userRole.userID = userID;
-    userRole.roleID = adminRole.id;
-    await roleDAO.saveUserRole(userRole);
-    logger.log("Created user role: ", userRole);
   }
 
   async removeUser(req: Request, res: Response) {

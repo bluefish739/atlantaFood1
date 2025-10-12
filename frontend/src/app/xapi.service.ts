@@ -23,8 +23,10 @@ export class XapiService {
 
   private getServiceAddress() {
     if(window.location.port=='4200') {
+      console.log("active")
       return 'http://127.0.0.1:5001/atlantafoodhub/us-central1/xapi';
     }
+    console.log("not active");
     return ''
   }
 
@@ -38,19 +40,19 @@ export class XapiService {
   getResponse = async <T>(path: string): Promise<T> => {
     const headers = this.buildAuthenticationHeader();
     sessionAuthenticator.refreshBrowserCookies();
-    return await firstValueFrom(this.http.get<T>(path, { headers }));
+    return await firstValueFrom(this.http.get<T>(this.getServiceAddress() + path, { headers }));
   };
 
   postResponse = async <T>(path: string, postData: any): Promise<T> => {
     const headers = this.buildAuthenticationHeader();
     sessionAuthenticator.refreshBrowserCookies();
-    return await firstValueFrom(this.http.post<T>(path, postData, { headers }));
+    return await firstValueFrom(this.http.post<T>(this.getServiceAddress() + path, postData, { headers }));
   };
 
   deleteResponse = async <T>(path: string): Promise<T> => {
     const headers = this.buildAuthenticationHeader();
     sessionAuthenticator.refreshBrowserCookies();
-    return await firstValueFrom(this.http.delete<T>(path, { headers }));
+    return await firstValueFrom(this.http.delete<T>(this.getServiceAddress() + path, { headers }));
   };
   //============================================================================================
   // Organization API Requests
@@ -101,12 +103,12 @@ export class XapiService {
   }
 
   public async login(loginRequest: LoginRequest) {
-    return this.postResponse<LoginResponse>(this.getServiceAddress() + `/xapi/users/login`, loginRequest);
+    return this.postResponse<LoginResponse>(`/xapi/users/login`, loginRequest);
   }
 
   public async verifyUserBySession() {
     const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<VerificationResponse>(this.getServiceAddress() + `/xapi/users/verify-user-by-session`, { headers }));
+    return await firstValueFrom(this.http.get<VerificationResponse>(`/xapi/users/verify-user-by-session`, { headers }));
   }
 
   public async signupUser(signupData: SignupData) {
