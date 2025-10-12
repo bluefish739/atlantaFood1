@@ -16,7 +16,7 @@
     }
   ],
   "hosting": {
-    "public": "dist",
+    "public": "dist/xapp",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -38,7 +38,7 @@
       }
     ],
     "rewrites": [
-		  {
+      {
         "source": "/xapp{,/**}",
         "destination": "/xapp/index.html"
       },
@@ -50,7 +50,7 @@
       },
       {
         "source": "**",
-        "destination": "/xapp/home.html"
+        "destination": "/index.html"
       }
     ]
   }

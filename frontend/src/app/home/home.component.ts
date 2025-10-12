@@ -21,11 +21,13 @@ export class HomeComponent {
   }
 
   async ngOnInit() {
+    /*
     const verificationResponse = await this.xapiService.verifyUserBySession();
     if (verificationResponse?.hasSession) {
       this.loggedInState = "logged in";
     } else {
       this.loggedInState = "logged out";
     }
+      */
   }
 }
