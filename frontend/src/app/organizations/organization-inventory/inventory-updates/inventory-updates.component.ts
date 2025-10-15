@@ -58,7 +58,6 @@ export class InventoryUpdatesComponent {
   }
 
   async submitButtonClicked() {
-    console.log("active");
     try {
       // Disable submit button until form valid
       this.detailedFood.categoryIDs = this.categoriesCheckboxRef.map((assigned, index) => {

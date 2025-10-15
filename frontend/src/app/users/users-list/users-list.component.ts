@@ -25,7 +25,6 @@ export class UserListComponent {
   async ngOnInit() {
     try {
       this.usersData = await this.xapiService.getAllSiteUsers();
-      console.log("ngOnInit: usersData=", this.usersData);
       this.currentUserID = sessionAuthenticator.getUserID();
     } catch (error: any) {
       if (error.status == 401) {
@@ -40,8 +39,7 @@ export class UserListComponent {
       console.log("removeUser: can't remove self, userID=" + userID);
       return;
     }
-    const removalResponse = (await this.xapiService.removeUserFromSite(userID));
-    console.log("removeUser: removal response=", removalResponse);
+    await this.xapiService.removeUserFromSite(userID);
     this.usersData = this.usersData.filter(userData => userData.userID != userID);
   }
 }
