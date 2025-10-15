@@ -11,12 +11,23 @@
         <td><input [(ngModel)]="organization.contact" /></td>
     </tr>
     <tr>
+        <td>State</td>
+        <td><input [(ngModel)]="organization.state" /></td>
+    </tr>
+    <tr>
+        <td>City</td>
+        <td><input [(ngModel)]="organization.city" /></td>
+    </tr>
+    <tr>
+        <td>Address Line 1</td>
+        <td><input [(ngModel)]="organization.addressLine1" /></td>
+    </tr>
+    <tr>
+        <td>Address Line 2</td>
+        <td><input [(ngModel)]="organization.addressLine2" /></td>
+    </tr>
+    <tr>
         <td><button (click)="saveClicked()">Save</button></td>
         <td></td>
     </tr>
-    <tr>
-        <td>Locations: </td>
-        <td><button (click)="viewOrganizationLocations()">View Locations</button></td>
-    </tr>
 </table>
-

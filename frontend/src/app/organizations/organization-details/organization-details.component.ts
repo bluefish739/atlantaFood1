@@ -20,28 +20,17 @@ export class OrganizationDetailsComponent {
       ) {
       }
       
-      organizationID = "";
       async ngOnInit() {
-        const id = this.activatedRoute.snapshot.params['id'];
-        if(id && id!='new') {
-          this.organization = await this.xapiService.getOrganization(id);
-          this.organizationID = id;
-          if(!this.organization) {
-            this.organization = new Organization();
-          }
-        }
+        this.organization = await this.xapiService.getOrganizationDetails();
+        console.log(this.organization);
       }
     
       async saveClicked() {
-        await this.xapiService.getOrganization(this.organizationID!);
-        this.router.navigateByUrl('/organization/list');
+        await this.xapiService.saveOrganization(this.organization);
+        this.router.navigateByUrl('/dashboard');
       }
 
       goBack() {
-        this.router.navigateByUrl('organization/list');
-      }
-
-      viewOrganizationLocations() {
-        this.router.navigate(['organization/locations-list', this.organizationID]);
+        this.router.navigateByUrl('/dashboard');
       }
 }

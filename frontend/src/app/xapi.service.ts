@@ -63,8 +63,8 @@ export class XapiService {
     return this.postResponse<Organization>(`/xapi/organizations/organization`, organization);
   }
 
-  public async getOrganization(id: string) {
-    return this.getResponse<Organization>(`/xapi/organizations/organization/` + id);
+  public async getOrganizationDetails() {
+    return this.getResponse<Organization>(`/xapi/organizations/organization-details`);
   }
   //============================================================================================
   // Role API Requests
