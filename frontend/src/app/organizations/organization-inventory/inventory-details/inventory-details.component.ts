@@ -29,7 +29,7 @@ export class InventoryDetailsComponent {
   }
 
   navigateToInventoryUpdates() {
-    this.router.navigateByUrl('/organizations/inventory/updates/new');
+    this.router.navigateByUrl('/organization/inventory/updates/new');
   }
 
   async runQuery() {

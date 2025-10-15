@@ -5,8 +5,8 @@
         <th>Organization</th>
     </tr>
     <tr *ngFor="let organization of organizations; let idx=index">
-        <td><a [routerLink]="['/organizations/details', organization.id]">{{ idx + 1 }}</a></td>
+        <td><a [routerLink]="['/organization/details', organization.id]">{{ idx + 1 }}</a></td>
         <td>{{ organization.name }}</td>
     </tr>
 </table>
-<a [routerLink]="['/organizations/details/new']">Create new organization</a>
+<a [routerLink]="['/organization/details/new']">Create new organization</a>

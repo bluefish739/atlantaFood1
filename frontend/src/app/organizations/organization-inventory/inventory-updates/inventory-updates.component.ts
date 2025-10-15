@@ -41,7 +41,7 @@ export class InventoryUpdatesComponent {
   }
 
   private navigateToDetails() {
-    this.router.navigateByUrl('/organizations/inventory/details');
+    this.router.navigateByUrl('/organization/inventory/details');
   }
 
   cancelButtonClicked() {

@@ -29,11 +29,11 @@ export class DashboardComponent {
   }
 
   navigateToInventoryDetails() {
-    this.router.navigateByUrl('/organizations/inventory/details');
+    this.router.navigateByUrl('/organization/inventory/details');
   }
 
   navigateToInventoryUpdates() {
-    this.router.navigateByUrl('/organizations/inventory/updates/new');
+    this.router.navigateByUrl('/organization/inventory/updates/new');
   }
 
   signOut() {

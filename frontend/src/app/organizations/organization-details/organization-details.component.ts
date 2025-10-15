@@ -34,14 +34,14 @@ export class OrganizationDetailsComponent {
     
       async saveClicked() {
         await this.xapiService.getOrganization(this.organizationID!);
-        this.router.navigateByUrl('/organizations/list');
+        this.router.navigateByUrl('/organization/list');
       }
 
       goBack() {
-        this.router.navigateByUrl('organizations/list');
+        this.router.navigateByUrl('organization/list');
       }
 
       viewOrganizationLocations() {
-        this.router.navigate(['organizations/locations-list', this.organizationID]);
+        this.router.navigate(['organization/locations-list', this.organizationID]);
       }
 }
