@@ -56,18 +56,15 @@ export class XapiService {
   // Organization API Requests
   //============================================================================================
   public async getAllOrganizations() {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<Organization[]>(`/xapi/organizations/all`, { headers }));
+    return this.getResponse<Organization[]>(`/xapi/organizations/all`);
   }
 
   public async saveOrganization(organization: Organization) {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.post<Organization>(`/xapi/organizations/organization`, organization, { headers }));
+    return this.postResponse<Organization>(`/xapi/organizations/organization`, organization);
   }
 
   public async getOrganization(id: string) {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<Organization>(`/xapi/organizations/organization/` + id, { headers }));
+    return this.getResponse<Organization>(`/xapi/organizations/organization/` + id);
   }
   //============================================================================================
   // Role API Requests
@@ -77,8 +74,7 @@ export class XapiService {
   }
 
   public async getRole(roleID: string) {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<Role>(`/xapi/roles/role/` + roleID, { headers }))
+    return this.getResponse<Role>(`/xapi/roles/role/` + roleID);
   }
 
   public async saveRole(role: Role) {
@@ -96,8 +92,7 @@ export class XapiService {
   }
 
   public async getDetailedUserByID(userID: string) {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<DetailedUser>(`/xapi/users/user-details/${userID}`, { headers }))
+    return this.getResponse<DetailedUser>(`/xapi/users/user-details/${userID}`);
   }
 
   public async login(loginRequest: LoginRequest) {
