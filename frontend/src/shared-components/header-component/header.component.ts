@@ -21,17 +21,4 @@ export class HeaderComponent {
         sessionAuthenticator.clearCurrentSession();
         this.router.navigateByUrl("/home");
     }
-
-    goToInventory() {
-        const userType = sessionAuthenticator.getUserType();
-        let pathHead = "";
-        if (userType == "Store" || userType == "Pantry" || userType == "Volunteer") {
-            pathHead == "organizations";
-        } else if (userType == "Admin") {
-            pathHead == "admins";
-        } else {
-            console.log("Error: unknown userType: " + userType);
-        }
-        this.router.navigateByUrl(`/${pathHead}/inventory/details`);
-    }
 }

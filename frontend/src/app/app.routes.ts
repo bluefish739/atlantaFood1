@@ -19,7 +19,7 @@ export const routes: Routes = [
         component: LoginComponent
     },
     {
-        path: 'organizations',
+        path: 'organization',
         loadChildren: () => import('./organizations/organizations-routing.module').then(mod => mod.OrganizationRoutingModule)
     },
     {
