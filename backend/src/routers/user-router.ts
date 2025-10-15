@@ -8,6 +8,7 @@ import { generateId } from "../shared/idutilities";
 import { employeeHelpers } from "../shared/employee-helpers";
 import { registrationManager } from "../managers/manager-factory";
 import { checkDuplicatedUsername } from "../utility-functions";
+import { preprocessor } from "../shared/preprocessing";
 
 export class UserRouter extends BaseRouter {
   async saveUser(req: Request, res: Response) {
@@ -241,12 +242,12 @@ export class UserRouter extends BaseRouter {
   static buildRouter(): Router {
     const userRouter = new UserRouter();
     return express.Router()
-      .post('/user', authenticator([]), userRouter.saveUser.bind(userRouter))
-      .get('/list-users', authenticator([]), userRouter.getAllSiteUsers.bind(userRouter))
-      .get('/user-details/:userId', authenticator([]), userRouter.getDetailedUserByID.bind(userRouter))
-      .post('/login', userRouter.login.bind(userRouter))
-      .get('/verify-user-by-session', userRouter.verifyUserBySession.bind(userRouter))
-      .post('/signup', userRouter.signupUser.bind(userRouter))
-      .delete('/remove-user/:userID', authenticator([]), userRouter.removeUser.bind(userRouter));
+      .post('/user', preprocessor(), authenticator([]), userRouter.saveUser.bind(userRouter))
+      .get('/list-users', preprocessor(), authenticator([]), userRouter.getAllSiteUsers.bind(userRouter))
+      .get('/user-details/:userId', preprocessor(), authenticator([]), userRouter.getDetailedUserByID.bind(userRouter))
+      .post('/login', preprocessor(), userRouter.login.bind(userRouter))
+      .get('/verify-user-by-session', preprocessor(), userRouter.verifyUserBySession.bind(userRouter))
+      .post('/signup', preprocessor(), userRouter.signupUser.bind(userRouter))
+      .delete('/remove-user/:userID', preprocessor(), authenticator([]), userRouter.removeUser.bind(userRouter));
   }
 }

@@ -4,6 +4,7 @@ import { authenticator } from "../shared/authentication";
 import { Organization } from "../../../shared/src/kinds";
 import { organizationDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
+import { preprocessor } from "../shared/preprocessing";
 
 export class OrganizationRouter extends BaseRouter {
   async addSampleOrganization(req: Request, res: Response) {
@@ -77,9 +78,9 @@ export class OrganizationRouter extends BaseRouter {
   static buildRouter() {
     const organizationRouter = new OrganizationRouter();
     return express.Router()
-      .get("/add-sample-organization", authenticator([]), organizationRouter.addSampleOrganization.bind(organizationRouter))
-      .get("/all", authenticator([]), organizationRouter.getAllOrganizations.bind(organizationRouter))
-      .get("/organization/:id", authenticator([]), organizationRouter.getOrganization.bind(organizationRouter))
-      .post('/organization', authenticator([]), organizationRouter.saveOrganization.bind(organizationRouter));
+      .get("/add-sample-organization", preprocessor(), authenticator([]), organizationRouter.addSampleOrganization.bind(organizationRouter))
+      .get("/all", preprocessor(), organizationRouter.getAllOrganizations.bind(organizationRouter))
+      .get("/organization/:id", preprocessor(), authenticator([]), organizationRouter.getOrganization.bind(organizationRouter))
+      .post('/organization', preprocessor(), authenticator([]), organizationRouter.saveOrganization.bind(organizationRouter));
   }
 }
