@@ -42,7 +42,7 @@ export class OrganizationDAO {
 
     public async getEmployeesByOrganizationID(organizationID: string) {
         const query = datastore.createQuery(OrganizationDAO.ORGANIZATION_EMPLOYEE_KIND)
-            .filter(new PropertyFilter('id', '=', organizationID));
+            .filter(new PropertyFilter('organizationID', '=', organizationID));
         const data = await query.run();
         const [users] = data;
         return users as OrganizationEmployee[];

@@ -98,7 +98,6 @@ export class UserRouter extends BaseRouter {
 
   async getAllSiteUsers(req: Request, res: Response) {
     try {
-      logger.log("getAllSiteUsers: made it to beginning ", req.headers);
       const organizationID = this.getCurrentOrganizationID(req)!;
       const user = (req as any).user;
       const userType = user.userType;
@@ -110,7 +109,6 @@ export class UserRouter extends BaseRouter {
         //userIDs = (await userDAO.getAdminsByOrganizationID(organizationID)).map(v => v.userID!);
       }
 
-      logger.log("getAllSiteUsers: organizationID from user ", organizationID);
       const users: User[] = userIDs ? await userDAO.getUsersByUserIDs(userIDs) : [];
       logger.log("getAllSiteUsers: made it to send normal response", users);
       const usersData = users.map(user => {
