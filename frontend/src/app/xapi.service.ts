@@ -23,10 +23,8 @@ export class XapiService {
 
   private getServiceAddress() {
     if(window.location.port=='4200') {
-      console.log("active")
       return 'http://127.0.0.1:5001/atlantafoodhub/us-central1/xapi';
     }
-    console.log("not active");
     return ''
   }
 
@@ -107,8 +105,7 @@ export class XapiService {
   }
 
   public async verifyUserBySession() {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<VerificationResponse>(`/xapi/users/verify-user-by-session`, { headers }));
+    return this.getResponse<VerificationResponse>(`/xapi/users/verify-user-by-session`);
   }
 
   public async signupUser(signupData: SignupData) {
