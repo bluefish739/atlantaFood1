@@ -9,17 +9,18 @@ export const routes: Routes = [
         path: 'home',
         component: HomeComponent 
     },
+    { 
+        path: '',
+        redirectTo: 'home',
+        pathMatch: 'full'
+    },
     {
         path: 'login',
         component: LoginComponent
     },
     {
-        path: 'stores',
-        loadChildren: () => import('./stores/stores-routing.module').then(mod => mod.StoreRoutingModule),
-    },
-    {
-        path: 'charities',
-        loadChildren: () => import('./charities/charities-routing.module').then(mod => mod.CharityRoutingModule)
+        path: 'organizations',
+        loadChildren: () => import('./organizations/organizations-routing.module').then(mod => mod.OrganizationRoutingModule)
     },
     {
         path: 'roles',

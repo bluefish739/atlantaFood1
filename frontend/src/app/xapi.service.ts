@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent, HttpHandlerFn, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Store, Charity, StoreLocation, CharityLocation, Role, User, VerificationResponse, SignupData, GeneralConfirmationResponse, LoginRequest, LoginResponse, DetailedUser, Food, DetailedFood, FoodCategory, InventoryQuery } from '../../../shared/src/kinds';
+import { Organization, Role, User, VerificationResponse, SignupData, GeneralConfirmationResponse, LoginRequest, LoginResponse, DetailedUser, Food, DetailedFood, FoodCategory, InventoryQuery, InventorySummaryRow } from '../../../shared/src/kinds';
 import { first, firstValueFrom, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { sessionAuthenticator } from './utilities/session-authentication';
@@ -21,6 +21,15 @@ export class XapiService {
 
   constructor(private http: HttpClient) { }
 
+  private getServiceAddress() {
+    if(window.location.port=='4200') {
+      console.log("active")
+      return 'http://127.0.0.1:5001/atlantafoodhub/us-central1/xapi';
+    }
+    console.log("not active");
+    return ''
+  }
+
   private buildAuthenticationHeader() {
     const sessionID = sessionAuthenticator.getSessionID();
     return new HttpHeaders({
@@ -31,90 +40,36 @@ export class XapiService {
   getResponse = async <T>(path: string): Promise<T> => {
     const headers = this.buildAuthenticationHeader();
     sessionAuthenticator.refreshBrowserCookies();
-    return await firstValueFrom(this.http.get<T>(path, { headers }));
+    return await firstValueFrom(this.http.get<T>(this.getServiceAddress() + path, { headers }));
   };
 
   postResponse = async <T>(path: string, postData: any): Promise<T> => {
     const headers = this.buildAuthenticationHeader();
     sessionAuthenticator.refreshBrowserCookies();
-    return await firstValueFrom(this.http.post<T>(path, postData, { headers }));
+    return await firstValueFrom(this.http.post<T>(this.getServiceAddress() + path, postData, { headers }));
   };
 
   deleteResponse = async <T>(path: string): Promise<T> => {
     const headers = this.buildAuthenticationHeader();
     sessionAuthenticator.refreshBrowserCookies();
-    return await firstValueFrom(this.http.delete<T>(path, { headers }));
+    return await firstValueFrom(this.http.delete<T>(this.getServiceAddress() + path, { headers }));
   };
-  
   //============================================================================================
-  // Store API Requests
+  // Organization API Requests
   //============================================================================================
-  public async getStore(id: string) {
+  public async getAllOrganizations() {
     const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<Store>(`/xapi/stores/store/` + id, { headers }));
+    return await firstValueFrom(this.http.get<Organization[]>(`/xapi/organizations/all`, { headers }));
   }
 
-  public async getAllStores() {
+  public async saveOrganization(organization: Organization) {
     const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<Store[]>(`/xapi/stores/all`, { headers }));
+    return await firstValueFrom(this.http.post<Organization>(`/xapi/organizations/organization`, organization, { headers }));
   }
 
-  public async saveStore(store: Store) {
+  public async getOrganization(id: string) {
     const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.post<Store>(`/xapi/stores/store`, store, { headers }));
-  }
-
-  public async saveStoreLocation(storeLocation: StoreLocation) {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.post<StoreLocation>(`/xapi/store-locations/location`, storeLocation, { headers }));
-  }
-
-  public async getAllStoreLocations() {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<StoreLocation[]>(`/xapi/store-locations/all`, { headers }));
-  }
-
-  public async getStoreLocations(storeID: string) {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<StoreLocation[]>(`/xapi/stores/` + storeID + `/locations`, { headers }));
-  }
-
-  public async getStoreLocation(id: string) {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<StoreLocation>(`/xapi/store-locations/location/` + id, { headers }));
-  }
-  
-  //============================================================================================
-  // Charity API Requests
-  //============================================================================================
-  public async getAllCharities() {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<Charity[]>(`/xapi/charities/all`, { headers }));
-  }
-
-  public async saveCharity(charity: Charity) {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.post<Charity>(`/xapi/charities/charity`, charity, { headers }));
-  }
-
-  public async getCharity(id: string) {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<Charity>(`/xapi/charities/charity/` + id, { headers }));
-  }
-
-  public async getCharityLocations(charityID: string) {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<CharityLocation[]>(`/xapi/charities/` + charityID + `/locations`, { headers }));
-  }
-
-  public async saveCharityLocation(charityLocation: CharityLocation) {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.post<CharityLocation>(`/xapi/charity-locations/location`, charityLocation, { headers }));
-  }
-
-  public async getCharityLocation(id: string) {
-    const headers = this.buildAuthenticationHeader();
-    return await firstValueFrom(this.http.get<CharityLocation>(`/xapi/charity-locations/location/` + id, { headers }));
+    return await firstValueFrom(this.http.get<Organization>(`/xapi/organizations/organization/` + id, { headers }));
   }
   //============================================================================================
   // Role API Requests
@@ -166,8 +121,8 @@ export class XapiService {
   //============================================================================================
   // Food/Inventory API Requests
   //============================================================================================
-  public async getInventory(inventoryQuery: InventoryQuery) {
-    return this.postResponse<DetailedFood[]>(`/xapi/food/get-inventory`, inventoryQuery);
+  public async getInventory(inventoryQuery: InventoryQuery, organizationID: string) {
+    return this.postResponse<DetailedFood[]>(`/xapi/food/get-inventory/` + organizationID, inventoryQuery);
   }
 
   public async saveFood(detailedFood: DetailedFood) {
@@ -184,5 +139,9 @@ export class XapiService {
 
   public async deleteFood(foodID: string) {
     return this.deleteResponse<GeneralConfirmationResponse>(`/xapi/food/delete-food/` + foodID);
+  }
+
+  public async getInventorySummary(organizationID: string) {
+    return this.getResponse<InventorySummaryRow[]>(`/xapi/food/get-inventory-summary/` + organizationID);
   }
 }

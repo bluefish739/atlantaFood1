@@ -3,7 +3,6 @@
     width: 100%;
     border-collapse: collapse;
     background-color: #A8D5BA;
-    
 }
 
 .inventory-table .inventory-table-header,
@@ -28,4 +27,16 @@
         font-size: 0.9rem;
         padding: 0.5rem;
     }
+}
+
+.empty-inventory-note {
+    background-color: #A8D5BA;
+    color: #2E7D32;
+    font-weight: bold;
+    padding: 2rem;
+    text-align: center;
+}
+
+.buffer-bar {
+    padding: 2rem, 0rem;
 }

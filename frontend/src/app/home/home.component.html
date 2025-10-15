@@ -1,16 +1,5 @@
 
-<nav>
-  <ul>
-      <li id="organization-title" class="nav-link"><a [routerLink]="['']"><i>AFS</i></a></li>
-      <li class="nav-link"><a [routerLink]="['/food-map']">Find Food</a></li>
-      <li class="nav-link"><a href="#about">About Us</a></li>
-      <li class="nav-link"><a href="#impact">Our Impact</a></li>
-      <li class="nav-link"><a href="#donate">Donate</a></li>
-      <li class="nav-link"><a href="#contact">Contact</a></li>
-      <li *ngIf="loggedInState == 'logged out'" class="account-item nav-link"><a [routerLink]="['/users/login']">Log In</a></li>
-      <li *ngIf="loggedInState == 'logged in'" class="account-item nav-link"><a [routerLink]="['/dashboard']">My Dashboard</a></li>
-  </ul>
-</nav>
+<home-header></home-header>
 
 <section class="hero">
     <h2>Ending Food Insecurity Together</h2>

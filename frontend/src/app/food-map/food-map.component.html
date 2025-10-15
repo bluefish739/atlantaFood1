@@ -1,1 +1,29 @@
-<p>food map</p>
+<home-header></home-header>
+<section class="guide">
+    <h2><b>Find food near you</b></h2>
+    <p>Use the search bar to find donatable food from<br>local stores and pantries</p>
+</section>
+
+<div class="food-map">
+    <div class="filter-section">
+        <label for="categoryFilter">Filter by Tag:</label>
+        <input type="text" id="categoryFilter" [(ngModel)]="filterCategoriesInput"
+            placeholder="e.g., Canned, Fresh, Dairy">
+        <button class="query-button" (click)="runQuery()">Search</button>
+    </div>
+
+    <mat-accordion class="food-pantries-accordion">
+        <mat-expansion-panel *ngFor="let site of sites; let i = index" (opened)="onPanelOpened(i)" hideToggle>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    {{ site.name }}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="summary-container">
+                <inventory-summary [organizationID]="site.id!" (onEmptyInventory)="onEmptyInventory(i)"></inventory-summary>
+                <!--Link this something useful-->
+                <a class="full-inventory-link" id="full-inventory-link-{{i}}" (click)="onClickFullInventoryLink(i)" *ngIf="!hiddenFullInventoryLinkIndices.has(i)">See full inventory</a>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

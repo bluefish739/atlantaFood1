@@ -1,0 +1,22 @@
+<button (click)="goBack()">←</button>
+<h1>Organization:</h1>
+
+<table *ngIf="organization">
+    <tr>
+        <td>Name</td>
+        <td><input [(ngModel)]="organization.name" /></td>
+    </tr>
+    <tr>
+        <td>Contact</td>
+        <td><input [(ngModel)]="organization.contact" /></td>
+    </tr>
+    <tr>
+        <td><button (click)="saveClicked()">Save</button></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Locations: </td>
+        <td><button (click)="viewOrganizationLocations()">View Locations</button></td>
+    </tr>
+</table>
+

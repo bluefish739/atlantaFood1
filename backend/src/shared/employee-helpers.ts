@@ -1,26 +1,14 @@
-import { charityDAO, roleDAO, storeDAO, volunteerDAO } from "../daos/dao-factory";
+import { organizationDAO, roleDAO } from "../daos/dao-factory";
 import * as logger from "firebase-functions/logger";
 import { datastore } from "../daos/data-store-factory";
 import { RoleDAO } from "../daos/role-dao";
 import { UserDAO } from "../daos/user-dao";
-import { StoreDAO } from "../daos/store-dao";
-import { CharityEmployee, StoreEmployee, TransportVolunteer, User, UserRole, UserType } from "../../../shared/src/kinds";
-import { CharityDAO } from "../daos/charity-dao";
-import { VolunteerDAO } from "../daos/volunteer-dao";
+import { OrganizationEmployee, User, UserRole, UserType } from "../../../shared/src/kinds";
+import { OrganizationDAO } from "../daos/organization-dao";
 
 class EmployeeHelpers {
-    private async getOrganizationIDofStoreUser(userID: string): Promise<string | undefined> {
-        const employeeRecord = await storeDAO.getEmployeeRecordByUserID(userID);
-        return employeeRecord?.organizationID;
-    }
-
-    private async getOrganizationIDofPantryUser(userID: string): Promise<string | undefined> {
-        const employeeRecord = await charityDAO.getEmployeeRecordByUserID(userID);
-        return employeeRecord?.organizationID;
-    }
-
-    private async getOrganizationIDofVolunteer(userID: string): Promise<string | undefined> {
-        const employeeRecord = await volunteerDAO.getEmployeeRecordByUserID(userID);
+    private async getOrganizationIDofUser(userID: string): Promise<string | undefined> {
+        const employeeRecord = await organizationDAO.getEmployeeRecordByUserID(userID);
         return employeeRecord?.organizationID;
     }
 
@@ -29,12 +17,8 @@ class EmployeeHelpers {
     }
 
     public async getOrganizationOfUser(userType: string, userID: string) {
-        if (userType == "Store") {
-            return await this.getOrganizationIDofStoreUser(userID!);
-        } else if (userType == "Pantry") {
-            return await this.getOrganizationIDofPantryUser(userID!);
-        } else if (userType == "Volunteer") {
-            return await this.getOrganizationIDofVolunteer(userID!);
+        if (userType == "Store" || userType == "Pantry" || userType == "Volunteer") {
+            return await this.getOrganizationIDofUser(userID!);
         } else if (userType == "Admin") {
             return await this.getOrganizationIDofAdmin(userID!);
         } else {
@@ -46,24 +30,17 @@ class EmployeeHelpers {
     public async removeUser(userID: string, userType: string) {
         const transaction = datastore.transaction();
         try {
-            // remove record of StoreEmployee/CharityEmployee/Volunteer
             const userRoles = await roleDAO.getUserRolesByUserID(userID);
             const keys = [
-                datastore.key([UserDAO.USER_KIND, userID]), // remove User
+                datastore.key([UserDAO.USER_KIND, userID]),
             ];
 
-            // Add key of UserRole entities to be removed
             for (let userRole of userRoles) {
                 keys.push(datastore.key([RoleDAO.USER_ROLE_KIND, userRole.userID + "|" + userRole.roleID]));
             }
 
-            // Add key of employee record entity to be removed
-            if (userType == UserType.STORE) {
-                keys.push(datastore.key([StoreDAO.STORE_EMPLOYEE_KIND, userID]));
-            } else if (userType == UserType.PANTRY) {
-                keys.push(datastore.key([CharityDAO.CHARITY_EMPLOYEE_KIND, userID]));
-            } else if (userType == UserType.VOLUNTEER) {
-                keys.push(datastore.key([VolunteerDAO.VOLUNTEER_KIND, userID]));
+            if (userType == UserType.STORE || userType == UserType.PANTRY || userType == UserType.VOLUNTEER) {
+                keys.push(datastore.key([OrganizationDAO.ORGANIZATION_EMPLOYEE_KIND, userID]));
             } else if (userType == UserType.ADMIN) {
                 throw new Error("TODO: Deletion of admin user type not implemented.");
             } else {
@@ -84,10 +61,10 @@ class EmployeeHelpers {
     private buildEmployeeRecordEntity(userType: string, userID: string, organizationID: string) {
         switch (userType) {
             case UserType.STORE: {
-                const storeEmployee = new StoreEmployee();
+                const storeEmployee = new OrganizationEmployee();
                 storeEmployee.userID = userID;
                 storeEmployee.organizationID = organizationID;
-                const storeEmployeeKey = datastore.key([StoreDAO.STORE_EMPLOYEE_KIND, userID]);
+                const storeEmployeeKey = datastore.key([OrganizationDAO.ORGANIZATION_EMPLOYEE_KIND, userID]);
                 const storeEmployeeEntity = {
                     key: storeEmployeeKey,
                     data: storeEmployee
@@ -95,21 +72,21 @@ class EmployeeHelpers {
                 return [storeEmployeeEntity];
             }
             case UserType.PANTRY: {
-                const charityEmployee = new CharityEmployee();
-                charityEmployee.userID = userID;
-                charityEmployee.organizationID = organizationID;
-                const charityEmployeeKey = datastore.key([CharityDAO.CHARITY_EMPLOYEE_KIND, userID]);
-                const charityEmployeeEntity = {
-                    key: charityEmployeeKey,
-                    data: charityEmployee
+                const organizationEmployee = new OrganizationEmployee();
+                organizationEmployee.userID = userID;
+                organizationEmployee.organizationID = organizationID;
+                const organizationEmployeeKey = datastore.key([OrganizationDAO.ORGANIZATION_EMPLOYEE_KIND, userID]);
+                const organizationEmployeeEntity = {
+                    key: organizationEmployeeKey,
+                    data: organizationEmployee
                 };
-                return [charityEmployeeEntity];
+                return [organizationEmployeeEntity];
             }
             case UserType.VOLUNTEER: {
-                const volunteer = new TransportVolunteer();
+                const volunteer = new OrganizationEmployee();
                 volunteer.userID = userID;
                 volunteer.organizationID = organizationID;
-                const volunteerKey = datastore.key([VolunteerDAO.VOLUNTEER_KIND, userID]);
+                const volunteerKey = datastore.key([OrganizationDAO.ORGANIZATION_EMPLOYEE_KIND, userID]);
                 const volunteerEntity = {
                     key: volunteerKey,
                     data: volunteer

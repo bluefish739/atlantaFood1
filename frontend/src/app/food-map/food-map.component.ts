@@ -2,21 +2,45 @@ import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { XapiService } from '../xapi.service';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { HomeHeaderComponent } from '../../shared-components/home-header/home-header.component';
+import { FormsModule } from '@angular/forms';
+import { InventorySummaryComponent } from '../../shared-components/inventory-summary-component/inventory-summary.component';
+import { Organization } from '../../../../shared/src/kinds';
 
 @Component({
-  selector: 'food-map',
-  imports: [CommonModule, RouterModule],
-  templateUrl: './food-map.component.html',
-  styleUrl: './food-map.component.scss'
+    selector: 'food-map',
+    imports: [CommonModule, RouterModule, HomeHeaderComponent, MatExpansionModule, FormsModule, InventorySummaryComponent],
+    templateUrl: './food-map.component.html',
+    styleUrl: './food-map.component.scss'
 })
 export class FoodMapComponent {
-  constructor(
-    private xapiService: XapiService,
-    private router: Router
-  ) {
-  }
+    sites: Organization[] = [];
+    filterCategoriesInput = "";
+    hiddenFullInventoryLinkIndices: Set<number> = new Set();
+    constructor(
+        private xapiService: XapiService,
+        private router: Router
+    ) {
+    }
 
-  async ngOnInit() {
-    
-  }
+    async ngOnInit() {
+        this.sites = await this.xapiService.getAllOrganizations();
+    }
+
+    onPanelOpened(index: number): void {
+        console.log('Opened organization at index:' + index);
+    }
+
+    async runQuery() {
+
+    }
+
+    onEmptyInventory(idx: number) {
+        this.hiddenFullInventoryLinkIndices.add(idx);
+    }
+
+    onClickFullInventoryLink(idx: number) {
+        // TODO: either redirect user to page containing full inventory or open dialog box with full inventory
+    }
 }

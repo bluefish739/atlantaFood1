@@ -24,22 +24,13 @@ export class HeaderComponent {
 
     goToInventory() {
         const userType = sessionAuthenticator.getUserType();
-        let pathHead: string;
-        switch (userType) {
-            case "Store":
-                pathHead = "stores"
-                break;
-            case "Pantry":
-                pathHead = "charities"
-                break;
-            case "Volunteer":
-                pathHead = "volunteers"
-                break;
-            case "Admin":
-                pathHead = "admins"
-                break;
-            default:
-                return;
+        let pathHead = "";
+        if (userType == "Store" || userType == "Pantry" || userType == "Volunteer") {
+            pathHead == "organizations";
+        } else if (userType == "Admin") {
+            pathHead == "admins";
+        } else {
+            console.log("Error: unknown userType: " + userType);
         }
         this.router.navigateByUrl(`/${pathHead}/inventory/details`);
     }

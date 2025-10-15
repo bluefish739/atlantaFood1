@@ -1,41 +1,37 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../app/auth.service';
 import { CommonModule } from '@angular/common';
 import { XapiService } from '../../app/xapi.service';
-import { DetailedFood, InventoryQuery, InventorySummaryRow } from '../../../../shared/src/kinds';
+import { InventorySummaryRow } from '../../../../shared/src/kinds';
 
 @Component({
   selector: 'inventory-summary',
-  imports: [RouterModule, FormsModule, CommonModule],
+  imports: [RouterModule, FormsModule, CommonModule, MatProgressBarModule],
   templateUrl: './inventory-summary.component.html',
   styleUrl: './inventory-summary.component.scss'
 })
 export class InventorySummaryComponent {
+  @Input() organizationID = "BLANK";
+  @Output() onEmptyInventory = new EventEmitter<boolean>();
   inventorySummaryData: InventorySummaryRow[] = [];
+  inventoryStatus = "";
   constructor(
     public authService: AuthService,
     private xapiService: XapiService,
   ) {
-    this.getInventorySummaryData();
   }
 
-  async getInventorySummaryData() {
-    const foodCategories = await this.xapiService.getFoodCategories();
-    const inventoryData = await this.xapiService.getInventory(new InventoryQuery());
-    this.inventorySummaryData = foodCategories.map(foodCategory => {
-      const inventorySummaryRow = new InventorySummaryRow();
-      inventorySummaryRow.categoryName = foodCategory.name!;
-      const filteredInventory = inventoryData.filter(v => v.categoryIDs.includes(foodCategory.id!));
-      const unitsList = new Set(filteredInventory.map(v => v.food!.units!));
-      inventorySummaryRow.quantitySummary = [...unitsList]
-      .map(units =>
-        filteredInventory
-          .filter(v => v.food!.units == units)
-          .reduce((accumulator, v) => accumulator += v.food!.currentQuantity!, 0) + " " + units
-      ).join(", ");
-      return inventorySummaryRow;
-    });
+  async ngOnInit() {
+    this.inventoryStatus = "LOADING";
+    this.inventorySummaryData = await this.xapiService.getInventorySummary(this.organizationID);
+    if (this.inventorySummaryData.length === 0) {
+      this.inventoryStatus = "EMPTY";
+      this.onEmptyInventory.emit(true);
+      return;
+    }
+    this.inventoryStatus = "LOADED";
   }
 }

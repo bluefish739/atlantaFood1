@@ -1,9 +1,31 @@
 <page-header></page-header>
-<section class="dashboard-container">
-    <admin-dashboard *ngIf="userType == UserType.ADMIN"></admin-dashboard>
-    <pantry-dashboard *ngIf="userType == UserType.PANTRY"></pantry-dashboard>
-    <store-dashboard *ngIf="userType == UserType.STORE"></store-dashboard>
-    <volunteer-dashboard *ngIf="userType == UserType.VOLUNTEER"></volunteer-dashboard>
+<section class="dashboard-section">
+    <h2>Dashboard</h2>
+    <h3>Inventory Summary</h3>
+    <inventory-summary [organizationID]="'BLANK'"></inventory-summary>
+    <br>
+    <section class="inventory-actions-container">
+        <button class="inventory-action-button" (click)="navigateToInventoryDetails()">Inventory Details</button>
+        <button class="inventory-action-button" (click)="navigateToInventoryUpdates()">Add</button>
+    </section>
+    <h3>Recent Messages</h3>
+    <table class="messages">
+        <tr>
+            <th>Pantry</th>
+            <th>Message</th>
+            <th>Date</th>
+        </tr>
+        <tr>
+            <td>City Food Pantry</td>
+            <td>Requesting pickup for 100 lbs of produce</td>
+            <td>2025-07-16</td>
+        </tr>
+        <tr>
+            <td>Hope Pantry</td>
+            <td>Can you donate canned goods this week?</td>
+            <td>2025-07-15</td>
+        </tr>
+    </table>
 </section>
 <footer>
     <p>© 2025 Food Network Non-Profit. All rights reserved.</p>
