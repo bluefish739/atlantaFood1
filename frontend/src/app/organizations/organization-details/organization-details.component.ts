@@ -13,6 +13,7 @@ import { HeaderComponent } from "../../../shared-components/header-component/hea
   imports: [CommonModule, FormsModule, HeaderComponent]
 })
 export class OrganizationDetailsComponent {
+  originalOrganization = new Organization();
   organization = new Organization();
   constructor(
     private xapiService: XapiService,
@@ -23,7 +24,7 @@ export class OrganizationDetailsComponent {
 
   async ngOnInit() {
     this.organization = await this.xapiService.getOrganizationDetails();
-    console.log(this.organization);
+    this.originalOrganization = structuredClone(this.organization);
   }
 
   async saveClicked() {
@@ -36,11 +37,14 @@ export class OrganizationDetailsComponent {
   }
 
   cancelChanges() {
-    // Implement cancel logic (e.g., reload original data)
+    this.organization = structuredClone(this.originalOrganization);
   }
 
   organizationFormValid(): boolean {
-    // Implement form validation logic
-    return !!this.organization?.name?.trim();
+    return !!this.organization!.name?.trim() 
+      && !!this.organization!.contact?.trim()
+      && !!this.organization!.state?.trim()
+      && !!this.organization!.city?.trim()
+      && !!this.organization!.addressLine1?.trim();
   }
 }
