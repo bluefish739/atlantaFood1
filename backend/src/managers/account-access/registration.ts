@@ -7,17 +7,22 @@ import { checkDuplicatedUsername } from "../../utility-functions";
 export class RegistrationManager {
     async signupUser(requestContext: RequestContext, signupData: SignupData) {
         try {
+            const loginResponse = new LoginResponse();
             if (!signupData) {
                 logger.log("Signup data is not provided", signupData);
                 throw new BadRequestError("Signup data is not provided");
             }
             if (!this.validateSignupData(signupData)) {
                 logger.log("Signup data incomplete", signupData);
-                throw new BadRequestError("Signup data incomplete");
+                loginResponse.success = false;
+                loginResponse.message = "Signup data incomplete";
+                return loginResponse;
             }
             if (await checkDuplicatedUsername(signupData.username!)) {
                 logger.log("Username already taken, please choose another", signupData);
-                throw new BadRequestError("Username already taken, please choose another");
+                loginResponse.success = false;
+                loginResponse.message = "Username already taken, please choose another";
+                return loginResponse;
             }
 
             const organizationID = generateId();
@@ -31,7 +36,6 @@ export class RegistrationManager {
 
             this.createNewOrganization(user.userID!, organizationID, user.userType!.toUpperCase());
 
-            const loginResponse = new LoginResponse();
             loginResponse.success = true;
             loginResponse.sessionID = user.sessionID;
             loginResponse.userID = user.userID;
