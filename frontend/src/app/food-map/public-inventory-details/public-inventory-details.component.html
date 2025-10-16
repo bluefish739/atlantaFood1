@@ -1,0 +1,33 @@
+<section class="inventory-container">
+    <div class="inventory-section">
+        <h2>{{ organizationName }} Inventory</h2>
+        <div class="inventory-actions-section">
+            <div class="filter-section">
+                <label for="categoryFilter">Filter by Tag:</label>
+                <input type="text" id="categoryFilter" [(ngModel)]="filterCategoriesInput"
+                    placeholder="e.g., Canned, Fresh">
+                <button class="inventory-action query-button" (click)="runQuery()">Search</button>
+            </div>
+        </div>
+        <table class="inventory-table" id="inventoryTable" *ngIf="inventoryData.length > 0">
+            <thead>
+                <tr>
+                    <th>Number</th>
+                    <th>Product</th>
+                    <th>Current Quantity</th>
+                    <th>Expiration Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let entry of inventoryData; let idx=index">
+                    <td>
+                        {{ idx + 1 }}
+                    </td>
+                    <td>{{ entry.food!.name! }}</td>
+                    <td>{{ entry.food!.currentQuantity! }} {{ entry.food!.units! }}</td>
+                    <td>{{ entry.food!.expirationDate! | date:"shortDate" }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>

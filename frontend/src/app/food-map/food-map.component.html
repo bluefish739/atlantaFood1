@@ -20,9 +20,12 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <div class="summary-container">
-                <inventory-summary [organizationID]="site.id!" (onEmptyInventory)="onEmptyInventory(i)"></inventory-summary>
+                <inventory-summary [organizationID]="site.id!"
+                    (onEmptyInventory)="onEmptyInventory(i)"></inventory-summary>
                 <!--Link this something useful-->
-                <a class="full-inventory-link" id="full-inventory-link-{{i}}" (click)="onClickFullInventoryLink(i)" *ngIf="!hiddenFullInventoryLinkIndices.has(i)">See full inventory</a>
+                <button class="full-inventory-button" id="full-inventory-button-{{i}}" matButton
+                    (click)="onClickFullInventoryButton(i)" *ngIf="!hiddenFullInventoryButtonIndices.has(i)">See full
+                    inventory</button>
             </div>
         </mat-expansion-panel>
     </mat-accordion>
