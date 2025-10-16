@@ -4,12 +4,13 @@ import { Organization } from '../../../../../shared/src/kinds';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HeaderComponent } from "../../../shared-components/header-component/header.component";
 
 @Component({
     selector: 'organizations-details',
     templateUrl: './organization-details.component.html',
     styleUrl: './organization-details.component.scss',
-    imports: [CommonModule, FormsModule]
+    imports: [CommonModule, FormsModule, HeaderComponent]
 })
 export class OrganizationDetailsComponent {
     organization = new Organization();
