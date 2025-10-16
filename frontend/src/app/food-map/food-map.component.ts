@@ -19,7 +19,7 @@ import { PublicInventoryDetailsComponent } from './public-inventory-details/publ
 export class FoodMapComponent {
     sites: Organization[] = [];
     filterCategoriesInput = "";
-    hiddenFullInventoryButtonIndices: Set<number> = new Set();
+    siteDisplayStatuses: boolean[] = [];
     inventoryDetails = inject(MatDialog);
     constructor(
         private xapiService: XapiService,
@@ -29,6 +29,7 @@ export class FoodMapComponent {
 
     async ngOnInit() {
         this.sites = await this.xapiService.getAllOrganizations();
+        this.siteDisplayStatuses = this.sites.map(v => true);
     }
 
     onPanelOpened(index: number): void {
@@ -36,11 +37,10 @@ export class FoodMapComponent {
     }
 
     async runQuery() {
-
     }
 
     onEmptyInventory(idx: number) {
-        this.hiddenFullInventoryButtonIndices.add(idx);
+        this.siteDisplayStatuses[idx] = false;
     }
 
     onClickFullInventoryButton(idx: number) {

@@ -13,20 +13,21 @@
     </div>
 
     <mat-accordion class="food-pantries-accordion">
-        <mat-expansion-panel *ngFor="let site of sites; let i = index" (opened)="onPanelOpened(i)" hideToggle>
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    {{ site.name }}
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <div class="summary-container">
-                <inventory-summary [organizationID]="site.id!"
-                    (onEmptyInventory)="onEmptyInventory(i)"></inventory-summary>
-                <!--Link this something useful-->
-                <button class="full-inventory-button" id="full-inventory-button-{{i}}" matButton
-                    (click)="onClickFullInventoryButton(i)" *ngIf="!hiddenFullInventoryButtonIndices.has(i)">See full
-                    inventory</button>
-            </div>
-        </mat-expansion-panel>
+        <ng-container *ngFor="let site of sites; let i = index">
+            <mat-expansion-panel *ngIf="siteDisplayStatuses[i]" (opened)="onPanelOpened(i)" hideToggle>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        {{ site.name }}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="summary-container">
+                    <inventory-summary [organizationID]="site.id!"
+                        (onEmptyInventory)="onEmptyInventory(i)"></inventory-summary>
+                    <button class="full-inventory-button" id="full-inventory-button-{{i}}" matButton
+                        (click)="onClickFullInventoryButton(i)">See full
+                        inventory</button>
+                </div>
+            </mat-expansion-panel>
+        </ng-container>
     </mat-accordion>
 </div>
