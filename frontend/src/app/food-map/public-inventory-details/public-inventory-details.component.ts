@@ -49,7 +49,7 @@ export class PublicInventoryDetailsComponent {
         }).filter(filterCategoryID => !!filterCategoryID);
       const inventoryQuery = new InventoryQuery();
       inventoryQuery.categoryIDs = filterCategoryIDs;
-      this.inventoryData = await this.xapiService.getInventory(inventoryQuery, "BLANK");
+      this.inventoryData = await this.xapiService.getInventory(inventoryQuery, this.data.organizationID);
     } catch (error: any) {
       console.log("Error: ", error);
     }
