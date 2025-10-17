@@ -14,7 +14,7 @@
 
     <mat-accordion class="food-pantries-accordion">
         <ng-container *ngFor="let site of sites; let i = index">
-            <mat-expansion-panel *ngIf="siteDisplayStatuses[i]" (opened)="onPanelOpened(i)" hideToggle>
+            <mat-expansion-panel *ngIf="!siteInventoryEmpty[i] && siteIncludesSearchedCategories[i]" (opened)="onPanelOpened(i)" hideToggle>
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                         {{ site.name }}

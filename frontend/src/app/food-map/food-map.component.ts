@@ -20,11 +20,8 @@ export class FoodMapComponent {
     sites: Organization[] = [];
     filterCategoriesInput = "";
     foodCategories: FoodCategory[] = [];
-    siteDisplayStatuses: boolean[] = [];
-
-    //siteInventoryEmpty: boolean[] = [];
-    //siteIncludeSearchedCategories: boolean[] = [];
-
+    siteInventoryEmpty: boolean[] = [];
+    siteIncludesSearchedCategories: boolean[] = [];
     siteCategoriesLists: string[][] = [];
     inventoryDetails = inject(MatDialog);
     constructor(
@@ -36,7 +33,8 @@ export class FoodMapComponent {
     async ngOnInit() {
         this.sites = await this.xapiService.getAllOrganizations();
         this.foodCategories = await this.xapiService.getFoodCategories();
-        this.siteDisplayStatuses = this.sites.map(v => true);
+        this.siteInventoryEmpty = this.sites.map(v => false);
+        this.siteIncludesSearchedCategories = this.sites.map(v => true);
         this.siteCategoriesLists = this.sites.map(v => []);
     }
 
@@ -60,15 +58,16 @@ export class FoodMapComponent {
     runQuery() {
         const filterCategoryNames = this.getFilterCategoryNames();
         if (filterCategoryNames.size === 0) {
+            this.siteIncludesSearchedCategories = this.siteIncludesSearchedCategories.map(v => true);
             return;
         }
         this.siteCategoriesLists.forEach((siteCategoryList, idx) => {
-            this.siteDisplayStatuses[idx] = siteCategoryList.filter(categoryName => filterCategoryNames.has(categoryName.toLowerCase())).length > 0;
+            this.siteIncludesSearchedCategories[idx] = siteCategoryList.filter(categoryName => filterCategoryNames.has(categoryName.toLowerCase())).length > 0;
         });
     }
 
     onEmptyInventory(idx: number, isEmpty: boolean) {
-        this.siteDisplayStatuses[idx] = !isEmpty;
+        this.siteInventoryEmpty[idx] = isEmpty;
     }
 
     updateSiteCategories(idx: number, categories: string[]) {
