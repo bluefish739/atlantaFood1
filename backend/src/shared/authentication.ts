@@ -11,6 +11,10 @@ admin.initializeApp();
 export function authenticator(requiredPermissionsList: string[]) {
     return async (req: Request, res: Response, next: NextFunction) => {
         const user = (req as any).user as User;
+        if (!user) {
+            sendResponse(res, { success: false, message: "No user found" }, 401);
+            return;
+        }
         let userPermissions = new Set();
         const userRoles = await roleDAO.getUserRolesByUserID(user.userID!);
         for (let userRole of userRoles) {
@@ -31,7 +35,6 @@ export function authenticator(requiredPermissionsList: string[]) {
                 return;
             }
         });
-        
         next();
     }
 }

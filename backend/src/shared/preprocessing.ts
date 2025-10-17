@@ -9,7 +9,6 @@ export function preprocessor() {
         const authentication = req.headers.authentication as string;
         const user = await userDAO.getUserBySessionID(authentication) as User;
         if (!user) {
-            (req as any).loggedIn = false;
             next();
         } else {
             const organizationID = await employeeHelpers.getOrganizationOfUser(user.userType!, user.userID!);
