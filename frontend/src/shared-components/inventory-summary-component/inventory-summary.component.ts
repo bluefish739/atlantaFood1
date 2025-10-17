@@ -16,6 +16,7 @@ import { InventorySummaryRow } from '../../../../shared/src/kinds';
 export class InventorySummaryComponent {
   @Input() organizationID = "BLANK";
   @Output() onEmptyInventory = new EventEmitter<boolean>();
+  @Output() categoryNames = new EventEmitter<string[]>();
   inventorySummaryData: InventorySummaryRow[] = [];
   inventoryStatus = "";
   constructor(
@@ -30,8 +31,11 @@ export class InventorySummaryComponent {
     if (this.inventorySummaryData.length === 0) {
       this.inventoryStatus = "EMPTY";
       this.onEmptyInventory.emit(true);
+      this.categoryNames.emit([]);
       return;
     }
     this.inventoryStatus = "LOADED";
+    this.onEmptyInventory.emit(false);
+    this.categoryNames.emit(this.inventorySummaryData.map(row => row.categoryName!));
   }
 }

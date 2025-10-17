@@ -7,7 +7,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { HomeHeaderComponent } from '../../shared-components/home-header/home-header.component';
 import { FormsModule } from '@angular/forms';
 import { InventorySummaryComponent } from '../../shared-components/inventory-summary-component/inventory-summary.component';
-import { Organization } from '../../../../shared/src/kinds';
+import { FoodCategory, InventoryQuery, Organization } from '../../../../shared/src/kinds';
 import { PublicInventoryDetailsComponent } from './public-inventory-details/public-inventory-details.component';
 
 @Component({
@@ -19,7 +19,13 @@ import { PublicInventoryDetailsComponent } from './public-inventory-details/publ
 export class FoodMapComponent {
     sites: Organization[] = [];
     filterCategoriesInput = "";
+    foodCategories: FoodCategory[] = [];
     siteDisplayStatuses: boolean[] = [];
+
+    //siteInventoryEmpty: boolean[] = [];
+    //siteIncludeSearchedCategories: boolean[] = [];
+
+    siteCategoriesLists: string[][] = [];
     inventoryDetails = inject(MatDialog);
     constructor(
         private xapiService: XapiService,
@@ -29,18 +35,44 @@ export class FoodMapComponent {
 
     async ngOnInit() {
         this.sites = await this.xapiService.getAllOrganizations();
+        this.foodCategories = await this.xapiService.getFoodCategories();
         this.siteDisplayStatuses = this.sites.map(v => true);
+        this.siteCategoriesLists = this.sites.map(v => []);
     }
 
     onPanelOpened(index: number): void {
         console.log('Opened organization at index:' + index);
     }
 
-    async runQuery() {
+    private getFilterCategoryNames() {
+        const filterCategoryNames = new Set(
+            this.filterCategoriesInput
+                .split(",")
+                .map(categoryName => {
+                    const cleanCategoryName = categoryName.trim().toLowerCase();
+                    return cleanCategoryName ? cleanCategoryName : "";
+                })
+                .filter(v => !!v)
+        );
+        return filterCategoryNames;
     }
 
-    onEmptyInventory(idx: number) {
-        this.siteDisplayStatuses[idx] = false;
+    runQuery() {
+        const filterCategoryNames = this.getFilterCategoryNames();
+        if (filterCategoryNames.size === 0) {
+            return;
+        }
+        this.siteCategoriesLists.forEach((siteCategoryList, idx) => {
+            this.siteDisplayStatuses[idx] = siteCategoryList.filter(categoryName => filterCategoryNames.has(categoryName.toLowerCase())).length > 0;
+        });
+    }
+
+    onEmptyInventory(idx: number, isEmpty: boolean) {
+        this.siteDisplayStatuses[idx] = !isEmpty;
+    }
+
+    updateSiteCategories(idx: number, categories: string[]) {
+        this.siteCategoriesLists[idx] = categories;
     }
 
     onClickFullInventoryButton(idx: number) {

@@ -22,7 +22,8 @@
                 </mat-expansion-panel-header>
                 <div class="summary-container">
                     <inventory-summary [organizationID]="site.id!"
-                        (onEmptyInventory)="onEmptyInventory(i)"></inventory-summary>
+                        (onEmptyInventory)="onEmptyInventory(i, $event)"
+                        (categoryNames)="updateSiteCategories(i, $event)"></inventory-summary>
                     <button class="full-inventory-button" id="full-inventory-button-{{i}}" matButton
                         (click)="onClickFullInventoryButton(i)">See full
                         inventory</button>
