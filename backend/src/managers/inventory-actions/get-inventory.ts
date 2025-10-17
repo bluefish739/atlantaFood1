@@ -1,13 +1,16 @@
 
-import { DetailedFood, Food, InventoryQuery, InventorySummaryRow, RequestContext } from "../../../../shared/src/kinds";
+import { BadRequestError, DetailedFood, Food, InventoryQuery, InventorySummaryRow, RequestContext } from "../../../../shared/src/kinds";
 import { foodDAO } from "../../daos/dao-factory";
 import * as logger from "firebase-functions/logger";
 
 export class GetInventoryManager {
-    async getInventory(requestContext: RequestContext, inventoryQuery: InventoryQuery, organizationID: string) {
+    async getInventory(requestContext: RequestContext, inventoryQuery: InventoryQuery, organizationID: string | undefined) {
         try {
             if (organizationID == "BLANK") {
-                organizationID = requestContext.getCurrentOrganizationID()!;
+                organizationID = requestContext.getCurrentOrganizationID();
+            }
+            if (!organizationID) {
+                throw new BadRequestError("No organizationID found.");
             }
             const categoryIDs = inventoryQuery.categoryIDs;
             logger.log("getInventory: categoryIDs: ", categoryIDs);
