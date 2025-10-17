@@ -76,7 +76,7 @@
 }
 
 
-.query-button {
+.filter-section-button {
   display: inline-block;
   background-color: #2E7D32;
   color: white;
@@ -91,6 +91,10 @@
   margin-left: 1rem;
 }
 
-.query-button:hover {
+.filter-section-button:hover {
   background-color: #1B5E20;
+}
+
+.clear-button {
+  background-color: #339936;
 }

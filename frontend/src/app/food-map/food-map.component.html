@@ -9,7 +9,8 @@
         <label for="categoryFilter">Filter by Tag:</label>
         <input type="text" id="categoryFilter" [(ngModel)]="filterCategoriesInput"
             placeholder="e.g., Canned, Fresh, Dairy">
-        <button class="query-button" (click)="runQuery()">Search</button>
+        <button class="filter-section-button query-button" (click)="runQuery()">Search</button>
+        <button class="filter-section-button clear-button" (click)="clearQuery()">Clear</button>
     </div>
 
     <mat-accordion class="food-pantries-accordion">
