@@ -4,7 +4,6 @@ import { authenticator } from "../shared/authentication";
 import { Role } from "../../../shared/src/kinds";
 import { roleDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
-import { preprocessor } from "../shared/preprocessing";
 
 export class RoleRouter extends BaseRouter {
     async saveRole(req: Request, res: Response) {
@@ -64,8 +63,8 @@ export class RoleRouter extends BaseRouter {
     static buildRouter() {
         const roleRouter = new RoleRouter();
         return express.Router()
-            .post('/role', preprocessor(), authenticator([]), roleRouter.saveRole.bind(roleRouter))
-            .get('/role/:roleID', preprocessor(), authenticator([]), roleRouter.getRole.bind(roleRouter))
-            .get('/list-roles', preprocessor(), authenticator([]), roleRouter.getAllUserRolesOfCurrentOrg.bind(roleRouter));
+            .post('/role', authenticator([]), roleRouter.saveRole.bind(roleRouter))
+            .get('/role/:roleID', authenticator([]), roleRouter.getRole.bind(roleRouter))
+            .get('/list-roles', authenticator([]), roleRouter.getAllUserRolesOfCurrentOrg.bind(roleRouter));
     }
 }

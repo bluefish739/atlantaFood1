@@ -4,7 +4,6 @@ import { authenticator } from "../shared/authentication";
 import { BadRequestError, Organization, RequestContext } from "../../../shared/src/kinds";
 import { organizationDAO } from "../daos/dao-factory";
 import { BaseRouter } from "./base-router";
-import { preprocessor } from "../shared/preprocessing";
 import { organizationInfoManager } from "../managers/manager-factory";
 
 export class OrganizationRouter extends BaseRouter {
@@ -64,9 +63,9 @@ export class OrganizationRouter extends BaseRouter {
   static buildRouter() {
     const organizationRouter = new OrganizationRouter();
     return express.Router()
-      .get("/add-sample-organization", preprocessor(), authenticator([]), organizationRouter.addSampleOrganization.bind(organizationRouter))
-      .get("/all", preprocessor(), organizationRouter.getAllOrganizations.bind(organizationRouter))
-      .get("/organization-details", preprocessor(), authenticator([]), organizationRouter.getOrganizationDetails.bind(organizationRouter))
-      .post('/organization', preprocessor(), authenticator([]), organizationRouter.saveOrganization.bind(organizationRouter));
+      .get("/add-sample-organization", authenticator([]), organizationRouter.addSampleOrganization.bind(organizationRouter))
+      .get("/all", organizationRouter.getAllOrganizations.bind(organizationRouter))
+      .get("/organization-details", authenticator([]), organizationRouter.getOrganizationDetails.bind(organizationRouter))
+      .post('/organization', authenticator([]), organizationRouter.saveOrganization.bind(organizationRouter));
   }
 }

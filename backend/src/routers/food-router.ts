@@ -4,7 +4,6 @@ import { authenticator } from "../shared/authentication";
 import { BaseRouter } from "./base-router";
 import { BadRequestError, DetailedFood, GeneralConfirmationResponse, InventoryQuery, RequestContext } from "../../../shared/src/kinds";
 import { getInventoryManager, foodActionManager } from "../managers/manager-factory";
-import { preprocessor } from "../shared/preprocessing";
 
 
 export class FoodRouter extends BaseRouter {
@@ -87,11 +86,11 @@ export class FoodRouter extends BaseRouter {
   static buildRouter() {
     const foodRouter = new FoodRouter();
     return express.Router()
-      .get('/get-food-categories', preprocessor(), authenticator([]), foodRouter.getFoodCategories.bind(foodRouter))
-      .post('/post-food', preprocessor(), authenticator([]), foodRouter.saveFood.bind(foodRouter))
-      .post('/get-inventory/:organizationID', preprocessor(), foodRouter.getInventory.bind(foodRouter))
-      .get('/get-detailed-food/:foodID', preprocessor(), authenticator([]), foodRouter.getDetailedFoodByID.bind(foodRouter))
-      .delete('/delete-food/:foodID', preprocessor(), authenticator([]), foodRouter.deleteFood.bind(foodRouter))
-      .get('/get-inventory-summary/:organizationID', preprocessor(), foodRouter.getInventorySummary.bind(foodRouter));
+      .get('/get-food-categories', foodRouter.getFoodCategories.bind(foodRouter))
+      .post('/post-food', authenticator([]), foodRouter.saveFood.bind(foodRouter))
+      .post('/get-inventory/:organizationID', foodRouter.getInventory.bind(foodRouter))
+      .get('/get-detailed-food/:foodID', authenticator([]), foodRouter.getDetailedFoodByID.bind(foodRouter))
+      .delete('/delete-food/:foodID', authenticator([]), foodRouter.deleteFood.bind(foodRouter))
+      .get('/get-inventory-summary/:organizationID', foodRouter.getInventorySummary.bind(foodRouter));
   }
 }

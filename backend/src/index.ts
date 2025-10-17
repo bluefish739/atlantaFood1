@@ -4,6 +4,7 @@ import { OrganizationRouter } from "./routers/organization-router";
 import { RoleRouter } from "./routers/role-router";
 import { UserRouter } from "./routers/user-router";
 import { FoodRouter } from "./routers/food-router";
+import { preprocessor } from "./shared/preprocessing";
 
 const expressApp = express();
 expressApp.use(express.json());
@@ -12,6 +13,8 @@ expressApp.use((req, res, next) => {
     res.set('Expires', '0');
     next();
 });
+
+expressApp.use(preprocessor());
 
 expressApp.use('/xapi/organizations', OrganizationRouter.buildRouter());
 expressApp.use('/xapi/roles', RoleRouter.buildRouter());
