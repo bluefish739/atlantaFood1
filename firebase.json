@@ -16,7 +16,7 @@
     }
   ],
   "hosting": {
-    "public": "dist/xapp",
+    "public": "dist",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -50,7 +50,7 @@
       },
       {
         "source": "**",
-        "destination": "/index.html"
+        "destination": "/xapp/landing-page.html"
       }
     ]
   }
