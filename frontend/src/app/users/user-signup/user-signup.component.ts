@@ -46,7 +46,7 @@ export class UserSignupComponent {
         const loginResponse = await this.xapiService.signupUser(payload);
         if (loginResponse?.success) {
             sessionAuthenticator.saveLoginSession(loginResponse);
-            this.router.navigateByUrl("/dashboard");
+            this.router.navigateByUrl("/organization/details");
         } else {
             console.log("Sign up response:", loginResponse);
             this.errorMessage = loginResponse.message!;
