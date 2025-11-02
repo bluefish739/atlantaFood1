@@ -91,6 +91,7 @@ export class FoodMapComponent {
     }
 
     toggleView() {
+        this.filterCategoriesInput = "";
         if (this.viewMode === "LIST-BY-ORGANIZATION") {
             this.viewMode = "LIST-BY-CATEGORY";
         } else {
