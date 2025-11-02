@@ -162,3 +162,11 @@ export class CategorySummaryRow {
     quantitySummary: string | undefined;
     organization: string | undefined;
 }
+
+export class Message {
+    id: string | undefined;
+    sendingOrganization: string | undefined;
+    receivingOrganization: string | undefined;
+    content: string | undefined;
+    timestamp: Date | undefined;
+}

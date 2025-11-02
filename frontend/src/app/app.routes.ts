@@ -37,5 +37,9 @@ export const routes: Routes = [
     {
         path: 'food-map',
         component: FoodMapComponent
+    },
+    {
+        path: 'messages',
+        loadChildren: () => import('./messages/messages-routing.module').then(mod => mod.MessagesRoutingModule)
     }
 ];

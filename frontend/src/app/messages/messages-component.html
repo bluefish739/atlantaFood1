@@ -1,9 +1,5 @@
-<!--
-Create a simple HTML template for displaying a list of messages.
-There should be a column on the left to view chats with different organizations, and a main area on the right to view the selected chat conversation. 
-Use basic HTML and CSS classes for styling.
--->
 
+<page-header></page-header>
 <div class="messages-container">
     <div class="organization-list">
         <h3>Organizations</h3>
@@ -13,15 +9,15 @@ Use basic HTML and CSS classes for styling.
             </li>
         </ul>
     </div>
-    <div class="chat-area" *ngIf="selectedOrganization">
+    <div class="chat-area" *ngIf="selectedOrganization.name">
         <h3>Chat with {{ selectedOrganization.name }}</h3>
         <div class="chat-messages">
             <div *ngFor="let message of messages" class="message">
-                <strong>{{ message.sender }}:</strong> {{ message.text }}
+                <strong>{{ message.sendingOrganization }}:</strong> {{ message.content }}
             </div>
         </div>
         <div class="message-input">
-            <input type="text" [(ngModel)]="newMessageText" placeholder="Type your message here...">
+            <input type="text" [(ngModel)]="newMessageText" placeholder="Type your message here..." />
             <button (click)="sendMessage()">Send</button>
         </div>
     </div>
