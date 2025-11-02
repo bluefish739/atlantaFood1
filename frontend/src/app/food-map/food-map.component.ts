@@ -9,10 +9,11 @@ import { FormsModule } from '@angular/forms';
 import { PublicInventorySummaryComponent } from './public-inventory-summary/public-inventory-summary.component';
 import { FoodCategory, InventoryQuery, Organization } from '../../../../shared/src/kinds';
 import { PublicInventoryDetailsComponent } from './public-inventory-details/public-inventory-details.component';
+import { CategoryViewComponent } from './list-by-category-view/category-view.component';
 
 @Component({
     selector: 'food-map',
-    imports: [CommonModule, RouterModule, HomeHeaderComponent, MatExpansionModule, FormsModule, PublicInventoryDetailsComponent, PublicInventorySummaryComponent, MatDialogModule],
+    imports: [CommonModule, RouterModule, HomeHeaderComponent, MatExpansionModule, FormsModule, PublicInventoryDetailsComponent, PublicInventorySummaryComponent, MatDialogModule, CategoryViewComponent],
     templateUrl: './food-map.component.html',
     styleUrl: './food-map.component.scss'
 })

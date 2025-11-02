@@ -156,3 +156,9 @@ export class InventorySummaryRow {
     categoryName: string | undefined;
     quantitySummary: string | undefined;
 }
+
+export class CategorySummaryRow {
+    category: string | undefined;
+    summary: string | undefined;
+    organization: string | undefined;
+}

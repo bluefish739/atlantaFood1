@@ -1,0 +1,24 @@
+
+<section class="category-view-container">
+    <table class="food-items-table" *ngIf="categorySummaryRows.length > 0">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Food Item</th>
+                <th>Quantity</th>
+                <th>Organization</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let categorySummaryRow of categorySummaryRows; let idx=index">
+                <td>{{ categorySummaryRow.category }}</td>
+                <td>{{ categorySummaryRow.summary }}</td>
+                <td>{{ categorySummaryRow.organization }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="no-items-note" *ngIf="categorySummaryRows.length === 0">
+        No food items found for the selected category.
+    </div>
+</section>

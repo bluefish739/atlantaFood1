@@ -1,0 +1,44 @@
+.category-view-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.food-items-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #A8D5BA;
+}
+
+.food-items-table th,
+.food-items-table td {
+    padding: 0.8rem;
+    border: 1px solid #A8D5BA;
+    text-align: left;
+}
+
+.food-items-table th {
+    background-color: #A8D5BA;
+    color: #2E7D32;
+    font-weight: bold;
+}
+
+.food-items-table td {
+    background-color: white;
+}
+
+@media (max-width: 768px) {
+    .food-items-table th,
+    .food-items-table td {
+        font-size: 0.9rem;
+        padding: 0.5rem;
+    }
+}
+
+.no-items-note {
+    background-color: #A8D5BA;
+    color: #2E7D32;
+    font-weight: bold;
+    padding: 2rem;
+    text-align: center;
+}
