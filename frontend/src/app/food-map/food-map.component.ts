@@ -68,11 +68,6 @@ export class FoodMapComponent {
         });
     }
 
-    clearQuery() {
-        this.filterCategoriesInput = "";
-        this.runQuery();
-    }
-
     onEmptyInventory(idx: number, isEmpty: boolean) {
         this.siteInventoryEmpty[idx] = isEmpty;
     }
