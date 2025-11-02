@@ -23,7 +23,7 @@ export class FoodMapComponent {
     siteInventoryEmpty: boolean[] = [];
     siteIncludesSearchedCategories: boolean[] = [];
     siteCategoriesLists: string[][] = [];
-    inventoryDetails = inject(MatDialog);
+    dialog = inject(MatDialog);
     constructor(
         private xapiService: XapiService,
         private router: Router
@@ -80,7 +80,7 @@ export class FoodMapComponent {
     }
 
     onClickFullInventoryButton(idx: number) {
-        this.inventoryDetails.open(PublicInventoryDetailsComponent, {
+        this.dialog.open(PublicInventoryDetailsComponent, {
             data: {
                 organizationName: this.sites[idx].name,
                 organizationID: this.sites[idx].id
