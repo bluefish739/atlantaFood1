@@ -1,0 +1,14 @@
+<mat-progress-bar class="buffer-bar" mode="buffer" *ngIf="inventoryStatus == 'LOADING'"></mat-progress-bar>
+<table class="inventory-table" *ngIf="inventoryStatus == 'LOADED'">
+    <tr>
+        <th class="inventory-table-header">Category</th>
+        <th class="inventory-table-header">Quantity</th>
+    </tr>
+    <tr *ngFor="let entry of inventorySummaryData; let idx=index">
+        <td class="inventory-table-entry">{{ entry.categoryName! }}</td>
+        <td class="inventory-table-entry">{{ entry.quantitySummary! }}</td>
+      </tr>
+</table>
+<div class="empty-inventory-note" *ngIf="inventoryStatus == 'EMPTY'">
+    Inventory empty, check back later!
+</div>
