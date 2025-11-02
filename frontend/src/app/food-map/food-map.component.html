@@ -5,15 +5,18 @@
 </section>
 
 <div class="food-map">
-    <div class="filter-section">
-        <label for="categoryFilter">Filter by Tag:</label>
-        <input type="text" id="categoryFilter" [(ngModel)]="filterCategoriesInput"
-            placeholder="e.g., Canned, Fresh, Dairy">
-        <button class="filter-section-button query-button" (click)="runQuery()">Search</button>
-        <button class="filter-section-button clear-button" (click)="clearQuery()">Clear</button>
+    <div class="actions-section">
+        <div class="filter-section">
+            <label for="categoryFilter">Filter by Tag:</label>
+            <input type="text" id="categoryFilter" [(ngModel)]="filterCategoriesInput"
+                placeholder="e.g., Canned, Fresh, Dairy">
+            <button class="action-button query-button" (click)="runQuery()">Search</button>
+            <button class="action-button clear-button" (click)="clearQuery()">Clear</button>
+        </div>
+        <button class="action-button toggle-view-button" (click)="toggleView()">Toggle View</button>
     </div>
 
-    <mat-accordion class="food-pantries-accordion">
+    <mat-accordion *ngIf="viewMode === 'LIST-BY-ORGANIZATION'" class="food-pantries-accordion">
         <ng-container *ngFor="let site of sites; let i = index">
             <mat-expansion-panel *ngIf="!siteInventoryEmpty[i] && siteIncludesSearchedCategories[i]" (opened)="onPanelOpened(i)" hideToggle>
                 <mat-expansion-panel-header>

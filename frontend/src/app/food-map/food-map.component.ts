@@ -23,6 +23,7 @@ export class FoodMapComponent {
     siteInventoryEmpty: boolean[] = [];
     siteIncludesSearchedCategories: boolean[] = [];
     siteCategoriesLists: string[][] = [];
+    viewMode = "LIST-BY-ORGANIZATION";
     dialog = inject(MatDialog);
     constructor(
         private xapiService: XapiService,
@@ -86,5 +87,14 @@ export class FoodMapComponent {
                 organizationID: this.sites[idx].id
             }
         });
+    }
+
+    toggleView() {
+        if (this.viewMode === "LIST-BY-ORGANIZATION") {
+            this.viewMode = "LIST-BY-CATEGORY";
+        } else {
+            this.viewMode = "LIST-BY-ORGANIZATION";
+        }
+        console.log(this.viewMode);
     }
 }
