@@ -22,13 +22,18 @@ export class MessagesComponent {
 
     async ngOnInit() {
         this.organizations = await this.xapiService.getAllOrganizations();
+        this.organizations = this.organizations.filter(org => org.name && org.name.trim() !== "");
     }
 
     selectOrganization(organization: Organization) {
-        console.log(organization);
+        this.selectedOrganization = organization;
     }
 
     async sendMessage() {
-
+        const message = new Message();
+        message.content = this.newMessageText;
+        message.receivingOrganization = this.selectedOrganization.id;
+        console.log(message);
+        await this.xapiService.sendMessageToOrganization(message);
     }
 }

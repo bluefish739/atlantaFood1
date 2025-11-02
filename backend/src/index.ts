@@ -5,6 +5,7 @@ import { RoleRouter } from "./routers/role-router";
 import { UserRouter } from "./routers/user-router";
 import { FoodRouter } from "./routers/food-router";
 import { preprocessor } from "./shared/preprocessing";
+import { CommunicationsRouter } from "./routers/communications-router";
 
 const expressApp = express();
 expressApp.use(express.json());
@@ -20,5 +21,6 @@ expressApp.use('/xapi/organizations', OrganizationRouter.buildRouter());
 expressApp.use('/xapi/roles', RoleRouter.buildRouter());
 expressApp.use('/xapi/users', UserRouter.buildRouter());
 expressApp.use('/xapi/food', FoodRouter.buildRouter());
+expressApp.use('/xapi/communications', CommunicationsRouter.buildRouter());
 
 export const xapi = onRequest(expressApp);
