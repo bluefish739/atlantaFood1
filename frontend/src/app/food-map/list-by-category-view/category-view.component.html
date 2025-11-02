@@ -1,4 +1,3 @@
-
 <section class="category-view-container">
     <table class="food-items-table" *ngIf="categorySummaryRows.length > 0">
         <thead>
@@ -9,11 +8,13 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let categorySummaryRow of categorySummaryRows; let idx=index">
-                <td>{{ categorySummaryRow.category }}</td>
-                <td>{{ categorySummaryRow.quantitySummary }}</td>
-                <td>{{ categorySummaryRow.organization }}</td>
-            </tr>
+            <ng-container *ngFor="let categoryGroup of groupedCategorySummaryRows">
+                <tr *ngFor="let row of categoryGroup.rows; let first = first">
+                    <td *ngIf="first" [attr.rowspan]="categoryGroup.rows.length" class="category-block"><b>{{ categoryGroup.category }}</b></td>
+                    <td>{{ row.quantitySummary }}</td>
+                    <td>{{ row.organization }}</td>
+                </tr>
+            </ng-container>
         </tbody>
     </table>
 

@@ -27,6 +27,14 @@
     background-color: white;
 }
 
+.food-items-table .category-block {
+    background-color: #C8E6C9;
+    color: #2E7D32; 
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
 @media (max-width: 768px) {
     .food-items-table th,
     .food-items-table td {
