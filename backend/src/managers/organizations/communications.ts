@@ -1,12 +1,16 @@
 import { BadRequestError, Message, RequestContext } from "../../../../shared/src/kinds";
 import { organizationDAO } from "../../daos/dao-factory";
+import { generateId } from "../../shared/idutilities";
 //import * as logger from "firebase-functions/logger";
 
 export class CommunicationsManager {
     async sendMessage(requestContext: RequestContext, message: Message) {
         try {
             await this.validateMessage(requestContext, message);
-
+            message.id = generateId();
+            message.sendingOrganization = requestContext.getCurrentOrganizationID()!;
+            message.timestamp = new Date();
+            await organizationDAO.saveMessage(message);
         } catch (error: any) {
             throw new BadRequestError("Failed to send message: " + error.message);
         }

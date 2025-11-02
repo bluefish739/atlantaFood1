@@ -1,3 +1,4 @@
+import { Message } from "../../../shared/src/kinds";
 import { Organization, OrganizationEmployee } from "../../../shared/src/kinds";
 import { generateId } from "../shared/idutilities";
 import { datastore } from "./data-store-factory";
@@ -6,6 +7,7 @@ import { PropertyFilter } from "@google-cloud/datastore";
 export class OrganizationDAO {
     static ORGANIZATION_KIND = "Organization";
     static ORGANIZATION_EMPLOYEE_KIND = "OrganizationEmployee";
+    static MESSAGE_KIND = "Message";
 
     public async getAllOrganizations() {
         const query = datastore.createQuery(OrganizationDAO.ORGANIZATION_KIND);
@@ -57,5 +59,16 @@ export class OrganizationDAO {
 
         await datastore.save(entity);
         return employee;
+    }
+
+    public async saveMessage(message: Message) {
+        const entityKey = datastore.key([OrganizationDAO.MESSAGE_KIND, message.id!]);
+        const entity = {
+            key: entityKey,
+            data: message
+        };
+
+        await datastore.save(entity);
+        return message;
     }
 }
