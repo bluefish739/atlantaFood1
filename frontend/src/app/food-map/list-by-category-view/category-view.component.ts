@@ -14,4 +14,8 @@ export class CategoryViewComponent {
     categorySummaryRows: CategorySummaryRow[] = [];
     constructor(private xapiService: XapiService) {
     }
+
+    async ngOnInit() {
+        this.categorySummaryRows = await this.xapiService.getCategorySummaries();
+    }
 }

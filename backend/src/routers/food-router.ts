@@ -3,13 +3,14 @@ import * as logger from "firebase-functions/logger";
 import { authenticator } from "../shared/authentication";
 import { BaseRouter } from "./base-router";
 import { BadRequestError, DetailedFood, GeneralConfirmationResponse, InventoryQuery, RequestContext } from "../../../shared/src/kinds";
-import { getInventoryManager, foodActionManager } from "../managers/manager-factory";
+import { getInventoryManager, foodActionManager, getCategorySummariesManager } from "../managers/manager-factory";
+import { getAllFoodCategories } from "../shared/utilities";
 
 
 export class FoodRouter extends BaseRouter {
   async getFoodCategories(req: Request, res: Response) {
     try {
-      const foodCategories = await getInventoryManager.getAllFoodCategories(new RequestContext(req));
+      const foodCategories = getAllFoodCategories();
       this.sendNormalResponse(res, foodCategories);
     } catch (error: any) {
       logger.log("getStoreInventory: failed", error)
@@ -83,6 +84,16 @@ export class FoodRouter extends BaseRouter {
     }
   }
 
+  async getCategorySummaries(req: Request, res: Response) {
+    try {
+      const categorySummaries = await getCategorySummariesManager.getCategorySummaries(new RequestContext(req));
+      this.sendNormalResponse(res, categorySummaries);
+    } catch (error: any) {
+      this.sendServerErrorResponse(res, { success: false, message: error.message });
+      logger.log("getCategorySummaries: server error", error);
+    }
+  }
+
   static buildRouter() {
     const foodRouter = new FoodRouter();
     return express.Router()
@@ -91,6 +102,7 @@ export class FoodRouter extends BaseRouter {
       .post('/get-inventory/:organizationID', foodRouter.getInventory.bind(foodRouter))
       .get('/get-detailed-food/:foodID', authenticator([]), foodRouter.getDetailedFoodByID.bind(foodRouter))
       .delete('/delete-food/:foodID', authenticator([]), foodRouter.deleteFood.bind(foodRouter))
-      .get('/get-inventory-summary/:organizationID', foodRouter.getInventorySummary.bind(foodRouter));
+      .get('/get-inventory-summary/:organizationID', foodRouter.getInventorySummary.bind(foodRouter))
+      .get('/get-category-summaries', foodRouter.getCategorySummaries.bind(foodRouter));
   }
 }

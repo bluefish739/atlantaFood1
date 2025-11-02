@@ -87,8 +87,4 @@ export class GetInventoryManager {
         detailedFood.categoryIDs = await this.getCategoriesByFoodID(foodID);
         return detailedFood;
     }
-
-    async getAllFoodCategories(requestContext: RequestContext) {
-        return await foodDAO.getAllFoodCategories();
-    }
 }

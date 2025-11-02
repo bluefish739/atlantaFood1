@@ -4,7 +4,6 @@
         <thead>
             <tr>
                 <th>Category</th>
-                <th>Food Item</th>
                 <th>Quantity</th>
                 <th>Organization</th>
             </tr>
@@ -12,7 +11,7 @@
         <tbody>
             <tr *ngFor="let categorySummaryRow of categorySummaryRows; let idx=index">
                 <td>{{ categorySummaryRow.category }}</td>
-                <td>{{ categorySummaryRow.summary }}</td>
+                <td>{{ categorySummaryRow.quantitySummary }}</td>
                 <td>{{ categorySummaryRow.organization }}</td>
             </tr>
         </tbody>
