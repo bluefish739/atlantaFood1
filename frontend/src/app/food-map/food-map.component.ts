@@ -34,7 +34,7 @@ export class FoodMapComponent {
     async ngOnInit() {
         this.sites = await this.xapiService.getAllOrganizations();
         this.foodCategories = await this.xapiService.getFoodCategories();
-        this.siteInventoryEmpty = this.sites.map(v => false);
+        this.siteInventoryEmpty = this.sites.map(v => true);
         this.siteIncludesSearchedCategories = this.sites.map(v => true);
         this.siteCategoriesLists = this.sites.map(v => []);
     }
@@ -95,6 +95,5 @@ export class FoodMapComponent {
         } else {
             this.viewMode = "LIST-BY-ORGANIZATION";
         }
-        console.log(this.viewMode);
     }
 }
