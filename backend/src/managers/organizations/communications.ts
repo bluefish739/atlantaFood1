@@ -45,7 +45,11 @@ export class CommunicationsManager {
             const messages = [...(await organizationDAO.getMessagesBetweenOrganizations(organizationID, otherOrganizationID)),
                 ...(await organizationDAO.getMessagesBetweenOrganizations(otherOrganizationID, organizationID))];
             messages.sort((a, b) => (a.timestamp!.getTime() - b.timestamp!.getTime()));
-            return messages;
+            const messageValueObjects = messages.map(message => {
+                message.id = undefined;
+                return message;
+            });
+            return messageValueObjects;
         } catch (error: any) {
             throw new ServerError("Failed to retrieve messages: " + error.message);
         }
