@@ -12,8 +12,10 @@
     <div class="chat-area" *ngIf="selectedOrganization.name">
         <h3>Chat with {{ selectedOrganization.name }}</h3>
         <div class="chat-messages">
-            <div *ngFor="let message of messages" class="message">
-                <strong>{{ message.sendingOrganization }}:</strong> {{ message.content }}
+            <div *ngFor="let message of messages" class="message" 
+                [ngClass]="{'message-from': message.sendingOrganization === selectedOrganization.id,
+                'message-to': message.receivingOrganization == selectedOrganization.id}">
+                {{ message.content }}
             </div>
         </div>
         <div class="message-input">
