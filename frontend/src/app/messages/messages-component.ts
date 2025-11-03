@@ -26,6 +26,7 @@ export class MessagesComponent {
     }
 
     async selectOrganization(organization: Organization) {
+        this.messages = [];
         this.selectedOrganization = organization;
         this.messages = await this.xapiService.getMessagesWithOrganization(organization.id!);
     }
@@ -36,5 +37,6 @@ export class MessagesComponent {
         message.receivingOrganization = this.selectedOrganization.id;
         await this.xapiService.sendMessageToOrganization(message);
         this.newMessageText = "";
+        this.messages = await this.xapiService.getMessagesWithOrganization(this.selectedOrganization.id!);
     }
 }
