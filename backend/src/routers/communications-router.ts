@@ -16,6 +16,16 @@ export class CommunicationsRouter extends BaseRouter {
             generalConfirmationResponse.message = "Message sent successfully";
             this.sendNormalResponse(res, generalConfirmationResponse);
         } catch (error: any) {
+            this.sendBadRequestResponse(res, { success: false, message: error.message });
+        }
+    }
+
+    async getMessagesWithOrganization(req: Request, res: Response) {
+        const otherOrganizationID = req.params.otherOrganizationID as string;
+        try {
+            const messages = await communicationsManager.getMessagesWithOrganization(new RequestContext(req), otherOrganizationID);
+            this.sendNormalResponse(res, messages);            
+        } catch (error: any) {
             this.sendServerErrorResponse(res, { success: false, message: error.message });
         }
     }
@@ -23,6 +33,7 @@ export class CommunicationsRouter extends BaseRouter {
     static buildRouter() {
         const communicationsRouter = new CommunicationsRouter();
         return express.Router()
-            .post('/send-message-to-organization', authenticator([]), communicationsRouter.sendMessage.bind(communicationsRouter));
+            .post('/send-message-to-organization', authenticator([]), communicationsRouter.sendMessage.bind(communicationsRouter))
+            .get('/get-messages-with-organization/:otherOrganizationID', authenticator([]), communicationsRouter.getMessagesWithOrganization.bind(communicationsRouter));
     }
 }

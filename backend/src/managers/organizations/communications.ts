@@ -1,4 +1,4 @@
-import { BadRequestError, Message, RequestContext } from "../../../../shared/src/kinds";
+import { BadRequestError, Message, RequestContext, ServerError } from "../../../../shared/src/kinds";
 import { organizationDAO } from "../../daos/dao-factory";
 import { generateId } from "../../shared/idutilities";
 //import * as logger from "firebase-functions/logger";
@@ -33,5 +33,22 @@ export class CommunicationsManager {
         if (!message.receivingOrganization || !(await organizationDAO.getOrganization(message.receivingOrganization))) {
             throw new BadRequestError("Receiving organization is not specified or does not exist");
         }
+    }
+
+    async getMessagesWithOrganization(requestContext: RequestContext, otherOrganizationID: string) {
+        const organizationID = requestContext.getCurrentOrganizationID();
+        if (!organizationID) {
+            throw new BadRequestError("User is not associated with any organization");
+        }
+
+        try {
+            const messages = [...(await organizationDAO.getMessagesBetweenOrganizations(organizationID, otherOrganizationID)),
+                ...(await organizationDAO.getMessagesBetweenOrganizations(otherOrganizationID, organizationID))];
+            messages.sort((a, b) => (a.timestamp!.getTime() - b.timestamp!.getTime()));
+            return messages;
+        } catch (error: any) {
+            throw new ServerError("Failed to retrieve messages: " + error.message);
+        }
+        
     }
 }
