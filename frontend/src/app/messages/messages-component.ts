@@ -25,15 +25,16 @@ export class MessagesComponent {
         this.organizations = this.organizations.filter(org => org.name && org.name.trim() !== "");
     }
 
-    selectOrganization(organization: Organization) {
+    async selectOrganization(organization: Organization) {
         this.selectedOrganization = organization;
+        this.messages = await this.xapiService.getMessagesWithOrganization(organization.id!);
     }
 
     async sendMessage() {
         const message = new Message();
         message.content = this.newMessageText;
         message.receivingOrganization = this.selectedOrganization.id;
-        console.log(message);
         await this.xapiService.sendMessageToOrganization(message);
+        this.newMessageText = "";
     }
 }

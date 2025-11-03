@@ -144,4 +144,8 @@ export class XapiService {
   public async sendMessageToOrganization(message: Message) {
     return this.postResponse<GeneralConfirmationResponse>(`/xapi/communications/send-message-to-organization`, message);
   }
+
+  public async getMessagesWithOrganization(organizationID: string) {
+    return this.getResponse<Message[]>(`/xapi/communications/get-messages-with-organization/` + organizationID);
+  }
 }

@@ -74,8 +74,8 @@ export class OrganizationDAO {
 
     public async getMessagesBetweenOrganizations(fromOrganizationID: string, toOrganizationID: string) {
         const query = datastore.createQuery(OrganizationDAO.MESSAGE_KIND)
-            .filter(new PropertyFilter('fromOrganizationID', '=', fromOrganizationID))
-            .filter(new PropertyFilter('toOrganizationID', '=', toOrganizationID));
+            .filter(new PropertyFilter('sendingOrganization', '=', fromOrganizationID))
+            .filter(new PropertyFilter('receivingOrganization', '=', toOrganizationID));
         const data = await query.run();
         const messages = data[0];
         return messages as Message[];
