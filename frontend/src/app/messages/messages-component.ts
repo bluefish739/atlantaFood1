@@ -21,8 +21,13 @@ export class MessagesComponent {
     }
 
     async ngOnInit() {
+        const currentOrganiztionID = await this.xapiService.getCurrentOrganizationID();
         this.organizations = await this.xapiService.getAllOrganizations();
-        this.organizations = this.organizations.filter(org => org.name && org.name.trim() !== "");
+        this.organizations = this.organizations.filter(org => 
+            org.name && 
+            org.name.trim() !== "" && 
+            org.id !== currentOrganiztionID
+        );
     }
 
     async selectOrganization(organization: Organization) {

@@ -60,12 +60,26 @@ export class OrganizationRouter extends BaseRouter {
     }
   }
 
+  async getCurrentOrganization(req: Request, res: Response) {
+    try {
+      const currentOrganizationID = await organizationInfoManager.getCurrentOrganizationID(new RequestContext(req));
+      this.sendNormalResponse(res, currentOrganizationID);
+    } catch (error: any) {
+      if (error instanceof BadRequestError) {
+        this.sendBadRequestResponse(res, { success: false, message: error.message });
+      } else {
+        this.sendServerErrorResponse(res, { success: false, message: error.message });
+      }
+    }
+  }
+
   static buildRouter() {
     const organizationRouter = new OrganizationRouter();
     return express.Router()
       .get("/add-sample-organization", authenticator([]), organizationRouter.addSampleOrganization.bind(organizationRouter))
       .get("/all", organizationRouter.getAllOrganizations.bind(organizationRouter))
       .get("/organization-details", authenticator([]), organizationRouter.getOrganizationDetails.bind(organizationRouter))
-      .post('/organization', authenticator([]), organizationRouter.saveOrganization.bind(organizationRouter));
+      .post('/organization', authenticator([]), organizationRouter.saveOrganization.bind(organizationRouter))
+      .get("/get-current-organization-id", authenticator([]), organizationRouter.getCurrentOrganization.bind(organizationRouter));
   }
 }

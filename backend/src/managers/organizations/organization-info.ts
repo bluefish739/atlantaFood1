@@ -24,4 +24,8 @@ export class OrganizationInfoManager {
         await organizationDAO.saveOrganization(organization);
         return organization;
     }
+
+    async getCurrentOrganizationID(requestContext: RequestContext) {
+        return requestContext.getCurrentOrganizationID();
+    }
 }

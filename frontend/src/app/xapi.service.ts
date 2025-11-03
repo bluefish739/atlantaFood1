@@ -66,6 +66,10 @@ export class XapiService {
   public async getOrganizationDetails() {
     return this.getResponse<Organization>(`/xapi/organizations/organization-details`);
   }
+
+  public async getCurrentOrganizationID() {
+    return this.getResponse<string>(`/xapi/organizations//get-current-organization-id`);
+  }
   //============================================================================================
   // Role API Requests
   //============================================================================================
