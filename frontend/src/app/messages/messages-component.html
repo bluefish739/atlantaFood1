@@ -8,6 +8,22 @@
                 {{ org.name }}
             </li>
         </ul>
+        <div class="add-chat-selection">
+            <form [formGroup]="organizationSearchForm" (ngSubmit)="addChat()">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Number</mat-label>
+                  <input type="text"
+                         placeholder="Pick one"
+                         aria-label="Find an organization to start chatting with"
+                         matInput
+                         [matAutocomplete]="auto"
+                         formControlName="searchedOrganization">
+                  <mat-autocomplete #auto="matAutocomplete">
+                      <mat-option *ngFor="let org of organizations" [value]="org.name">{{ org.name }}</mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </form>
+        </div>
     </div>
     <div class="chat-area" *ngIf="selectedOrganization.name">
         <h3>Chat with {{ selectedOrganization.name }}</h3>
