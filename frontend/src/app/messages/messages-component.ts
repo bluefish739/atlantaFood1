@@ -8,12 +8,13 @@ import { HeaderComponent } from '../../shared-components/header-component/header
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
+import { MatAutocomplete } from '@angular/material/autocomplete';
 
 @Component({
     selector: 'messages',
     templateUrl: './messages-component.html',
     styleUrl: './messages-component.scss',
-    imports: [CommonModule, RouterModule, FormsModule, HeaderComponent, ReactiveFormsModule, MatFormFieldModule, MatAutocompleteModule, MatInputModule]
+    imports: [CommonModule, RouterModule, FormsModule, HeaderComponent, ReactiveFormsModule, MatFormFieldModule, MatAutocompleteModule, MatInputModule, MatAutocomplete]
 })
 export class MessagesComponent {
     organizations: Organization[] = [];

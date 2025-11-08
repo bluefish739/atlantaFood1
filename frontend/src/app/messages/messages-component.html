@@ -11,10 +11,10 @@
         <div class="add-chat-selection">
             <form [formGroup]="organizationSearchForm" (ngSubmit)="addChat()">
                 <mat-form-field class="example-full-width">
-                  <mat-label>Number</mat-label>
+                  <mat-label>Find an organization</mat-label>
                   <input type="text"
-                         placeholder="Pick one"
-                         aria-label="Find an organization to start chatting with"
+                         placeholder="Start typing..."
+                         aria-label="Find an organization"
                          matInput
                          [matAutocomplete]="auto"
                          formControlName="searchedOrganization">
