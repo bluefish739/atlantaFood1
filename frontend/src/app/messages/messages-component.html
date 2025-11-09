@@ -1,35 +1,33 @@
-
 <page-header></page-header>
 <div class="messages-container">
     <div class="organization-list">
-        <h3>Organizations</h3>
-        <ul>
-            <li *ngFor="let org of organizations" (click)="selectOrganization(org)" [class.selected]="org === selectedOrganization">
-                {{ org.name }}
-            </li>
-        </ul>
+        <div>
+            <h3>Organizations</h3>
+            <ul>
+                <li *ngFor="let org of organizations" (click)="selectOrganization(org)"
+                    [class.selected]="org === selectedOrganization">
+                    {{ org.name }}
+                </li>
+            </ul>
+        </div>
         <div class="add-chat-selection">
             <form [formGroup]="organizationSearchForm" (ngSubmit)="addChat()">
-                <mat-form-field class="example-full-width">
-                  <mat-label>Find an organization</mat-label>
-                  <input type="text"
-                         placeholder="Start typing..."
-                         aria-label="Find an organization"
-                         matInput
-                         [matAutocomplete]="auto"
-                         formControlName="searchedOrganization">
-                  <mat-autocomplete #auto="matAutocomplete">
-                      <mat-option *ngFor="let org of organizations" [value]="org.name">{{ org.name }}</mat-option>
-                  </mat-autocomplete>
+                <mat-form-field>
+                    <mat-label>Find an organization</mat-label>
+                    <input type="text" placeholder="Start typing..." aria-label="Find an organization" matInput
+                        [matAutocomplete]="auto" formControlName="searchedOrganization">
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let org of organizations" [value]="org.name">{{ org.name }}</mat-option>
+                    </mat-autocomplete>
                 </mat-form-field>
-              </form>
+                <button type="submit" mat-raised-button color="primary">Add Chat</button>
+            </form>
         </div>
     </div>
     <div class="chat-area" *ngIf="selectedOrganization.name">
         <h3>Chat with {{ selectedOrganization.name }}</h3>
         <div class="chat-messages">
-            <div *ngFor="let message of messages" class="message" 
-                [ngClass]="{'message-from': message.sendingOrganization === selectedOrganization.id,
+            <div *ngFor="let message of messages" class="message" [ngClass]="{'message-from': message.sendingOrganization === selectedOrganization.id,
                 'message-to': message.receivingOrganization == selectedOrganization.id}">
                 {{ message.content }}
             </div>
