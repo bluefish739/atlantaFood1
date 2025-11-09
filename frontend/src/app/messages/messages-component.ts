@@ -24,16 +24,25 @@ export class MessagesComponent {
     });
     newMessageText = "";
     messages: Message[] = [];
+    organizationDetailsProvided = "LOADING";
+
     constructor(private xapiService: XapiService) {
     }
 
     async ngOnInit() {
-        const currentOrganiztionID = await this.xapiService.getCurrentOrganizationID();
+        const currentOrganizationID = await this.xapiService.getCurrentOrganizationID();
+        const currentOrganization = await this.xapiService.getOrganizationDetails();
+        if (!currentOrganization.name) {
+            this.organizationDetailsProvided = "NO";
+            return;
+        }
+
+        this.organizationDetailsProvided = "YES";
         this.organizations = await this.xapiService.getAllOrganizations();
         this.organizations = this.organizations.filter(org => 
             org.name && 
             org.name.trim() !== "" && 
-            org.id !== currentOrganiztionID
+            org.id !== currentOrganizationID
         );
     }
 
