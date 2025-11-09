@@ -59,7 +59,7 @@ export class MessagesComponent {
             }
             return false;
         });
-            
+        this.organizationsToSearch = this.organizationsToSearch.filter(org => org.name && !this.chattingOrganizations.find(chatOrg => chatOrg.name === org.name));
     }
 
     async selectOrganization(organization: Organization) {
