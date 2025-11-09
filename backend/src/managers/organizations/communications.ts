@@ -1,7 +1,7 @@
 import { BadRequestError, ChatStatus, Message, RequestContext, ServerError } from "../../../../shared/src/kinds";
 import { organizationDAO } from "../../daos/dao-factory";
 import { generateId } from "../../shared/idutilities";
-//import * as logger from "firebase-functions/logger";
+import * as logger from "firebase-functions/logger";
 
 export class CommunicationsManager {
     async sendMessage(requestContext: RequestContext, message: Message) {
@@ -42,8 +42,7 @@ export class CommunicationsManager {
         }
 
         try {
-            const messages = [...(await organizationDAO.getMessagesBetweenOrganizations(organizationID, otherOrganizationID)),
-                ...(await organizationDAO.getMessagesBetweenOrganizations(otherOrganizationID, organizationID))];
+            const messages = await organizationDAO.getMessagesBetweenOrganizations(organizationID, otherOrganizationID);
             messages.sort((a, b) => (a.timestamp!.getTime() - b.timestamp!.getTime()));
             const messageValueObjects = messages.map(message => {
                 message.id = undefined;
@@ -67,7 +66,9 @@ export class CommunicationsManager {
             const chatStatuses = await Promise.all(organizations
                 .filter(org => org.id !== organizationID && org.name && org.name.trim() !== "")
                 .map(async org => {
+                    if (!org.name) return;
                     const messages = await organizationDAO.getMessagesBetweenOrganizations(organizationID, org.id!);
+                    logger.log("getChatStatuses: messages with " + org.name + ": ", messages);
                     const chatStatus = new ChatStatus();
                     chatStatus.organizationName = org.name;
                     chatStatus.chatStarted = messages.length > 0;
@@ -76,6 +77,7 @@ export class CommunicationsManager {
                     chatStatus.lastUpdateTimestamp = latestTimestamp ? new Date(latestTimestamp) : undefined;
                     return chatStatus;
                 }));
+            logger.log(chatStatuses);
             return chatStatuses;
         } catch (error: any) {
             throw new ServerError("Failed to retrieve chat statuses: " + error.message);

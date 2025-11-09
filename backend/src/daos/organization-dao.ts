@@ -72,12 +72,16 @@ export class OrganizationDAO {
         return message;
     }
 
-    public async getMessagesBetweenOrganizations(fromOrganizationID: string, toOrganizationID: string) {
-        const query = datastore.createQuery(OrganizationDAO.MESSAGE_KIND)
-            .filter(new PropertyFilter('sendingOrganization', '=', fromOrganizationID))
-            .filter(new PropertyFilter('receivingOrganization', '=', toOrganizationID));
-        const data = await query.run();
-        const messages = data[0];
+    public async getMessagesBetweenOrganizations(orgID1: string, orgID2: string) {
+        const query1 = datastore.createQuery(OrganizationDAO.MESSAGE_KIND)
+            .filter(new PropertyFilter('sendingOrganization', '=', orgID1))
+            .filter(new PropertyFilter('receivingOrganization', '=', orgID2));
+        const query2 = datastore.createQuery(OrganizationDAO.MESSAGE_KIND)
+            .filter(new PropertyFilter('sendingOrganization', '=', orgID2))
+            .filter(new PropertyFilter('receivingOrganization', '=', orgID1));
+        const [data1] = await query1.run();
+        const [data2] = await query2.run();
+        const messages = [...data1, ...data2];
         return messages as Message[];
     }
 }
