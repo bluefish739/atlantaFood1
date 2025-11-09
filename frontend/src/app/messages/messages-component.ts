@@ -9,14 +9,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocomplete } from '@angular/material/autocomplete';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { timestamp } from 'rxjs';
+import { LoadingSpinnerComponent } from '../../shared-components/loading-spinner-component/loading-spinner.component';
 
 @Component({
     selector: 'messages',
     templateUrl: './messages-component.html',
     styleUrl: './messages-component.scss',
-    imports: [CommonModule, RouterModule, FormsModule, HeaderComponent, ReactiveFormsModule, MatFormFieldModule, MatAutocompleteModule, MatInputModule, MatAutocomplete, MatProgressSpinnerModule]
+    imports: [CommonModule, RouterModule, FormsModule, HeaderComponent, ReactiveFormsModule, MatFormFieldModule, MatAutocompleteModule, MatInputModule, MatAutocomplete, LoadingSpinnerComponent]
 })
 export class MessagesComponent {
     chattingOrganizations: Organization[] = [];
