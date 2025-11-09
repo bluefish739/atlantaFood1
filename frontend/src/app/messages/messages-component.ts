@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { XapiService } from '../xapi.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Message, Organization } from '../../../../shared/src/kinds';
+import { ChatStatus, Message, Organization } from '../../../../shared/src/kinds';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../shared-components/header-component/header.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,13 +17,15 @@ import { MatAutocomplete } from '@angular/material/autocomplete';
     imports: [CommonModule, RouterModule, FormsModule, HeaderComponent, ReactiveFormsModule, MatFormFieldModule, MatAutocompleteModule, MatInputModule, MatAutocomplete]
 })
 export class MessagesComponent {
-    organizations: Organization[] = [];
+    chattingOrganizations: Organization[] = [];
+    organizationsToSearch: Organization[] = [];
     selectedOrganization = new Organization();
     organizationSearchForm = new FormGroup({
         searchedOrganization: new FormControl('')
     });
     newMessageText = "";
     messages: Message[] = [];
+    chatStatuses: ChatStatus[] = [];
     organizationDetailsProvided = "LOADING";
 
     constructor(private xapiService: XapiService) {
@@ -38,12 +40,26 @@ export class MessagesComponent {
         }
 
         this.organizationDetailsProvided = "YES";
-        this.organizations = await this.xapiService.getAllOrganizations();
-        this.organizations = this.organizations.filter(org => 
+        this.chattingOrganizations = await this.xapiService.getAllOrganizations();
+        this.chattingOrganizations = this.chattingOrganizations.filter(org => 
             org.name && 
             org.name.trim() !== "" && 
             org.id !== currentOrganizationID
         );
+        await this.updateByChatStatuses();
+    }
+
+    async updateByChatStatuses() {
+        this.organizationsToSearch = [...this.chattingOrganizations];
+        this.chatStatuses = await this.xapiService.getChatStatuses();
+        this.chattingOrganizations = this.chattingOrganizations.filter(org => {
+            const organizationIndex = this.chatStatuses.findIndex(chatStatus => chatStatus.organizationName == org.name);
+            if (organizationIndex >= 0) {
+                return this.chatStatuses[organizationIndex].chatStarted;
+            }
+            return false;
+        });
+            
     }
 
     async selectOrganization(organization: Organization) {

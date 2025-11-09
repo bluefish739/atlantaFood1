@@ -30,10 +30,20 @@ export class CommunicationsRouter extends BaseRouter {
         }
     }
 
+    async getChatStatuses(req: Request, res: Response) {
+        try {
+            const chatStatuses = await communicationsManager.getChatStatuses(new RequestContext(req));
+            this.sendNormalResponse(res, chatStatuses);            
+        } catch (error: any) {
+            this.sendServerErrorResponse(res, { success: false, message: error.message });
+        }
+    }
+
     static buildRouter() {
         const communicationsRouter = new CommunicationsRouter();
         return express.Router()
             .post('/send-message-to-organization', authenticator([]), communicationsRouter.sendMessage.bind(communicationsRouter))
-            .get('/get-messages-with-organization/:otherOrganizationID', authenticator([]), communicationsRouter.getMessagesWithOrganization.bind(communicationsRouter));
+            .get('/get-messages-with-organization/:otherOrganizationID', authenticator([]), communicationsRouter.getMessagesWithOrganization.bind(communicationsRouter))
+            .get('/get-chat-statuses', authenticator([]), communicationsRouter.getChatStatuses.bind(communicationsRouter));
     }
 }

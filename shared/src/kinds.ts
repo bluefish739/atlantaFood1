@@ -170,3 +170,8 @@ export class Message {
     content: string | undefined;
     timestamp: Date | undefined;
 }
+
+export class ChatStatus {
+    organizationName: string | undefined;
+    chatStarted: boolean | undefined;
+}

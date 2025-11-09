@@ -4,7 +4,7 @@
         <div>
             <h3>Organizations</h3>
             <ul>
-                <li *ngFor="let org of organizations" (click)="selectOrganization(org)"
+                <li *ngFor="let org of chattingOrganizations" (click)="selectOrganization(org)"
                     [class.selected]="org === selectedOrganization">
                     {{ org.name }}
                 </li>
@@ -17,7 +17,7 @@
                     <input type="text" placeholder="Start typing..." aria-label="Find an organization" matInput
                         [matAutocomplete]="auto" formControlName="searchedOrganization">
                     <mat-autocomplete #auto="matAutocomplete">
-                        <mat-option *ngFor="let org of organizations" [value]="org.name">{{ org.name }}</mat-option>
+                        <mat-option *ngFor="let org of organizationsToSearch" [value]="org.name">{{ org.name }}</mat-option>
                     </mat-autocomplete>
                 </mat-form-field>
                 <button type="submit" mat-raised-button color="primary">Add Chat</button>

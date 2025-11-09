@@ -1,4 +1,4 @@
-import { BadRequestError, Message, RequestContext, ServerError } from "../../../../shared/src/kinds";
+import { BadRequestError, ChatStatus, Message, RequestContext, ServerError } from "../../../../shared/src/kinds";
 import { organizationDAO } from "../../daos/dao-factory";
 import { generateId } from "../../shared/idutilities";
 //import * as logger from "firebase-functions/logger";
@@ -54,5 +54,28 @@ export class CommunicationsManager {
             throw new ServerError("Failed to retrieve messages: " + error.message);
         }
         
+    }
+
+    async getChatStatuses(requestContext: RequestContext) {
+        const organizationID = requestContext.getCurrentOrganizationID();
+        if (!organizationID) {
+            throw new BadRequestError("User is not associated with any organization");
+        }
+
+        try {
+            const organizations = await organizationDAO.getAllOrganizations();
+            const chatStatuses = await Promise.all(organizations
+                .filter(org => org.id !== organizationID && org.name && org.name.trim() !== "")
+                .map(async org => {
+                    const messages = await organizationDAO.getMessagesBetweenOrganizations(organizationID, org.id!);
+                    const chatStatus = new ChatStatus();
+                    chatStatus.organizationName = org.name;
+                    chatStatus.chatStarted = messages.length > 0;
+                    return chatStatus;
+                }));
+            return chatStatuses;
+        } catch (error: any) {
+            throw new ServerError("Failed to retrieve chat statuses: " + error.message);
+        }
     }
 }
