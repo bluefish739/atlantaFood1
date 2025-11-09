@@ -27,6 +27,7 @@ export class MessagesComponent {
     messages: Message[] = [];
     chatStatuses: ChatStatus[] = [];
     organizationDetailsProvided = "LOADING";
+    chattingOrganizationsLoaded = false;
 
     constructor(private xapiService: XapiService) {
     }
@@ -60,6 +61,7 @@ export class MessagesComponent {
             return false;
         });
         this.organizationsToSearch = this.organizationsToSearch.filter(org => org.name && !this.chattingOrganizations.find(chatOrg => chatOrg.name === org.name));
+        this.chattingOrganizationsLoaded = true;
     }
 
     async selectOrganization(organization: Organization) {
@@ -78,6 +80,13 @@ export class MessagesComponent {
     }
 
     addChat() {
-        
+        const organizationToAdd = this.organizationsToSearch.find(org => org.name === this.organizationSearchForm.value.searchedOrganization);
+        if (!organizationToAdd) {
+            return;
+        }
+
+        this.chattingOrganizations.unshift(organizationToAdd);
+        this.selectOrganization(organizationToAdd);
+        this.organizationsToSearch = this.organizationsToSearch.filter(org => org.name !== organizationToAdd.name);
     }
 }
