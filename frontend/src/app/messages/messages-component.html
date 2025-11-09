@@ -27,6 +27,12 @@
     </div>
     <div class="chat-area" *ngIf="selectedOrganization.name">
         <h3>Chat with {{ selectedOrganization.name }}</h3>
+        <div class="loading-container" *ngIf="messagesLoading">
+            <div class="loading-spinner">
+                <mat-spinner *ngIf="messagesLoading"></mat-spinner>
+                <p>Loading messages...</p>
+            </div>
+        </div>
         <div class="chat-messages">
             <div *ngFor="let message of messages" class="message" [ngClass]="{'message-from': message.sendingOrganization === selectedOrganization.id,
                 'message-to': message.receivingOrganization == selectedOrganization.id}">

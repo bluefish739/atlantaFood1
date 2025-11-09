@@ -9,12 +9,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocomplete } from '@angular/material/autocomplete';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'messages',
     templateUrl: './messages-component.html',
     styleUrl: './messages-component.scss',
-    imports: [CommonModule, RouterModule, FormsModule, HeaderComponent, ReactiveFormsModule, MatFormFieldModule, MatAutocompleteModule, MatInputModule, MatAutocomplete]
+    imports: [CommonModule, RouterModule, FormsModule, HeaderComponent, ReactiveFormsModule, MatFormFieldModule, MatAutocompleteModule, MatInputModule, MatAutocomplete, MatProgressSpinnerModule]
 })
 export class MessagesComponent {
     chattingOrganizations: Organization[] = [];
@@ -28,6 +29,7 @@ export class MessagesComponent {
     chatStatuses: ChatStatus[] = [];
     organizationDetailsProvided = "LOADING";
     chattingOrganizationsLoaded = false;
+    messagesLoading = false;
 
     constructor(private xapiService: XapiService) {
     }
@@ -67,7 +69,9 @@ export class MessagesComponent {
     async selectOrganization(organization: Organization) {
         this.messages = [];
         this.selectedOrganization = organization;
+        this.messagesLoading = true;
         this.messages = await this.xapiService.getMessagesWithOrganization(organization.id!);
+        this.messagesLoading = false;
     }
 
     async sendMessage() {
