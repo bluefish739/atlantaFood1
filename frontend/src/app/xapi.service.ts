@@ -145,6 +145,10 @@ export class XapiService {
     return this.getResponse<CategorySummaryRow[]>(`/xapi/food/get-category-summaries`);
   }
 
+  //============================================================================================
+  // Messaging API Requests
+  //============================================================================================
+
   public async sendMessageToOrganization(message: Message) {
     return this.postResponse<GeneralConfirmationResponse>(`/xapi/communications/send-message-to-organization`, message);
   }
