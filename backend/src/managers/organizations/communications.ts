@@ -71,6 +71,9 @@ export class CommunicationsManager {
                     const chatStatus = new ChatStatus();
                     chatStatus.organizationName = org.name;
                     chatStatus.chatStarted = messages.length > 0;
+                    
+                    const latestTimestamp = Math.max(...messages.map(msg => msg.timestamp ? msg.timestamp.getTime() : 0));
+                    chatStatus.lastUpdateTimestamp = latestTimestamp ? new Date(latestTimestamp) : undefined;
                     return chatStatus;
                 }));
             return chatStatuses;

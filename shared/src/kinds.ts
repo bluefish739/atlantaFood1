@@ -174,4 +174,5 @@ export class Message {
 export class ChatStatus {
     organizationName: string | undefined;
     chatStarted: boolean | undefined;
+    lastUpdateTimestamp: Date | undefined;
 }

@@ -10,6 +10,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocomplete } from '@angular/material/autocomplete';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { timestamp } from 'rxjs';
 
 @Component({
     selector: 'messages',
@@ -63,7 +64,21 @@ export class MessagesComponent {
             return false;
         });
         this.organizationsToSearch = this.organizationsToSearch.filter(org => org.name && !this.chattingOrganizations.find(chatOrg => chatOrg.name === org.name));
+        this.sortChatsByTimestamp();
         this.chattingOrganizationsLoaded = true;
+    }
+
+    private sortChatsByTimestamp() {
+        this.chattingOrganizations.sort((a, b) => {
+            const statusA = this.chatStatuses.find(status => status.organizationName === a.name);
+            const statusB = this.chatStatuses.find(status => status.organizationName === b.name);
+            if (statusA && statusB) {
+                const timestampA = new Date(statusA.lastUpdateTimestamp || 0).getTime();
+                const timestampB = new Date(statusB.lastUpdateTimestamp || 0).getTime();
+                return timestampA - timestampB;
+            }
+            return 0;
+        });
     }
 
     async selectOrganization(organization: Organization) {
