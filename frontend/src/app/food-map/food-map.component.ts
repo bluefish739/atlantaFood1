@@ -2,18 +2,18 @@ import { Component, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { XapiService } from '../xapi.service';
-import { MatDialog, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { HomeHeaderComponent } from '../../shared-components/home-header/home-header.component';
 import { FormsModule } from '@angular/forms';
 import { PublicInventorySummaryComponent } from './public-inventory-summary/public-inventory-summary.component';
-import { FoodCategory, InventoryQuery, Organization } from '../../../../shared/src/kinds';
+import { FoodCategory, Organization } from '../../../../shared/src/kinds';
 import { PublicInventoryDetailsComponent } from './public-inventory-details/public-inventory-details.component';
 import { CategoryViewComponent } from './list-by-category-view/category-view.component';
 
 @Component({
     selector: 'food-map',
-    imports: [CommonModule, RouterModule, HomeHeaderComponent, MatExpansionModule, FormsModule, PublicInventoryDetailsComponent, PublicInventorySummaryComponent, MatDialogModule, CategoryViewComponent],
+    imports: [CommonModule, RouterModule, HomeHeaderComponent, MatExpansionModule, FormsModule, PublicInventorySummaryComponent, MatDialogModule, CategoryViewComponent],
     templateUrl: './food-map.component.html',
     styleUrl: './food-map.component.scss'
 })

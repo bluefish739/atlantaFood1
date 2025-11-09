@@ -80,7 +80,6 @@ export class FoodRouter extends BaseRouter {
       this.sendNormalResponse(res, inventorySummaryData);
     } catch (error: any) {
       this.sendServerErrorResponse(res, { success: false, message: error.message });
-      logger.log("saveFood: server error", error);
     }
   }
 
@@ -90,7 +89,6 @@ export class FoodRouter extends BaseRouter {
       this.sendNormalResponse(res, categorySummaries);
     } catch (error: any) {
       this.sendServerErrorResponse(res, { success: false, message: error.message });
-      logger.log("getCategorySummaries: server error", error);
     }
   }
 
