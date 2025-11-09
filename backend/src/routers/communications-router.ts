@@ -3,7 +3,7 @@ import { authenticator } from "../shared/authentication";
 import { BaseRouter } from "./base-router";
 import { Message, RequestContext } from "../../../shared/src/kinds";
 import { GeneralConfirmationResponse } from "../../../shared/src/kinds";
-import { communicationsManager } from "../managers/manager-factory";
+import { chatManager, communicationsManager } from "../managers/manager-factory";
 
 export class CommunicationsRouter extends BaseRouter {
     async sendMessage(req: Request, res: Response) {
@@ -32,7 +32,7 @@ export class CommunicationsRouter extends BaseRouter {
 
     async getChatStatuses(req: Request, res: Response) {
         try {
-            const chatStatuses = await communicationsManager.getChatStatuses(new RequestContext(req));
+            const chatStatuses = await chatManager.getChatStatuses(new RequestContext(req));
             this.sendNormalResponse(res, chatStatuses);            
         } catch (error: any) {
             this.sendServerErrorResponse(res, { success: false, message: error.message });
