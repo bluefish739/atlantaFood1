@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
@@ -8,6 +8,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     imports: [MatProgressSpinnerModule]
 })
 export class LoadingSpinnerComponent {
+    @Input() loadingMessage: string = "Loading...";
     constructor() {
     }
 
