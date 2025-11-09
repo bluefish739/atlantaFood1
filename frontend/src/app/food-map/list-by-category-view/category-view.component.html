@@ -1,4 +1,4 @@
-<section class="category-view-container">
+<section class="category-view-container" *ngIf="!viewLoading">
     <table class="food-items-table" *ngIf="categorySummaryRows.length > 0">
         <thead>
             <tr>
@@ -22,3 +22,6 @@
         No food items found for the selected category.
     </div>
 </section>
+<div class="loading-container" *ngIf="viewLoading">
+    <loading-spinner [loadingMessage]="'Loading data...'"></loading-spinner>
+</div>

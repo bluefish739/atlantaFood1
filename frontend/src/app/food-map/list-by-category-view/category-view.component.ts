@@ -3,14 +3,16 @@ import { XapiService } from '../../xapi.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { CategorySummaryRow, Food } from '../../../../../shared/src/kinds';
+import { LoadingSpinnerComponent } from '../../../shared-components/loading-spinner-component/loading-spinner.component';
 
 @Component({
     selector: 'category-view',
     templateUrl: './category-view.component.html',
     styleUrls: ['./category-view.component.scss'],
-    imports: [CommonModule, RouterModule]
+    imports: [CommonModule, RouterModule, LoadingSpinnerComponent]
 })
 export class CategoryViewComponent implements OnInit {
+    viewLoading = true;
     categorySummaryRows: CategorySummaryRow[] = [];
     groupedCategorySummaryRows: { category: string, rows: CategorySummaryRow[] }[] = [];
 
@@ -19,6 +21,7 @@ export class CategoryViewComponent implements OnInit {
 
     async ngOnInit() {
         this.categorySummaryRows = await this.xapiService.getCategorySummaries();
+        this.viewLoading = false;
         this.groupedCategorySummaryRows = this.groupByCategory(this.categorySummaryRows);
     }
 
