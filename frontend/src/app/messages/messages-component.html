@@ -30,7 +30,7 @@
         <div class="loading-container" *ngIf="messagesLoading">
             <loading-spinner [loadingMessage]="'Loading messages...'"></loading-spinner>
         </div>
-        <div class="chat-messages">
+        <div class="chat-messages" *ngIf="!messagesLoading">
             <div *ngFor="let message of messages" class="message" [ngClass]="{'message-from': message.sendingOrganization === selectedOrganization.id,
                 'message-to': message.receivingOrganization == selectedOrganization.id}">
                 {{ message.content }}

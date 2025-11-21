@@ -81,14 +81,14 @@ export class MessagesComponent {
     }
 
     async selectOrganization(organization: Organization) {
-        this.messages = [];
-        this.selectedOrganization = organization;
         this.messagesLoading = true;
         this.messages = await this.xapiService.getMessagesWithOrganization(organization.id!);
+        this.selectedOrganization = organization;
         this.messagesLoading = false;
     }
 
     async sendMessage() {
+        // TODO: implement poll model
         const message = new Message();
         message.content = this.newMessageText;
         message.receivingOrganization = this.selectedOrganization.id;

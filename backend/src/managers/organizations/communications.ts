@@ -35,11 +35,7 @@ export class CommunicationsManager {
     }
 
     async getMessagesWithOrganization(requestContext: RequestContext, otherOrganizationID: string) {
-        const organizationID = requestContext.getCurrentOrganizationID();
-        if (!organizationID) {
-            throw new BadRequestError("User is not associated with any organization");
-        }
-
+        const organizationID = requestContext.getCurrentOrganizationID()!;
         try {
             const messages = await organizationDAO.getMessagesBetweenOrganizations(organizationID, otherOrganizationID);
             messages.sort((a, b) => (a.timestamp!.getTime() - b.timestamp!.getTime()));

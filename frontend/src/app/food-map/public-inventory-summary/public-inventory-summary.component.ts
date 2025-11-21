@@ -28,13 +28,13 @@ export class PublicInventorySummaryComponent {
   async ngOnInit() {
     this.inventoryStatus = "LOADING";
     this.inventorySummaryData = await this.xapiService.getInventorySummary(this.organizationID);
+    this.inventoryStatus = "LOADED";
     if (this.inventorySummaryData.length === 0) {
       this.inventoryStatus = "EMPTY";
       this.onEmptyInventory.emit(true);
       this.categoryNames.emit([]);
       return;
     }
-    this.inventoryStatus = "LOADED";
     this.onEmptyInventory.emit(false);
     this.categoryNames.emit(this.inventorySummaryData.map(row => row.categoryName!));
   }
