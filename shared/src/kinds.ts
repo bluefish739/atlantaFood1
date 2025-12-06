@@ -88,6 +88,11 @@ export class FoodCategory {
     name: string | undefined;
 }
 
+export class SitesByCategoryQuery {
+    categories: FoodCategory[] = [];
+    pageNumber: number | undefined;
+}
+
 export class VerificationResponse {
     hasSession: boolean | undefined;
 }

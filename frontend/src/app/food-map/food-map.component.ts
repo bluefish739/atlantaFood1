@@ -7,7 +7,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { HomeHeaderComponent } from '../../shared-components/home-header/home-header.component';
 import { FormsModule } from '@angular/forms';
 import { PublicInventorySummaryComponent } from './public-inventory-summary/public-inventory-summary.component';
-import { FoodCategory, Organization } from '../../../../shared/src/kinds';
+import { FoodCategory, Organization, SitesByCategoryQuery } from '../../../../shared/src/kinds';
 import { PublicInventoryDetailsComponent } from './public-inventory-details/public-inventory-details.component';
 import { CategoryViewComponent } from './list-by-category-view/category-view.component';
 
@@ -33,7 +33,10 @@ export class FoodMapComponent {
     }
 
     async ngOnInit() {
-        this.sites = await this.xapiService.getAllOrganizations();
+        const sitesByCategoryQuery = new SitesByCategoryQuery();
+        sitesByCategoryQuery.pageNumber = 1;
+        this.sites = await this.xapiService.searchSitesByCategories(sitesByCategoryQuery);
+
         this.foodCategories = await this.xapiService.getFoodCategories();
         this.siteInventoryEmpty = this.sites.map(v => true);
         this.siteIncludesSearchedCategories = this.sites.map(v => true);
