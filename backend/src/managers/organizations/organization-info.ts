@@ -1,5 +1,5 @@
-import { BadRequestError, Organization, RequestContext, ServerError } from "../../../../shared/src/kinds";
-import { organizationDAO } from "../../daos/dao-factory";
+import { BadRequestError, Organization, RequestContext, ServerError, SitesByCategoryQuery } from "../../../../shared/src/kinds";
+import { foodDAO, organizationDAO } from "../../daos/dao-factory";
 
 export class OrganizationInfoManager {
     async getOrganizationDetails(requestContext: RequestContext) {
@@ -11,8 +11,7 @@ export class OrganizationInfoManager {
         if (!organization) {
             throw new ServerError("No organization found with organizationID=" + organizationID);
         }
-        organization.id = "";
-        // Prevent sending sensitive info
+
         return organization;
     }
 
@@ -27,5 +26,26 @@ export class OrganizationInfoManager {
 
     async getCurrentOrganizationID(requestContext: RequestContext) {
         return requestContext.getCurrentOrganizationID();
+    }
+
+    async searchSitesByCategories(requestContext: RequestContext, sitesbyCategoryQuery: SitesByCategoryQuery) {
+        const organizations = (await organizationDAO.getAllOrganizations()).filter(async org => {
+            if (!org.name || !org.addressLine1) {
+                return false;
+            }
+
+            const foods = await foodDAO.getFoodsByOrganizationID(org.id!);
+            for (const food of foods) {
+                const categories = await foodDAO.getFoodCategoryAssociationsByFoodID(food.id!);
+                for (const category of categories) {
+                    if (sitesbyCategoryQuery.categoryIDs.includes(category.foodCategoryID!)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        });
+
+        return organizations;
     }
 }

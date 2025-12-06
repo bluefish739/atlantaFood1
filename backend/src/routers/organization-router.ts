@@ -73,6 +73,19 @@ export class OrganizationRouter extends BaseRouter {
     }
   }
 
+  async searchSitesByCategories(req: Request, res: Response) {
+    try {
+      const organizations = await organizationInfoManager.searchSitesByCategories(new RequestContext(req), req.body);
+      this.sendNormalResponse(res, organizations);
+    } catch (error: any) {
+      if (error instanceof BadRequestError) {
+        this.sendBadRequestResponse(res, { success: false, message: error.message });
+      } else {
+        this.sendServerErrorResponse(res, { success: false, message: error.message });
+      }
+    }
+  }
+
   static buildRouter() {
     const organizationRouter = new OrganizationRouter();
     return express.Router()
@@ -80,6 +93,7 @@ export class OrganizationRouter extends BaseRouter {
       .get("/all", organizationRouter.getAllOrganizations.bind(organizationRouter))
       .get("/organization-details", authenticator([]), organizationRouter.getOrganizationDetails.bind(organizationRouter))
       .post('/organization', authenticator([]), organizationRouter.saveOrganization.bind(organizationRouter))
-      .get("/get-current-organization-id", authenticator([]), organizationRouter.getCurrentOrganization.bind(organizationRouter));
+      .get("/get-current-organization-id", authenticator([]), organizationRouter.getCurrentOrganization.bind(organizationRouter))
+      .post("/search-sites-by-categories", organizationRouter.searchSitesByCategories.bind(organizationRouter));
   }
 }
