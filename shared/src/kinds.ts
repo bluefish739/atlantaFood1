@@ -89,7 +89,7 @@ export class FoodCategory {
 }
 
 export class SitesByCategoryQuery {
-    categories: FoodCategory[] = [];
+    categoryIDs: string[] = [];
     pageNumber: number | undefined;
 }
 
