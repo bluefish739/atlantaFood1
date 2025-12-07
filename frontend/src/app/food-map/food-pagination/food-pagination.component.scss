@@ -13,6 +13,11 @@
         margin: 0 5px;
     }
 
+    button:hover {
+        background-color: #145A1F;
+        cursor: pointer;
+    }
+
     .page-numbers {
         display: flex;
         align-items: center;
