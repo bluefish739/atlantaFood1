@@ -1,8 +1,8 @@
 <page-header></page-header>
 <div class="messages-container" *ngIf="organizationDetailsProvided == 'YES'">
     <div class="organization-list">
-        <div>
-            <h3>Organizations</h3>
+        <div class="active-chats">
+            <h3>Active Chats</h3>
             <ul>
                 <li *ngFor="let org of organizationsWithActiveChats" (click)="selectOrganization(org)"
                     [class.selected]="org === selectedOrganization">
@@ -10,7 +10,8 @@
                 </li>
             </ul>
         </div>
-        <div class="add-chat-selection">
+        <div class="start-new-chat">
+            <h3>Start New Chat</h3>
             <form [formGroup]="organizationSearchForm" (ngSubmit)="addChat()">
                 <mat-form-field>
                     <mat-label>Find an organization</mat-label>
@@ -20,7 +21,7 @@
                         <mat-option *ngFor="let org of organizationsToSearch" [value]="org.name">{{ org.name }}</mat-option>
                     </mat-autocomplete>
                 </mat-form-field>
-                <button type="submit" mat-raised-button color="primary">Add Chat</button>
+                <button type="submit" class="add-chat-button" mat-raised-button color="primary">Add Chat</button>
             </form>
         </div>
     </div>
