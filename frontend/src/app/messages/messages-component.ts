@@ -27,7 +27,6 @@ export class MessagesComponent {
     newMessageText = "";
     messages: Message[] = [];
     organizationDetailsProvided = "LOADING";
-    chattingOrganizationsLoaded = false;
     messagesLoading = false;
 
     constructor(private xapiService: XapiService) {
