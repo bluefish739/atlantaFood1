@@ -90,7 +90,7 @@ export class FoodCategory {
 
 export class SitesByCategoryQuery {
     categoryIDs: string[] = [];
-    pageNumber: number | undefined;
+    pageNumber: number = 1;
 }
 
 export class VerificationResponse {
