@@ -11,10 +11,11 @@ import { FoodCategory, Organization, SitesByCategoryQuery, SitesByCategoryQueryR
 import { PublicInventoryDetailsComponent } from './public-inventory-details/public-inventory-details.component';
 import { CategoryViewComponent } from './list-by-category-view/category-view.component';
 import { FoodPaginationComponent } from './food-pagination/food-pagination.component';
+import { LoadingSpinnerComponent } from '../../shared-components/loading-spinner-component/loading-spinner.component';
 
 @Component({
     selector: 'food-map',
-    imports: [CommonModule, RouterModule, HomeHeaderComponent, MatExpansionModule, FormsModule, PublicInventorySummaryComponent, MatDialogModule, CategoryViewComponent, FoodPaginationComponent],
+    imports: [CommonModule, RouterModule, HomeHeaderComponent, MatExpansionModule, FormsModule, PublicInventorySummaryComponent, MatDialogModule, CategoryViewComponent, LoadingSpinnerComponent, FoodPaginationComponent],
     templateUrl: './food-map.component.html',
     styleUrl: './food-map.component.scss'
 })
@@ -22,7 +23,7 @@ export class FoodMapComponent {
     sites: Organization[] = [];
     filterCategoriesInput = "";
     foodCategories: FoodCategory[] = [];
-    viewMode = "LIST-BY-ORGANIZATION";
+    viewMode = "";
     totalPages = 1;
     dialog = inject(MatDialog);
     constructor(
@@ -32,10 +33,12 @@ export class FoodMapComponent {
     }
 
     async ngOnInit() {
+        this.viewMode = "LOADING";
         const initResponse = await this.xapiService.searchSitesByCategories(new SitesByCategoryQuery());
         this.sites = initResponse.organizations;
         this.totalPages = initResponse.totalPages!;
         this.foodCategories = await this.xapiService.getFoodCategories();
+        this.viewMode = "LIST-BY-ORGANIZATION";
     }
 
     private getFilterCategoryIDs() {
@@ -51,6 +54,7 @@ export class FoodMapComponent {
     }
 
     async runQuery(pageNumber?: number) {
+        this.viewMode = "LOADING";
         const sitesbyCategoryQuery = new SitesByCategoryQuery();
         sitesbyCategoryQuery.categoryIDs = this.getFilterCategoryIDs();
         sitesbyCategoryQuery.pageNumber = pageNumber ? pageNumber : 1;
@@ -58,6 +62,7 @@ export class FoodMapComponent {
         const response = await this.xapiService.searchSitesByCategories(sitesbyCategoryQuery);
         this.sites = response.organizations;
         this.totalPages = response.totalPages!;
+        this.viewMode = "LIST-BY-ORGANIZATION";
     }
 
     clearQuery() {

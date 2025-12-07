@@ -34,6 +34,8 @@
         </ng-container>
     </mat-accordion>
 
+    <loading-spinner *ngIf="viewMode === 'LOADING'"></loading-spinner>
+
     <category-view *ngIf="viewMode === 'LIST-BY-CATEGORY'"></category-view>
 </div>
-<food-pagination [totalPages]="totalPages" (pageChange)="runQuery($event)"></food-pagination>
+<food-pagination [totalPages]="totalPages" (pageChange)="runQuery($event)" *ngIf="viewMode === 'LIST-BY-ORGANIZATION'"></food-pagination>
