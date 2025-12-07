@@ -60,9 +60,9 @@ export class FoodMapComponent {
         sitesbyCategoryQuery.pageNumber = pageNumber ? pageNumber : 1;
 
         const response = await this.xapiService.searchSitesByCategories(sitesbyCategoryQuery);
+        this.viewMode = "LIST-BY-ORGANIZATION";
         this.sites = response.organizations;
         this.totalPages = response.totalPages!;
-        this.viewMode = "LIST-BY-ORGANIZATION";
     }
 
     clearQuery() {

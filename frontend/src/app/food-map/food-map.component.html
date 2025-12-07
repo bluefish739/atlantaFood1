@@ -38,4 +38,4 @@
 
     <category-view *ngIf="viewMode === 'LIST-BY-CATEGORY'"></category-view>
 </div>
-<food-pagination [totalPages]="totalPages" (pageChange)="runQuery($event)" *ngIf="viewMode === 'LIST-BY-ORGANIZATION'"></food-pagination>
+<food-pagination [totalPages]="totalPages" (pageChange)="runQuery($event)" *ngIf="viewMode === 'LIST-BY-ORGANIZATION' || viewMode === 'LOADING'"></food-pagination>
