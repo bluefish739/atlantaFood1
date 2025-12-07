@@ -1,4 +1,4 @@
-import { BadRequestError, Organization, RequestContext, ServerError, SitesByCategoryQuery } from "../../../../shared/src/kinds";
+import { BadRequestError, Organization, RequestContext, ServerError, SitesByCategoryQuery, SitesByCategoryQueryResponse } from "../../../../shared/src/kinds";
 import { foodDAO, organizationDAO } from "../../daos/dao-factory";
 
 export class OrganizationInfoManager {
@@ -30,7 +30,7 @@ export class OrganizationInfoManager {
 
     async searchSitesByCategories(requestContext: RequestContext, sitesbyCategoryQuery: SitesByCategoryQuery) {
         const availableOrganizations = (await organizationDAO.getAllOrganizations()).filter(org => org.name && org.addressLine1);
-        const organizationsMatchingQuery = await Promise.all(
+        const organizationsMatchingCategories = await Promise.all(
             availableOrganizations.map(async org => {
                 const foods = await foodDAO.getFoodsByOrganizationID(org.id!);
                 if (foods.length === 0) {
@@ -52,6 +52,15 @@ export class OrganizationInfoManager {
                 return null;
             })
         ).then(results => results.filter(org => org !== null) as Organization[]);
-        return organizationsMatchingQuery;
+
+        const maxSitesPerPage = 1;
+        const organizationsMatchingQuery = organizationsMatchingCategories.filter((_, idx) => 
+            idx >= (sitesbyCategoryQuery.pageNumber - 1) * maxSitesPerPage && idx < sitesbyCategoryQuery.pageNumber * maxSitesPerPage
+        );
+
+        const searchSitesByCategoriesResponse = new SitesByCategoryQueryResponse();
+        searchSitesByCategoriesResponse.organizations = organizationsMatchingQuery;
+        searchSitesByCategoriesResponse.totalPages = Math.ceil(organizationsMatchingCategories.length / maxSitesPerPage);
+        return searchSitesByCategoriesResponse;
     }
 }

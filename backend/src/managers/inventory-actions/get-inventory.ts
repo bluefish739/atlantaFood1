@@ -13,7 +13,6 @@ export class GetInventoryManager {
                 throw new BadRequestError("No organizationID found.");
             }
             const categoryIDs = inventoryQuery.categoryIDs;
-            logger.log("getInventory: categoryIDs: ", categoryIDs);
             const foods = await foodDAO.getFoodsByOrganizationID(organizationID);
             const detailedFoods = (await Promise.all(foods.map(async food => {
                 const detailedFood = new DetailedFood();
