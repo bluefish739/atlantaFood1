@@ -93,6 +93,11 @@ export class SitesByCategoryQuery {
     pageNumber: number = 1;
 }
 
+export class SitesByCategoryQueryResponse {
+    organizations: Organization[] = [];
+    totalPages: number | undefined;
+}
+
 export class VerificationResponse {
     hasSession: boolean | undefined;
 }

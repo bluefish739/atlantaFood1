@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent, HttpHandlerFn, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Organization, Role, User, VerificationResponse, SignupData, GeneralConfirmationResponse, LoginRequest, LoginResponse, DetailedUser, Food, DetailedFood, FoodCategory, InventoryQuery, InventorySummaryRow, CategorySummaryRow, Message, ChatStatus, SitesByCategoryQuery } from '../../../shared/src/kinds';
+import { Organization, Role, User, VerificationResponse, SignupData, GeneralConfirmationResponse, LoginRequest, LoginResponse, DetailedUser, Food, DetailedFood, FoodCategory, InventoryQuery, InventorySummaryRow, CategorySummaryRow, Message, ChatStatus, SitesByCategoryQuery, SitesByCategoryQueryResponse } from '../../../shared/src/kinds';
 import { first, firstValueFrom, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { sessionAuthenticator } from './utilities/session-authentication';
@@ -72,7 +72,7 @@ export class XapiService {
   }
 
   public async searchSitesByCategories(sitesbyCategoryQuery: SitesByCategoryQuery) {
-    return this.postResponse<Organization[]>(`/xapi/organizations/search-sites-by-categories`, sitesbyCategoryQuery);
+    return this.postResponse<SitesByCategoryQueryResponse>(`/xapi/organizations/search-sites-by-categories`, sitesbyCategoryQuery);
   }
   //============================================================================================
   // Role API Requests
