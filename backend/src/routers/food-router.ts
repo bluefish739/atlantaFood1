@@ -10,7 +10,7 @@ import { getAllFoodCategories } from "../shared/utilities";
 export class FoodRouter extends BaseRouter {
   async getFoodCategories(req: Request, res: Response) {
     try {
-      const foodCategories = getAllFoodCategories();
+      const foodCategories = await getAllFoodCategories();
       this.sendNormalResponse(res, foodCategories);
     } catch (error: any) {
       logger.log("getStoreInventory: failed", error)
