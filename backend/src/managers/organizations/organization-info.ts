@@ -1,4 +1,4 @@
-import { BadRequestError, Organization, RequestContext, ServerError, SitesByCategoryQuery } from "../../../../shared/src/kinds";
+import { BadRequestError, Organization, RequestContext, ServerError, SitesByCategoryQuery, SitesByCategoryQueryResponse } from "../../../../shared/src/kinds";
 import { foodDAO, organizationDAO } from "../../daos/dao-factory";
 
 export class OrganizationInfoManager {
@@ -54,9 +54,13 @@ export class OrganizationInfoManager {
         ).then(results => results.filter(org => org !== null) as Organization[]);
 
         const maxSitesPerPage = 1;
-        const response = organizationsMatchingCategories.filter((_, idx) => 
+        const organizationsMatchingQuery = organizationsMatchingCategories.filter((_, idx) => 
             idx >= (sitesbyCategoryQuery.pageNumber - 1) * maxSitesPerPage && idx < sitesbyCategoryQuery.pageNumber * maxSitesPerPage
         );
-        return response;
+
+        const searchSitesByCategoriesResponse = new SitesByCategoryQueryResponse();
+        searchSitesByCategoriesResponse.organizations = organizationsMatchingQuery;
+        searchSitesByCategoriesResponse.totalPages = Math.ceil(organizationsMatchingCategories.length / maxSitesPerPage);
+        return searchSitesByCategoriesResponse;
     }
 }
