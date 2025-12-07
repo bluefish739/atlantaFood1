@@ -18,16 +18,14 @@
 
     <mat-accordion *ngIf="viewMode === 'LIST-BY-ORGANIZATION'" class="food-pantries-accordion">
         <ng-container *ngFor="let site of sites; let i = index">
-            <mat-expansion-panel [ngClass]="{'hidden-summary': siteInventoryEmpty[i] || !siteIncludesSearchedCategories[i]}" (opened)="onPanelOpened(i)" hideToggle>
+            <mat-expansion-panel hideToggle>
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                         {{ site.name }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
                 <div class="summary-container">
-                    <public-inventory-summary [organizationID]="site.id!"
-                        (onEmptyInventory)="onEmptyInventory(i, $event)"
-                        (categoryNames)="updateSiteCategories(i, $event)"></public-inventory-summary>
+                    <public-inventory-summary [organizationID]="site.id!"></public-inventory-summary>
                     <button class="full-inventory-button" id="full-inventory-button-{{i}}" matButton
                         (click)="onClickFullInventoryButton(i)">See full
                         inventory</button>

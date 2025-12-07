@@ -21,9 +21,6 @@ export class FoodMapComponent {
     sites: Organization[] = [];
     filterCategoriesInput = "";
     foodCategories: FoodCategory[] = [];
-    siteInventoryEmpty: boolean[] = [];
-    siteIncludesSearchedCategories: boolean[] = [];
-    siteCategoriesLists: string[][] = [];
     viewMode = "LIST-BY-ORGANIZATION";
     dialog = inject(MatDialog);
     constructor(
@@ -33,55 +30,32 @@ export class FoodMapComponent {
     }
 
     async ngOnInit() {
-        const sitesByCategoryQuery = new SitesByCategoryQuery();
-        sitesByCategoryQuery.pageNumber = 1;
-        this.sites = await this.xapiService.searchSitesByCategories(sitesByCategoryQuery);
-
+        this.sites = await this.xapiService.searchSitesByCategories(new SitesByCategoryQuery());
         this.foodCategories = await this.xapiService.getFoodCategories();
-        this.siteInventoryEmpty = this.sites.map(v => true);
-        this.siteIncludesSearchedCategories = this.sites.map(v => true);
-        this.siteCategoriesLists = this.sites.map(v => []);
     }
 
-    onPanelOpened(index: number): void {
-        console.log('Opened organization at index:' + index);
+    private getFilterCategoryIDs() {
+        const filterCategoryIDs = this.filterCategoriesInput
+            .split(",")
+            .map(categoryName => {
+                const cleanCategoryName = categoryName.trim().toLowerCase();
+                const category = this.foodCategories.find(foodCategory => foodCategory.name!.toLowerCase() === cleanCategoryName);
+                return category ? category.id! : null;
+            })
+            .filter(v => !!v) as string[];
+        return filterCategoryIDs;
     }
 
-    private getFilterCategoryNames() {
-        const filterCategoryNames = new Set(
-            this.filterCategoriesInput
-                .split(",")
-                .map(categoryName => {
-                    const cleanCategoryName = categoryName.trim().toLowerCase();
-                    return cleanCategoryName ? cleanCategoryName : "";
-                })
-                .filter(v => !!v)
-        );
-        return filterCategoryNames;
-    }
-
-    runQuery() {
-        const filterCategoryNames = this.getFilterCategoryNames();
-        if (filterCategoryNames.size === 0) {
-            this.siteIncludesSearchedCategories = this.siteIncludesSearchedCategories.map(v => true);
-            return;
-        }
-        this.siteCategoriesLists.forEach((siteCategoryList, idx) => {
-            this.siteIncludesSearchedCategories[idx] = siteCategoryList.filter(categoryName => filterCategoryNames.has(categoryName.toLowerCase())).length > 0;
-        });
+    async runQuery() {
+        const sitesbyCategoryQuery = new SitesByCategoryQuery();
+        sitesbyCategoryQuery.categoryIDs = this.getFilterCategoryIDs();
+        this.sites = await this.xapiService.searchSitesByCategories(sitesbyCategoryQuery);
+        console.log(this.sites);
     }
 
     clearQuery() {
         this.filterCategoriesInput = "";
         this.runQuery();
-    }
-
-    onEmptyInventory(idx: number, isEmpty: boolean) {
-        this.siteInventoryEmpty[idx] = isEmpty;
-    }
-
-    updateSiteCategories(idx: number, categories: string[]) {
-        this.siteCategoriesLists[idx] = categories;
     }
 
     onClickFullInventoryButton(idx: number) {
