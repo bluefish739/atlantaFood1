@@ -2,7 +2,7 @@
     flex: 1;
     /* Allow the container to grow and fill the remaining space */
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 20px;
     padding: 20px;
     background-color: #e7e7e7;
@@ -16,7 +16,7 @@
 }
 
 .organization-list {
-    width: 25%;
+    width: 100%;
     /* Example width for the organization list */
     border-right: 1px solid #A5D6A7;
     /* Green border */
