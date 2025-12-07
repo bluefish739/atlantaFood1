@@ -30,7 +30,7 @@ export class OrganizationInfoManager {
 
     async searchSitesByCategories(requestContext: RequestContext, sitesbyCategoryQuery: SitesByCategoryQuery) {
         const availableOrganizations = (await organizationDAO.getAllOrganizations()).filter(org => org.name && org.addressLine1);
-        const organizationsMatchingQuery = await Promise.all(
+        const organizationsMatchingCategories = await Promise.all(
             availableOrganizations.map(async org => {
                 const foods = await foodDAO.getFoodsByOrganizationID(org.id!);
                 if (foods.length === 0) {
@@ -52,6 +52,11 @@ export class OrganizationInfoManager {
                 return null;
             })
         ).then(results => results.filter(org => org !== null) as Organization[]);
-        return organizationsMatchingQuery;
+
+        const maxSitesPerPage = 1;
+        const response = organizationsMatchingCategories.filter((_, idx) => 
+            idx >= (sitesbyCategoryQuery.pageNumber - 1) * maxSitesPerPage && idx < sitesbyCategoryQuery.pageNumber * maxSitesPerPage
+        );
+        return response;
     }
 }
