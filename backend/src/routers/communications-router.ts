@@ -30,19 +30,10 @@ export class CommunicationsRouter extends BaseRouter {
         }
     }
 
-    async getChatStatuses(req: Request, res: Response) {
-        try {
-            const chatStatuses = await chatManager.getChatStatuses(new RequestContext(req));
-            this.sendNormalResponse(res, chatStatuses);            
-        } catch (error: any) {
-            this.sendServerErrorResponse(res, { success: false, message: error.message });
-        }
-    }
-
     async getOrganizationsWithActiveChats(req: Request, res: Response) {
         try {
-          const organizationsWithActiveChats = await chatManager.getOrganizationsWithActiveChats(new RequestContext(req));
-          this.sendNormalResponse(res, organizationsWithActiveChats);
+          const organizationChatStatuses = await chatManager.getOrganizationsWithActiveChats(new RequestContext(req));
+          this.sendNormalResponse(res, organizationChatStatuses);
         } catch (error: any) {
           if (error instanceof BadRequestError) {
             this.sendBadRequestResponse(res, { success: false, message: error.message });
@@ -57,7 +48,6 @@ export class CommunicationsRouter extends BaseRouter {
         return express.Router()
             .post('/send-message-to-organization', authenticator([]), communicationsRouter.sendMessage.bind(communicationsRouter))
             .get('/get-messages-with-organization/:otherOrganizationID', authenticator([]), communicationsRouter.getMessagesWithOrganization.bind(communicationsRouter))
-            .get('/get-chat-statuses', authenticator([]), communicationsRouter.getChatStatuses.bind(communicationsRouter))
-            .get("/get-organizations-with-active-chats", authenticator([]), communicationsRouter.getOrganizationsWithActiveChats.bind(communicationsRouter));
+            .get("/get-chat-statuses", authenticator([]), communicationsRouter.getOrganizationsWithActiveChats.bind(communicationsRouter));
     }
 }

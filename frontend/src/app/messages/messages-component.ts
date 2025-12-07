@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { XapiService } from '../xapi.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ChatStatus, Message, Organization } from '../../../../shared/src/kinds';
+import { Message, Organization } from '../../../../shared/src/kinds';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../shared-components/header-component/header.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -18,7 +18,7 @@ import { LoadingSpinnerComponent } from '../../shared-components/loading-spinner
     imports: [CommonModule, RouterModule, FormsModule, HeaderComponent, ReactiveFormsModule, MatFormFieldModule, MatAutocompleteModule, MatInputModule, MatAutocomplete, LoadingSpinnerComponent]
 })
 export class MessagesComponent {
-    chattingOrganizations: Organization[] = [];
+    organizationsWithActiveChats: Organization[] = [];
     organizationsToSearch: Organization[] = [];
     selectedOrganization = new Organization();
     organizationSearchForm = new FormGroup({
@@ -26,7 +26,6 @@ export class MessagesComponent {
     });
     newMessageText = "";
     messages: Message[] = [];
-    chatStatuses: ChatStatus[] = [];
     organizationDetailsProvided = "LOADING";
     chattingOrganizationsLoaded = false;
     messagesLoading = false;
@@ -35,7 +34,6 @@ export class MessagesComponent {
     }
 
     async ngOnInit() {
-        const currentOrganizationID = await this.xapiService.getCurrentOrganizationID();
         const currentOrganization = await this.xapiService.getOrganizationDetails();
         if (!currentOrganization.name) {
             this.organizationDetailsProvided = "NO";
@@ -43,30 +41,14 @@ export class MessagesComponent {
         }
 
         this.organizationDetailsProvided = "YES";
-        this.chattingOrganizations = await this.xapiService.getAllOrganizations();
-        this.chattingOrganizations = this.chattingOrganizations.filter(org => 
-            org.name && 
-            org.name.trim() !== "" && 
-            org.id !== currentOrganizationID
-        );
-        await this.updateByChatStatuses();
+        
+        const organizationsChatStatuses = await this.xapiService.getOrganizationsChatStatuses();
+        console.log(organizationsChatStatuses)
+        this.organizationsWithActiveChats = organizationsChatStatuses.organizationsWithActiveChats;
+        this.organizationsToSearch = organizationsChatStatuses.organizationsToSearch;
     }
 
-    async updateByChatStatuses() {
-        this.organizationsToSearch = [...this.chattingOrganizations];
-        this.chatStatuses = await this.xapiService.getChatStatuses();
-        this.chattingOrganizations = this.chattingOrganizations.filter(org => {
-            const organizationIndex = this.chatStatuses.findIndex(chatStatus => chatStatus.organizationName == org.name);
-            if (organizationIndex >= 0) {
-                return this.chatStatuses[organizationIndex].chatStarted;
-            }
-            return false;
-        });
-        this.organizationsToSearch = this.organizationsToSearch.filter(org => org.name && !this.chattingOrganizations.find(chatOrg => chatOrg.name === org.name));
-        this.sortChatsByTimestamp();
-        this.chattingOrganizationsLoaded = true;
-    }
-
+    /*
     private sortChatsByTimestamp() {
         this.chattingOrganizations.sort((a, b) => {
             const statusA = this.chatStatuses.find(status => status.organizationName === a.name);
@@ -78,7 +60,7 @@ export class MessagesComponent {
             }
             return 0;
         });
-    }
+    }*/
 
     async selectOrganization(organization: Organization) {
         this.messagesLoading = true;
@@ -103,7 +85,7 @@ export class MessagesComponent {
             return;
         }
 
-        this.chattingOrganizations.unshift(organizationToAdd);
+        this.organizationsWithActiveChats.unshift(organizationToAdd);
         this.selectOrganization(organizationToAdd);
         this.organizationsToSearch = this.organizationsToSearch.filter(org => org.name !== organizationToAdd.name);
     }

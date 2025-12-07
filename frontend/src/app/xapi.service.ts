@@ -1,6 +1,6 @@
 import { HttpClient, HttpEvent, HttpHandlerFn, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Organization, Role, User, VerificationResponse, SignupData, GeneralConfirmationResponse, LoginRequest, LoginResponse, DetailedUser, Food, DetailedFood, FoodCategory, InventoryQuery, InventorySummaryRow, CategorySummaryRow, Message, ChatStatus, SitesByCategoryQuery, SitesByCategoryQueryResponse } from '../../../shared/src/kinds';
+import { Organization, Role, User, VerificationResponse, SignupData, GeneralConfirmationResponse, LoginRequest, LoginResponse, DetailedUser, Food, DetailedFood, FoodCategory, InventoryQuery, InventorySummaryRow, CategorySummaryRow, Message, SitesByCategoryQuery, SitesByCategoryQueryResponse, OrganizationChatStatuses } from '../../../shared/src/kinds';
 import { first, firstValueFrom, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { sessionAuthenticator } from './utilities/session-authentication';
@@ -161,11 +161,7 @@ export class XapiService {
     return this.getResponse<Message[]>(`/xapi/communications/get-messages-with-organization/` + organizationID);
   }
 
-  public async getChatStatuses() {
-    return this.getResponse<ChatStatus[]>(`/xapi/communications/get-chat-statuses`);
-  }
-
-  public async getOrganizationsWithActiveChats() {
-    return this.getResponse<Organization[]>(`/xapi/communications/get-organizations-with-active-chats`);
+  public async getOrganizationsChatStatuses() {
+    return this.getResponse<OrganizationChatStatuses>(`/xapi/communications/get-chat-statuses`);
   }
 }

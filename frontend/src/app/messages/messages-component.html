@@ -4,7 +4,7 @@
         <div>
             <h3>Organizations</h3>
             <ul *ngIf="chattingOrganizationsLoaded">
-                <li *ngFor="let org of chattingOrganizations" (click)="selectOrganization(org)"
+                <li *ngFor="let org of organizationsWithActiveChats" (click)="selectOrganization(org)"
                     [class.selected]="org === selectedOrganization">
                     {{ org.name }}
                 </li>
