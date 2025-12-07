@@ -23,7 +23,7 @@ export class FoodMapComponent {
     sites: Organization[] = [];
     filterCategoriesInput = "";
     foodCategories: FoodCategory[] = [];
-    viewMode = "";
+    viewStatus = "";
     totalPages = 1;
     dialog = inject(MatDialog);
     constructor(
@@ -33,12 +33,12 @@ export class FoodMapComponent {
     }
 
     async ngOnInit() {
-        this.viewMode = "LOADING";
+        this.viewStatus = "SEARCHING";
         const initResponse = await this.xapiService.searchSitesByCategories(new SitesByCategoryQuery());
         this.sites = initResponse.organizations;
         this.totalPages = initResponse.totalPages!;
         this.foodCategories = await this.xapiService.getFoodCategories();
-        this.viewMode = "LIST-BY-ORGANIZATION";
+        this.viewStatus = "LIST-BY-ORGANIZATION";
     }
 
     private getFilterCategoryIDs() {
@@ -53,21 +53,33 @@ export class FoodMapComponent {
         return filterCategoryIDs;
     }
 
-    async runQuery(pageNumber?: number) {
-        this.viewMode = "LOADING";
+    async runNewSearch() {
+        this.viewStatus = "SEARCHING";
+        await this.runQuery(1);
+        this.viewStatus = "LIST-BY-ORGANIZATION";
+    }
+
+    private async runQuery(pageNumber: number) {
         const sitesbyCategoryQuery = new SitesByCategoryQuery();
         sitesbyCategoryQuery.categoryIDs = this.getFilterCategoryIDs();
-        sitesbyCategoryQuery.pageNumber = pageNumber ? pageNumber : 1;
+        sitesbyCategoryQuery.pageNumber = pageNumber;
 
         const response = await this.xapiService.searchSitesByCategories(sitesbyCategoryQuery);
-        this.viewMode = "LIST-BY-ORGANIZATION";
         this.sites = response.organizations;
         this.totalPages = response.totalPages!;
     }
 
-    clearQuery() {
+    async onPageChange(pageNumber: number) {
+        this.viewStatus = "CHANGING-PAGE";
+        await this.runQuery(pageNumber);
+        this.viewStatus = "LIST-BY-ORGANIZATION";
+    }
+
+    async clearQuery() {
+        this.viewStatus = "SEARCHING";
         this.filterCategoriesInput = "";
-        this.runQuery();
+        await this.runQuery(1);
+        this.viewStatus = "LIST-BY-ORGANIZATION";
     }
 
     onClickFullInventoryButton(idx: number) {
@@ -81,10 +93,10 @@ export class FoodMapComponent {
 
     toggleView() {
         this.filterCategoriesInput = "";
-        if (this.viewMode === "LIST-BY-ORGANIZATION") {
-            this.viewMode = "LIST-BY-CATEGORY";
+        if (this.viewStatus === "LIST-BY-ORGANIZATION") {
+            this.viewStatus = "LIST-BY-CATEGORY";
         } else {
-            this.viewMode = "LIST-BY-ORGANIZATION";
+            this.viewStatus = "LIST-BY-ORGANIZATION";
         }
     }
 }
