@@ -75,8 +75,8 @@ export class OrganizationRouter extends BaseRouter {
 
   async searchSitesByCategories(req: Request, res: Response) {
     try {
-      const organizations = await organizationInfoManager.searchSitesByCategories(new RequestContext(req), req.body);
-      this.sendNormalResponse(res, organizations);
+      const searchSitesByCategoriesResponse = await organizationInfoManager.searchSitesByCategories(new RequestContext(req), req.body);
+      this.sendNormalResponse(res, searchSitesByCategoriesResponse);
     } catch (error: any) {
       if (error instanceof BadRequestError) {
         this.sendBadRequestResponse(res, { success: false, message: error.message });

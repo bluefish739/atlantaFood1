@@ -51,12 +51,14 @@ export class OrganizationInfoManager {
                 }
                 return null;
             })
-        ).then(results => results.filter(org => org !== null) as Organization[]);
+        )
+        .then(results => results.filter(org => org !== null) as Organization[]);
+        const sortedOrganizationsMatchingCategories = organizationsMatchingCategories.sort((a, b) => a.name!.localeCompare(b.name!));
 
         const maxSitesPerPage = 1;
-        const organizationsMatchingQuery = organizationsMatchingCategories.filter((_, idx) => 
+        const organizationsMatchingQuery = sortedOrganizationsMatchingCategories.filter((_, idx) => 
             idx >= (sitesbyCategoryQuery.pageNumber - 1) * maxSitesPerPage && idx < sitesbyCategoryQuery.pageNumber * maxSitesPerPage
-        );
+        )
 
         const searchSitesByCategoriesResponse = new SitesByCategoryQueryResponse();
         searchSitesByCategoriesResponse.organizations = organizationsMatchingQuery;
