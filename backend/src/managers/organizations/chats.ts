@@ -31,4 +31,28 @@ export class ChatManager {
             throw new ServerError("Failed to retrieve chat statuses: " + error.message);
         }
     }
+
+    async getOrganizationsWithActiveChats(requestContext: RequestContext) {
+        const organizationID = requestContext.getCurrentOrganizationID();
+        if (!organizationID) {
+            throw new BadRequestError("User is not associated with any organization");
+        }
+
+        try {
+            const organizations = await organizationDAO.getAllOrganizations();
+            const organizationsWithActiveChats = await Promise.all(organizations
+                .filter(org => org.id !== organizationID && org.name && org.name.trim() !== "")
+                .map(async org => {
+                    const messages = await organizationDAO.getMessagesBetweenOrganizations(organizationID, org.id!);
+                    if (messages.length > 0) {
+                        return org;
+                    }
+                    return null;
+                }));
+            const filteredOrganizations = organizationsWithActiveChats.filter(org => org !== null);
+            return filteredOrganizations;
+        } catch (error: any) {
+            throw new ServerError("Failed to retrieve organizations with active chats: " + error.message);
+        }
+    }
 }

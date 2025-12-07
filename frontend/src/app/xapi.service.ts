@@ -164,4 +164,8 @@ export class XapiService {
   public async getChatStatuses() {
     return this.getResponse<ChatStatus[]>(`/xapi/communications/get-chat-statuses`);
   }
+
+  public async getOrganizationsWithActiveChats() {
+    return this.getResponse<Organization[]>(`/xapi/communications/get-organizations-with-active-chats`);
+  }
 }
