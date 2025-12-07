@@ -50,7 +50,6 @@ export class FoodMapComponent {
         const sitesbyCategoryQuery = new SitesByCategoryQuery();
         sitesbyCategoryQuery.categoryIDs = this.getFilterCategoryIDs();
         this.sites = await this.xapiService.searchSitesByCategories(sitesbyCategoryQuery);
-        console.log(this.sites);
     }
 
     clearQuery() {

@@ -29,23 +29,29 @@ export class OrganizationInfoManager {
     }
 
     async searchSitesByCategories(requestContext: RequestContext, sitesbyCategoryQuery: SitesByCategoryQuery) {
-        const organizations = (await organizationDAO.getAllOrganizations()).filter(async org => {
-            if (!org.name || !org.addressLine1) {
-                return false;
-            }
+        const availableOrganizations = (await organizationDAO.getAllOrganizations()).filter(org => org.name && org.addressLine1);
+        const organizationsMatchingQuery = await Promise.all(
+            availableOrganizations.map(async org => {
+                const foods = await foodDAO.getFoodsByOrganizationID(org.id!);
+                if (foods.length === 0) {
+                    return null;
+                }
 
-            const foods = await foodDAO.getFoodsByOrganizationID(org.id!);
-            for (const food of foods) {
-                const categories = await foodDAO.getFoodCategoryAssociationsByFoodID(food.id!);
-                for (const category of categories) {
-                    if (sitesbyCategoryQuery.categoryIDs.includes(category.foodCategoryID!)) {
-                        return true;
+                if (sitesbyCategoryQuery.categoryIDs.length === 0) {
+                    return org;
+                }
+
+                for (const food of foods) {
+                    const categories = await foodDAO.getFoodCategoryAssociationsByFoodID(food.id!);
+                    for (const category of categories) {
+                        if (sitesbyCategoryQuery.categoryIDs.includes(category.foodCategoryID!)) {
+                            return org;
+                        }
                     }
                 }
-            }
-            return false;
-        });
-
-        return organizations;
+                return null;
+            })
+        ).then(results => results.filter(org => org !== null) as Organization[]);
+        return organizationsMatchingQuery;
     }
 }
