@@ -4,18 +4,24 @@
     align-items: center;
     margin: 20px 0;
 
-    button {
+    .pagination-button {
         background-color: #1B5E20;
         color: white;
         border: none;
         border-radius: 5px;
         padding: 10px 15px;
         margin: 0 5px;
+        cursor: pointer;
     }
 
-    button:hover {
-        background-color: #145A1F;
-        cursor: pointer;
+    .active-page {
+        text-decoration: underline;
+        background-color: #29aa3c;
+    }
+
+    .active-page:hover {
+        background-color: #29aa3c;
+        cursor: disabled !important;
     }
 
     .page-numbers {

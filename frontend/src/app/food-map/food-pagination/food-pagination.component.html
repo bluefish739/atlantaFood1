@@ -1,7 +1,7 @@
 <div class="pagination-controls">
     <button class="pagination-button" (click)="previousPage()" *ngIf="currentPage !== 1">Previous</button>
     <div *ngFor="let page of pages">
-        <button class="pagination-button" [class.active]="page === currentPage" (click)="goToPage(page)">
+        <button [ngClass]="{'active-page': page === currentPage}" class="pagination-button" [disabled]="page === currentPage" (click)="goToPage(page)">
             {{ page }}
         </button>
     </div>
