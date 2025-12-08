@@ -49,20 +49,6 @@ export class MessagesComponent {
         this.organizationsToSearch = organizationsChatStatuses.organizationsToSearch;
     }
 
-    /*
-    private sortChatsByTimestamp() {
-        this.chattingOrganizations.sort((a, b) => {
-            const statusA = this.chatStatuses.find(status => status.organizationName === a.name);
-            const statusB = this.chatStatuses.find(status => status.organizationName === b.name);
-            if (statusA && statusB) {
-                const timestampA = new Date(statusA.lastUpdateTimestamp || 0).getTime();
-                const timestampB = new Date(statusB.lastUpdateTimestamp || 0).getTime();
-                return timestampA - timestampB;
-            }
-            return 0;
-        });
-    }*/
-
     async selectOrganization(organizationToSelect?: Organization) {
         this.messagesLoading = true;
         const organization = this.organizationsWithActiveChats.find(org => org.name == this.chatSelectForm.value.selectedChat);
