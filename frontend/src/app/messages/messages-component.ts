@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { XapiService } from '../xapi.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ChatStatus, Message, Organization } from '../../../../shared/src/kinds';
+import { Message, Organization } from '../../../../shared/src/kinds';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../shared-components/header-component/header.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -18,70 +18,43 @@ import { LoadingSpinnerComponent } from '../../shared-components/loading-spinner
     imports: [CommonModule, RouterModule, FormsModule, HeaderComponent, ReactiveFormsModule, MatFormFieldModule, MatAutocompleteModule, MatInputModule, MatAutocomplete, LoadingSpinnerComponent]
 })
 export class MessagesComponent {
-    chattingOrganizations: Organization[] = [];
+    organizationsWithActiveChats: Organization[] = [];
     organizationsToSearch: Organization[] = [];
-    selectedOrganization = new Organization();
     organizationSearchForm = new FormGroup({
         searchedOrganization: new FormControl('')
     });
+    chatSelectForm = new FormGroup({
+        selectedChat: new FormControl('')
+    });
+    selectedOrganization: Organization = new Organization();
     newMessageText = "";
     messages: Message[] = [];
-    chatStatuses: ChatStatus[] = [];
     organizationDetailsProvided = "LOADING";
-    chattingOrganizationsLoaded = false;
     messagesLoading = false;
 
     constructor(private xapiService: XapiService) {
     }
 
     async ngOnInit() {
-        const currentOrganizationID = await this.xapiService.getCurrentOrganizationID();
         const currentOrganization = await this.xapiService.getOrganizationDetails();
         if (!currentOrganization.name) {
             this.organizationDetailsProvided = "NO";
             return;
         }
-
         this.organizationDetailsProvided = "YES";
-        this.chattingOrganizations = await this.xapiService.getAllOrganizations();
-        this.chattingOrganizations = this.chattingOrganizations.filter(org => 
-            org.name && 
-            org.name.trim() !== "" && 
-            org.id !== currentOrganizationID
-        );
-        await this.updateByChatStatuses();
+        
+        const organizationsChatStatuses = await this.xapiService.getOrganizationsChatStatuses();
+        console.log(organizationsChatStatuses)
+        this.organizationsWithActiveChats = organizationsChatStatuses.organizationsWithActiveChats;
+        this.organizationsToSearch = organizationsChatStatuses.organizationsToSearch;
     }
 
-    async updateByChatStatuses() {
-        this.organizationsToSearch = [...this.chattingOrganizations];
-        this.chatStatuses = await this.xapiService.getChatStatuses();
-        this.chattingOrganizations = this.chattingOrganizations.filter(org => {
-            const organizationIndex = this.chatStatuses.findIndex(chatStatus => chatStatus.organizationName == org.name);
-            if (organizationIndex >= 0) {
-                return this.chatStatuses[organizationIndex].chatStarted;
-            }
-            return false;
-        });
-        this.organizationsToSearch = this.organizationsToSearch.filter(org => org.name && !this.chattingOrganizations.find(chatOrg => chatOrg.name === org.name));
-        this.sortChatsByTimestamp();
-        this.chattingOrganizationsLoaded = true;
-    }
-
-    private sortChatsByTimestamp() {
-        this.chattingOrganizations.sort((a, b) => {
-            const statusA = this.chatStatuses.find(status => status.organizationName === a.name);
-            const statusB = this.chatStatuses.find(status => status.organizationName === b.name);
-            if (statusA && statusB) {
-                const timestampA = new Date(statusA.lastUpdateTimestamp || 0).getTime();
-                const timestampB = new Date(statusB.lastUpdateTimestamp || 0).getTime();
-                return timestampA - timestampB;
-            }
-            return 0;
-        });
-    }
-
-    async selectOrganization(organization: Organization) {
+    async selectOrganization(organizationToSelect?: Organization) {
         this.messagesLoading = true;
+        const organization = this.organizationsWithActiveChats.find(org => org.name == this.chatSelectForm.value.selectedChat);
+        if (!organization) {
+            return;
+        }
         this.messages = await this.xapiService.getMessagesWithOrganization(organization.id!);
         this.selectedOrganization = organization;
         this.messagesLoading = false;
@@ -103,8 +76,9 @@ export class MessagesComponent {
             return;
         }
 
-        this.chattingOrganizations.unshift(organizationToAdd);
-        this.selectOrganization(organizationToAdd);
+        this.organizationsWithActiveChats.unshift(organizationToAdd);
+        this.chatSelectForm.value.selectedChat = organizationToAdd.name;
+        this.selectOrganization();
         this.organizationsToSearch = this.organizationsToSearch.filter(org => org.name !== organizationToAdd.name);
     }
 }

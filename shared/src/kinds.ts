@@ -181,8 +181,7 @@ export class Message {
     timestamp: Date | undefined;
 }
 
-export class ChatStatus {
-    organizationName: string | undefined;
-    chatStarted: boolean | undefined;
-    lastUpdateTimestamp: Date | undefined;
+export class OrganizationChatStatuses {
+    organizationsWithActiveChats: Organization[] = [];
+    organizationsToSearch: Organization[] = [];
 }

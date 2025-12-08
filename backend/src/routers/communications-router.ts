@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { authenticator } from "../shared/authentication";
 import { BaseRouter } from "./base-router";
-import { Message, RequestContext } from "../../../shared/src/kinds";
+import { BadRequestError, Message, RequestContext } from "../../../shared/src/kinds";
 import { GeneralConfirmationResponse } from "../../../shared/src/kinds";
 import { chatManager, communicationsManager } from "../managers/manager-factory";
 
@@ -30,20 +30,24 @@ export class CommunicationsRouter extends BaseRouter {
         }
     }
 
-    async getChatStatuses(req: Request, res: Response) {
+    async getOrganizationsWithActiveChats(req: Request, res: Response) {
         try {
-            const chatStatuses = await chatManager.getChatStatuses(new RequestContext(req));
-            this.sendNormalResponse(res, chatStatuses);            
+          const organizationChatStatuses = await chatManager.getOrganizationsWithActiveChats(new RequestContext(req));
+          this.sendNormalResponse(res, organizationChatStatuses);
         } catch (error: any) {
+          if (error instanceof BadRequestError) {
+            this.sendBadRequestResponse(res, { success: false, message: error.message });
+          } else {
             this.sendServerErrorResponse(res, { success: false, message: error.message });
+          }
         }
-    }
+      }
 
     static buildRouter() {
         const communicationsRouter = new CommunicationsRouter();
         return express.Router()
             .post('/send-message-to-organization', authenticator([]), communicationsRouter.sendMessage.bind(communicationsRouter))
             .get('/get-messages-with-organization/:otherOrganizationID', authenticator([]), communicationsRouter.getMessagesWithOrganization.bind(communicationsRouter))
-            .get('/get-chat-statuses', authenticator([]), communicationsRouter.getChatStatuses.bind(communicationsRouter));
+            .get("/get-chat-statuses", authenticator([]), communicationsRouter.getOrganizationsWithActiveChats.bind(communicationsRouter));
     }
 }
