@@ -1,4 +1,4 @@
-import { Message } from "../../../shared/src/kinds";
+import { ChatSummary, Message } from "../../../shared/src/kinds";
 import { Organization, OrganizationEmployee } from "../../../shared/src/kinds";
 import { generateId } from "../shared/idutilities";
 import { datastore } from "./data-store-factory";
@@ -8,6 +8,7 @@ export class OrganizationDAO {
     static ORGANIZATION_KIND = "Organization";
     static ORGANIZATION_EMPLOYEE_KIND = "OrganizationEmployee";
     static MESSAGE_KIND = "Message";
+    static CHAT_SUMMARY_KIND = "ChatSummary";
 
     public async getAllOrganizations() {
         const query = datastore.createQuery(OrganizationDAO.ORGANIZATION_KIND);
@@ -78,5 +79,23 @@ export class OrganizationDAO {
         const data = await query.run();
         const messages = data[0];
         return messages as Message[];
+    }
+
+    public async saveChatSummary(chatSummary: ChatSummary) {
+        const entityKey = datastore.key([OrganizationDAO.CHAT_SUMMARY_KIND, chatSummary.chatIdentifier!]);
+        const entity = {
+            key: entityKey,
+            data: chatSummary
+        };
+
+        await datastore.save(entity);
+        return chatSummary;
+    }
+
+    public async getChatSummary(orgID1: string, orgID2: string) {
+        const query = datastore.createQuery(OrganizationDAO.CHAT_SUMMARY_KIND)
+            .filter(new PropertyFilter('chatIdentifier', '=', [orgID1, orgID2].sort().join("|")));
+        const data = await query.run();
+        return data[0];
     }
 }

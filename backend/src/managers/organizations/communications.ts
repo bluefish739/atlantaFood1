@@ -1,4 +1,4 @@
-import { BadRequestError, Message, RequestContext } from "../../../../shared/src/kinds";
+import { BadRequestError, ChatSummary, Message, RequestContext, ServerError } from "../../../../shared/src/kinds";
 import { organizationDAO } from "../../daos/dao-factory";
 import { generateId } from "../../shared/idutilities";
 
@@ -11,9 +11,27 @@ export class CommunicationsManager {
             message.chatIdentifier = [message.sendingOrganization, message.receivingOrganization].sort().join("|");
             message.timestamp = new Date();
             await organizationDAO.saveMessage(message);
+            await this.updateChatSummary(message);
         } catch (error: any) {
             throw new BadRequestError("Failed to send message: " + error.message);
         }
+    }
+
+    async getLatestMessageTimestamp(requestContext: RequestContext, otherOrganizationID: string) {
+        const organizationID = requestContext.getCurrentOrganizationID()!;
+        try {
+            const data = await organizationDAO.getChatSummary(organizationID, otherOrganizationID);
+            if (this.chatSummaryFound(data)) {
+                return data.lastMessageTimestamp!;
+            }
+            return null;
+        } catch (error: any) {
+            throw new ServerError("Failed to retrieve latest message timestamp: " + error.message);
+        }
+    }
+
+    private chatSummaryFound(data: any): data is ChatSummary {
+        return data && typeof data.chatIdentifier === "string" && data.lastMessageTimestamp instanceof Date;
     }
 
     private async validateMessage(requestContext: RequestContext, message: Message) {
@@ -33,5 +51,19 @@ export class CommunicationsManager {
         if (!message.receivingOrganization || !(await organizationDAO.getOrganization(message.receivingOrganization))) {
             throw new BadRequestError("Receiving organization is not specified or does not exist");
         }
+    }
+
+    private async updateChatSummary(message: Message) {
+        const data = await organizationDAO.getChatSummary(message.receivingOrganization!, message.sendingOrganization!);
+        if (this.chatSummaryFound(data)) {
+            const chatSummary = data as ChatSummary;
+            chatSummary.lastMessageTimestamp = message.timestamp!;
+            await organizationDAO.saveChatSummary(chatSummary);
+            return;
+        }
+        const chatSummary = new ChatSummary();
+        chatSummary.chatIdentifier = [message.sendingOrganization, message.receivingOrganization].sort().join("|");
+        chatSummary.lastMessageTimestamp = message.timestamp;
+        await organizationDAO.saveChatSummary(chatSummary);
     }
 }

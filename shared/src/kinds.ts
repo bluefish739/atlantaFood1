@@ -186,3 +186,8 @@ export class OrganizationChatStatuses {
     organizationsWithActiveChats: Organization[] = [];
     organizationsToSearch: Organization[] = [];
 }
+
+export class ChatSummary {
+    chatIdentifier: string | undefined;
+    lastMessageTimestamp: Date | undefined;
+}
