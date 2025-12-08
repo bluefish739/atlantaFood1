@@ -23,7 +23,7 @@ export class CommunicationsRouter extends BaseRouter {
     async getMessagesWithOrganization(req: Request, res: Response) {
         const otherOrganizationID = req.params.otherOrganizationID as string;
         try {
-            const messages = await communicationsManager.getMessagesWithOrganization(new RequestContext(req), otherOrganizationID);
+            const messages = await chatManager.getMessagesWithOrganization(new RequestContext(req), otherOrganizationID);
             this.sendNormalResponse(res, messages);            
         } catch (error: any) {
             this.sendServerErrorResponse(res, { success: false, message: error.message });
