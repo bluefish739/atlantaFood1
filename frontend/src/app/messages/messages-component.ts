@@ -91,7 +91,8 @@ export class MessagesComponent {
         }
 
         this.organizationsWithActiveChats.unshift(organizationToAdd);
-        //this.selectOrganization(organizationToAdd);
+        this.chatSelectForm.value.selectedChat = organizationToAdd.name;
+        this.selectOrganization();
         this.organizationsToSearch = this.organizationsToSearch.filter(org => org.name !== organizationToAdd.name);
     }
 }
