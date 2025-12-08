@@ -8,6 +8,7 @@ export class CommunicationsManager {
             await this.validateMessage(requestContext, message);
             message.id = generateId();
             message.sendingOrganization = requestContext.getCurrentOrganizationID()!;
+            message.chatIdentifier = [message.sendingOrganization, message.receivingOrganization].sort().join("|");
             message.timestamp = new Date();
             await organizationDAO.saveMessage(message);
         } catch (error: any) {

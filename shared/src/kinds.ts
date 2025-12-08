@@ -177,6 +177,7 @@ export class Message {
     id: string | undefined;
     sendingOrganization: string | undefined;
     receivingOrganization: string | undefined;
+    chatIdentifier: string | undefined;
     content: string | undefined;
     timestamp: Date | undefined;
 }
