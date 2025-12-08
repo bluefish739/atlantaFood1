@@ -2,13 +2,18 @@
 <div class="messages-container" *ngIf="organizationDetailsProvided == 'YES'">
     <div class="organization-list">
         <div class="active-chats">
-            <h3>Active Chats</h3>
-            <ul>
-                <li *ngFor="let org of organizationsWithActiveChats" (click)="selectOrganization(org)"
-                    [class.selected]="org === selectedOrganization">
-                    {{ org.name }}
-                </li>
-            </ul>
+            <h3>Select Chat</h3>
+            <form [formGroup]="chatSelectForm" (ngSubmit)="selectOrganization()">
+                <mat-form-field>
+                    <mat-label>Select an Organization</mat-label>
+                    <input type="text" placeholder="Start typing..." aria-label="Select an organization" matInput
+                        [matAutocomplete]="chatAuto" formControlName="selectedChat">
+                    <mat-autocomplete #chatAuto="matAutocomplete">
+                        <mat-option *ngFor="let org of organizationsWithActiveChats" [value]="org.name">{{ org.name }}</mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+                <button type="submit" class="add-chat-button" mat-raised-button color="primary">Select Chat</button>
+            </form>
         </div>
         <div class="start-new-chat">
             <h3>Start New Chat</h3>
@@ -16,8 +21,8 @@
                 <mat-form-field>
                     <mat-label>Find an organization</mat-label>
                     <input type="text" placeholder="Start typing..." aria-label="Find an organization" matInput
-                        [matAutocomplete]="auto" formControlName="searchedOrganization">
-                    <mat-autocomplete #auto="matAutocomplete">
+                        [matAutocomplete]="searchAuto" formControlName="searchedOrganization">
+                    <mat-autocomplete #searchAuto="matAutocomplete">
                         <mat-option *ngFor="let org of organizationsToSearch" [value]="org.name">{{ org.name }}</mat-option>
                     </mat-autocomplete>
                 </mat-form-field>

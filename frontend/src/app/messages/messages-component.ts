@@ -20,10 +20,13 @@ import { LoadingSpinnerComponent } from '../../shared-components/loading-spinner
 export class MessagesComponent {
     organizationsWithActiveChats: Organization[] = [];
     organizationsToSearch: Organization[] = [];
-    selectedOrganization = new Organization();
     organizationSearchForm = new FormGroup({
         searchedOrganization: new FormControl('')
     });
+    chatSelectForm = new FormGroup({
+        selectedChat: new FormControl('')
+    });
+    selectedOrganization: Organization = new Organization();
     newMessageText = "";
     messages: Message[] = [];
     organizationDetailsProvided = "LOADING";
@@ -38,7 +41,6 @@ export class MessagesComponent {
             this.organizationDetailsProvided = "NO";
             return;
         }
-
         this.organizationDetailsProvided = "YES";
         
         const organizationsChatStatuses = await this.xapiService.getOrganizationsChatStatuses();
@@ -61,8 +63,12 @@ export class MessagesComponent {
         });
     }*/
 
-    async selectOrganization(organization: Organization) {
+    async selectOrganization(organizationToSelect?: Organization) {
         this.messagesLoading = true;
+        const organization = this.organizationsWithActiveChats.find(org => org.name == this.chatSelectForm.value.selectedChat);
+        if (!organization) {
+            return;
+        }
         this.messages = await this.xapiService.getMessagesWithOrganization(organization.id!);
         this.selectedOrganization = organization;
         this.messagesLoading = false;
@@ -85,7 +91,7 @@ export class MessagesComponent {
         }
 
         this.organizationsWithActiveChats.unshift(organizationToAdd);
-        this.selectOrganization(organizationToAdd);
+        //this.selectOrganization(organizationToAdd);
         this.organizationsToSearch = this.organizationsToSearch.filter(org => org.name !== organizationToAdd.name);
     }
 }
