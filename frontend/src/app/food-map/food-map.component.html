@@ -33,9 +33,7 @@
             </mat-expansion-panel>
         </ng-container>
     </mat-accordion>
-
-    <loading-spinner *ngIf="viewStatus === 'LOADING'"></loading-spinner>
-
+    <loading-spinner *ngIf="viewStatus === 'SEARCHING'"></loading-spinner>
     <category-view *ngIf="viewStatus === 'LIST-BY-CATEGORY'"></category-view>
 </div>
 <food-pagination [totalPages]="totalPages" (pageChange)="onPageChange($event)" *ngIf="viewStatus === 'LIST-BY-ORGANIZATION' || viewStatus === 'CHANGING-PAGE'"></food-pagination>
