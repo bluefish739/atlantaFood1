@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { XapiService } from '../xapi.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Message, Organization } from '../../../../shared/src/kinds';
+import { Message, MessagePollRequest, Organization } from '../../../../shared/src/kinds';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../shared-components/header-component/header.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,6 +10,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocomplete } from '@angular/material/autocomplete';
 import { LoadingSpinnerComponent } from '../../shared-components/loading-spinner-component/loading-spinner.component';
+import { last } from 'rxjs';
 
 @Component({
     selector: 'messages',
@@ -47,6 +48,7 @@ export class MessagesComponent {
         console.log(organizationsChatStatuses)
         this.organizationsWithActiveChats = organizationsChatStatuses.organizationsWithActiveChats;
         this.organizationsToSearch = organizationsChatStatuses.organizationsToSearch;
+        this.startPolling();
     }
 
     async selectOrganization(organizationToSelect?: Organization) {
@@ -80,5 +82,17 @@ export class MessagesComponent {
         this.chatSelectForm.value.selectedChat = organizationToAdd.name;
         this.selectOrganization();
         this.organizationsToSearch = this.organizationsToSearch.filter(org => org.name !== organizationToAdd.name);
+    }
+
+    async startPolling() {
+        setInterval(async () => {
+            if (this.selectedOrganization.id) {
+                const messagePollRequest = new MessagePollRequest();
+                messagePollRequest.otherOrganizationID = this.selectedOrganization.id;
+                messagePollRequest.lastMessageTimestamp = this.messages.length > 0 ? this.messages[this.messages.length - 1].timestamp! : new Date();
+                const update = await this.xapiService.getNewMessagesWithOrganization(messagePollRequest);
+                if (update.length > 0) this.messages = this.messages.concat(update);
+            }
+        }, 5000);
     }
 }

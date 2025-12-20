@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { authenticator } from "../shared/authentication";
 import { BaseRouter } from "./base-router";
-import { BadRequestError, Message, RequestContext } from "../../../shared/src/kinds";
+import { BadRequestError, Message, MessagePollRequest, RequestContext } from "../../../shared/src/kinds";
 import { GeneralConfirmationResponse } from "../../../shared/src/kinds";
 import { chatManager, communicationsManager } from "../managers/manager-factory";
 
@@ -43,11 +43,24 @@ export class CommunicationsRouter extends BaseRouter {
         }
       }
 
+      async getNewMessagesWithOrganization(req: Request, res: Response) {
+        const messagePollRequest = req.body as MessagePollRequest;
+        const otherOrganizationID = messagePollRequest.otherOrganizationID!;
+        const lastMessageTimestamp = new Date(messagePollRequest.lastMessageTimestamp!);
+        try {
+            const newMessages = await chatManager.getNewMessagesWithOrganization(new RequestContext(req), otherOrganizationID, lastMessageTimestamp);
+            this.sendNormalResponse(res, newMessages);            
+        } catch (error: any) {
+            this.sendServerErrorResponse(res, { success: false, message: error.message });
+        }
+      }
+
     static buildRouter() {
         const communicationsRouter = new CommunicationsRouter();
         return express.Router()
             .post('/send-message-to-organization', authenticator([]), communicationsRouter.sendMessage.bind(communicationsRouter))
             .get('/get-messages-with-organization/:otherOrganizationID', authenticator([]), communicationsRouter.getMessagesWithOrganization.bind(communicationsRouter))
-            .get("/get-chat-statuses", authenticator([]), communicationsRouter.getOrganizationsWithActiveChats.bind(communicationsRouter));
+            .get("/get-chat-statuses", authenticator([]), communicationsRouter.getOrganizationsWithActiveChats.bind(communicationsRouter))
+            .post("/get-new-messages-with-organization", authenticator([]), communicationsRouter.getNewMessagesWithOrganization.bind(communicationsRouter));
     }
 }

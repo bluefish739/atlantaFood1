@@ -47,4 +47,14 @@ export class ChatManager {
             throw new ServerError("Failed to retrieve messages: " + error.message);
         }   
     }
+
+    async getNewMessagesWithOrganization(requestContext: RequestContext, otherOrganizationID: string, lastMessageTimestamp: Date) {
+        try {
+            const allMessages = await this.getMessagesWithOrganization(requestContext, otherOrganizationID);
+            const newMessages = allMessages.filter(message => message.timestamp! > lastMessageTimestamp);
+            return newMessages;
+        } catch (error: any) {
+            throw new ServerError("Failed to retrieve new messages: " + error.message);
+        }
+    }
 }

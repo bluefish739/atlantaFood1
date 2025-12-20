@@ -191,3 +191,8 @@ export class ChatSummary {
     chatIdentifier: string | undefined;
     lastMessageTimestamp: Date | undefined;
 }
+
+export class MessagePollRequest {
+    otherOrganizationID: string | undefined;
+    lastMessageTimestamp: Date | undefined;
+}
