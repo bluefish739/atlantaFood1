@@ -95,7 +95,7 @@ export class OrganizationDAO {
     public async getChatSummary(orgID1: string, orgID2: string) {
         const query = datastore.createQuery(OrganizationDAO.CHAT_SUMMARY_KIND)
             .filter(new PropertyFilter('chatIdentifier', '=', [orgID1, orgID2].sort().join("|")));
-        const data = await query.run();
+        const [data] = await query.run();
         return data[0];
     }
 }

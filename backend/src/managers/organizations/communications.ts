@@ -31,7 +31,13 @@ export class CommunicationsManager {
     }
 
     private chatSummaryFound(data: any): data is ChatSummary {
-        return data && typeof data.chatIdentifier === "string" && data.lastMessageTimestamp instanceof Date;
+        if (!data || typeof data !== "object") {
+            return false;
+        }
+        const hasChatIdentifier = typeof data.chatIdentifier === "string";
+        const hasLastMessageTimestamp = data.lastMessageTimestamp instanceof Date;
+        const hasRequiredProperties = hasChatIdentifier && hasLastMessageTimestamp;
+        return hasRequiredProperties;
     }
 
     private async validateMessage(requestContext: RequestContext, message: Message) {
