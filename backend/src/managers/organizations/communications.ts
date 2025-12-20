@@ -10,6 +10,10 @@ export class CommunicationsManager {
             message.sendingOrganization = requestContext.getCurrentOrganizationID()!;
             message.chatIdentifier = [message.sendingOrganization, message.receivingOrganization].sort().join("|");
             message.timestamp = new Date();
+            // setTimeout(async () => {
+            //     await organizationDAO.saveMessage(message);
+            //     await this.updateChatSummary(message);
+            // }, 30000);
             await organizationDAO.saveMessage(message);
             await this.updateChatSummary(message);
         } catch (error: any) {
