@@ -199,12 +199,12 @@ export class MessagePollRequest {
     lastMessageTimestamp: Date | undefined;
 }
 
-export class CategoryQuantityPair {
-    categoryName: string | undefined;
+export class CategoryCount {
+    categoryID: string | undefined;
     quantity : number | undefined;
 }
 
 export class InventorySummary {
     organizationID: string | undefined;
-    summaryRows: CategoryQuantityPair[] = [];
+    categoryCounts: CategoryCount[] = [];
 }

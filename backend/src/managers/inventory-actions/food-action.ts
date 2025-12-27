@@ -1,4 +1,4 @@
-import { BadRequestError, DetailedFood, Food, FoodCategoryAssociation, GeneralConfirmationResponse, RequestContext, ServerError } from "../../../../shared/src/kinds";
+import { BadRequestError, CategoryCount, DetailedFood, Food, FoodCategoryAssociation, GeneralConfirmationResponse, RequestContext, ServerError } from "../../../../shared/src/kinds";
 import * as logger from "firebase-functions/logger";
 import { generateId } from "../../shared/idutilities";
 import { foodDAO } from "../../daos/dao-factory";
@@ -110,6 +110,32 @@ export class FoodActionManager {
                 return foodCategoryAssociationEntity;
             });
             transaction.save(foodCategoryEntities);
+
+            const inventorySummary = await foodDAO.getInventorySummaryByOrganizationID(food.organizationID!);
+            if (idsOfFoodCategoriestoSave.length > 0) {
+                idsOfFoodCategoriestoSave.forEach(foodCategoryID => {
+                    const categoryCount = inventorySummary.categoryCounts?.find(c => c.categoryID === foodCategoryID);
+                    if (categoryCount) {
+                        categoryCount.quantity = (categoryCount.quantity || 0) + (food.currentQuantity || 0);
+                    } else {
+                        const categoryCount = new CategoryCount();
+                        categoryCount.categoryID = foodCategoryID;
+                        categoryCount.quantity = food.currentQuantity || 0;
+                        inventorySummary.categoryCounts.push(categoryCount);
+                    }
+                });
+                idsOfFoodCategoriestoDelete.forEach(foodCategoryID => {
+                    const categoryCount = inventorySummary.categoryCounts?.find(c => c.categoryID === foodCategoryID);
+                    if (categoryCount) {
+                        categoryCount.quantity = (categoryCount.quantity || 0) - (food.currentQuantity || 0);
+                    }
+                });
+            }
+            const inventorySummaryEntity = {
+                key: datastore.key([FoodDAO.INVENTORY_SUMMARY_KIND, food.organizationID!]),
+                data: inventorySummary
+            };
+            transaction.save(inventorySummaryEntity);
 
             const keysOfFoodCategoryAssociationToDelete = idsOfFoodCategoriestoDelete
                 .map(foodCategoryID => datastore.key([FoodDAO.FOOD_CATEGORY_ASSOCIATION_KIND, food.id + "|" + foodCategoryID]));
