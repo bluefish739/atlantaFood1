@@ -33,25 +33,12 @@ export class ChatManager {
         }
     }
 
-    async getMessagesWithOrganization(requestContext: RequestContext, otherOrganizationID: string) {
-        const organizationID = requestContext.getCurrentOrganizationID()!;
-        try {
-            const messages = await organizationDAO.getMessagesBetweenOrganizations(organizationID, otherOrganizationID);
-            messages.sort((a, b) => (a.timestamp!.getTime() - b.timestamp!.getTime()));
-            const messageValueObjects = messages.map(message => {
-                message.id = undefined;
-                return message;
-            });
-            return messageValueObjects;
-        } catch (error: any) {
-            throw new ServerError("Failed to retrieve messages: " + error.message);
-        }   
-    }
-
     async getNewMessagesWithOrganization(requestContext: RequestContext, otherOrganizationID: string, lastMessageTimestamp: Date) {
         try {
-            const allMessages = await this.getMessagesWithOrganization(requestContext, otherOrganizationID);
-            const newMessages = allMessages.filter(message => message.timestamp! > lastMessageTimestamp);
+            const organizationID = requestContext.getCurrentOrganizationID()!;
+            const messages = await organizationDAO.getMessagesBetweenOrganizations(organizationID, otherOrganizationID);
+            messages.sort((a, b) => (a.timestamp!.getTime() - b.timestamp!.getTime()));
+            const newMessages = messages.filter(message => message.timestamp! > lastMessageTimestamp);
             return newMessages;
         } catch (error: any) {
             throw new ServerError("Failed to retrieve new messages: " + error.message);

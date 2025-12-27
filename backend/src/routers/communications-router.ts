@@ -20,16 +20,6 @@ export class CommunicationsRouter extends BaseRouter {
         }
     }
 
-    async getMessagesWithOrganization(req: Request, res: Response) {
-        const otherOrganizationID = req.params.otherOrganizationID as string;
-        try {
-            const messages = await chatManager.getMessagesWithOrganization(new RequestContext(req), otherOrganizationID);
-            this.sendNormalResponse(res, messages);            
-        } catch (error: any) {
-            this.sendServerErrorResponse(res, { success: false, message: error.message });
-        }
-    }
-
     async getOrganizationsWithActiveChats(req: Request, res: Response) {
         try {
           const organizationChatStatuses = await chatManager.getOrganizationsWithActiveChats(new RequestContext(req));
@@ -59,7 +49,6 @@ export class CommunicationsRouter extends BaseRouter {
         const communicationsRouter = new CommunicationsRouter();
         return express.Router()
             .post('/send-message-to-organization', authenticator([]), communicationsRouter.sendMessage.bind(communicationsRouter))
-            .get('/get-messages-with-organization/:otherOrganizationID', authenticator([]), communicationsRouter.getMessagesWithOrganization.bind(communicationsRouter))
             .get("/get-chat-statuses", authenticator([]), communicationsRouter.getOrganizationsWithActiveChats.bind(communicationsRouter))
             .post("/get-new-messages-with-organization", authenticator([]), communicationsRouter.getNewMessagesWithOrganization.bind(communicationsRouter));
     }

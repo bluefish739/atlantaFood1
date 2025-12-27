@@ -157,10 +157,6 @@ export class XapiService {
     return this.postResponse<GeneralConfirmationResponse>(`/xapi/communications/send-message-to-organization`, message);
   }
 
-  public async getMessagesWithOrganization(organizationID: string) {
-    return this.getResponse<Message[]>(`/xapi/communications/get-messages-with-organization/` + organizationID);
-  }
-
   public async getOrganizationsChatStatuses() {
     return this.getResponse<OrganizationChatStatuses>(`/xapi/communications/get-chat-statuses`);
   }
