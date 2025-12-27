@@ -32,21 +32,17 @@ export class OrganizationInfoManager {
         const availableOrganizations = (await organizationDAO.getAllOrganizations()).filter(org => org.name && org.addressLine1);
         const organizationsMatchingCategories = await Promise.all(
             availableOrganizations.map(async org => {
-                const foods = await foodDAO.getFoodsByOrganizationID(org.id!);
-                if (foods.length === 0) {
-                    return null;
-                }
+                const inventorySummary = await foodDAO.getInventorySummaryByOrganizationID(org.id!);
+                const inventoryEmpty = inventorySummary.categoryCounts.every(categoryCount => {
+                    return categoryCount.quantity === 0;
+                });
+                if (inventoryEmpty) return null;
 
-                if (sitesbyCategoryQuery.categoryIDs.length === 0) {
-                    return org;
-                }
-
-                for (const food of foods) {
-                    const categories = await foodDAO.getFoodCategoryAssociationsByFoodID(food.id!);
-                    for (const category of categories) {
-                        if (sitesbyCategoryQuery.categoryIDs.includes(category.foodCategoryID!)) {
-                            return org;
-                        }
+                if (sitesbyCategoryQuery.categoryIDs.length === 0) return org;
+                for (const categoryCount of inventorySummary.categoryCounts) {
+                    if (sitesbyCategoryQuery.categoryIDs.includes(categoryCount.categoryID!) &&
+                        categoryCount.quantity! > 0) {
+                        return org;
                     }
                 }
                 return null;
