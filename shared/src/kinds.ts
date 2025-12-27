@@ -196,3 +196,13 @@ export class MessagePollRequest {
     otherOrganizationID: string | undefined;
     lastMessageTimestamp: Date | undefined;
 }
+
+export class CategoryQuantityPair {
+    categoryName: string | undefined;
+    quantity : number | undefined;
+}
+
+export class InventorySummary {
+    organizationID: string | undefined;
+    summaryRows: CategoryQuantityPair[] = [];
+}
