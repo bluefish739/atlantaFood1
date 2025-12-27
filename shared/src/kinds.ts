@@ -190,6 +190,8 @@ export class OrganizationChatStatuses {
 export class ChatSummary {
     chatIdentifier: string | undefined;
     lastMessageTimestamp: Date | undefined;
+    lastReadByOrg1: Date | undefined;
+    lastReadByOrg2: Date | undefined;
 }
 
 export class MessagePollRequest {
