@@ -1,5 +1,5 @@
 <page-header></page-header>
-<div class="messages-container" *ngIf="organizationDetailsProvided == 'YES'">
+<div class="messages-container" *ngIf="organizationDetailsProvided == yes">
     <div class="organization-list">
         <div class="active-chats">
             <h3>Select Chat</h3>
@@ -50,6 +50,6 @@
         <h3>Please select an organization to start chatting.</h3>
     </div>
 </div>
-<div *ngIf="organizationDetailsProvided == 'NO'" class="warning-message">
+<div *ngIf="organizationDetailsProvided == no" class="warning-message">
     <h2>Please provide your organization details to access the messaging feature.</h2>
 </div>

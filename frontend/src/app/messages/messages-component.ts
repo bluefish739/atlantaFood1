@@ -30,7 +30,10 @@ export class MessagesComponent {
     selectedOrganization: Organization = new Organization();
     newMessageText = "";
     messages: Message[] = [];
-    organizationDetailsProvided = "LOADING";
+    loading = "LOADING";
+    no = "NO";
+    yes = "YES";
+    organizationDetailsProvided = this.loading;
     messagesLoading = false;
 
     constructor(private xapiService: XapiService) {
@@ -39,10 +42,10 @@ export class MessagesComponent {
     async ngOnInit() {
         const currentOrganization = await this.xapiService.getOrganizationDetails();
         if (!currentOrganization.name) {
-            this.organizationDetailsProvided = "NO";
+            this.organizationDetailsProvided = this.no;
             return;
         }
-        this.organizationDetailsProvided = "YES";
+        this.organizationDetailsProvided = this.yes;
         
         const organizationsChatStatuses = await this.xapiService.getOrganizationsChatStatuses();
         console.log(organizationsChatStatuses)
@@ -89,7 +92,7 @@ export class MessagesComponent {
             if (this.selectedOrganization.id) {
                 const messagePollRequest = new MessagePollRequest();
                 messagePollRequest.otherOrganizationID = this.selectedOrganization.id;
-                messagePollRequest.lastMessageTimestamp = this.messages.length > 0 ? this.messages[this.messages.length - 1].timestamp! : new Date();
+                messagePollRequest.lastMessageTimestamp = this.messages.length > 0 ? this.messages[this.messages.length - 1].timestamp! : new Date(1);
                 const update = await this.xapiService.getNewMessagesWithOrganization(messagePollRequest);
                 if (update.length > 0) this.messages = this.messages.concat(update);
             }
