@@ -1,4 +1,4 @@
-import { Food, FoodCategory, FoodCategoryAssociation } from "../../../shared/src/kinds";
+import { Food, FoodCategory, FoodCategoryAssociation, InventorySummary } from "../../../shared/src/kinds";
 import { datastore } from "./data-store-factory";
 import { PropertyFilter } from "@google-cloud/datastore";
 
@@ -6,6 +6,7 @@ export class FoodDAO {
     static FOOD_KIND = "Food";
     static FOOD_CATEGORY_KIND = "FoodCategory";
     static FOOD_CATEGORY_ASSOCIATION_KIND = "FoodCategoryAssocation";
+    static INVENTORY_SUMMARY_KIND = "InventorySummary";
     public async getFoodsByOrganizationID(organizationID: string) {
         const query = datastore.createQuery(FoodDAO.FOOD_KIND)
             .filter(new PropertyFilter('organizationID', '=', organizationID));
@@ -61,5 +62,21 @@ export class FoodDAO {
             data: food
         }
         await datastore.save(entity);
+    }
+
+    public async saveInventorySummary(inventorySummary: InventorySummary) {
+        const entityKey = datastore.key([FoodDAO.INVENTORY_SUMMARY_KIND, inventorySummary.organizationID!]);
+        const entity = {
+            key: entityKey,
+            data: inventorySummary
+        }
+        await datastore.save(entity);
+    }
+
+    public async getInventorySummaryByOrganizationID(organizationID: string) {
+        const entityKey = datastore.key([FoodDAO.INVENTORY_SUMMARY_KIND, organizationID]);
+        const data = await datastore.get(entityKey);
+        const inventorySummary = data[0];
+        return inventorySummary as InventorySummary;
     }
 }
