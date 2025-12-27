@@ -35,6 +35,7 @@ export class MessagesComponent {
     yes = "YES";
     organizationDetailsProvided = this.loading;
     messagesLoading = false;
+    pollingTimeout: any;
 
     constructor(private xapiService: XapiService) {
     }
@@ -48,7 +49,6 @@ export class MessagesComponent {
         this.organizationDetailsProvided = this.yes;
         
         const organizationsChatStatuses = await this.xapiService.getOrganizationsChatStatuses();
-        console.log(organizationsChatStatuses)
         this.organizationsWithActiveChats = organizationsChatStatuses.organizationsWithActiveChats;
         this.organizationsToSearch = organizationsChatStatuses.organizationsToSearch;
         this.startPolling();
@@ -60,19 +60,20 @@ export class MessagesComponent {
         if (!organization) {
             return;
         }
-        this.messages = await this.xapiService.getMessagesWithOrganization(organization.id!);
+        const messagePollRequest = new MessagePollRequest();
+        messagePollRequest.otherOrganizationID = organization.id!;
+        messagePollRequest.lastMessageTimestamp = new Date(1);
+        this.messages = await this.xapiService.getNewMessagesWithOrganization(messagePollRequest);
         this.selectedOrganization = organization;
         this.messagesLoading = false;
     }
 
     async sendMessage() {
-        // TODO: implement poll model
         const message = new Message();
         message.content = this.newMessageText;
         message.receivingOrganization = this.selectedOrganization.id;
         await this.xapiService.sendMessageToOrganization(message);
         this.newMessageText = "";
-        this.messages = await this.xapiService.getMessagesWithOrganization(this.selectedOrganization.id!);
     }
 
     addChat() {
@@ -88,7 +89,7 @@ export class MessagesComponent {
     }
 
     async startPolling() {
-        setInterval(async () => {
+        const poll = async () => {
             if (this.selectedOrganization.id) {
                 const messagePollRequest = new MessagePollRequest();
                 messagePollRequest.otherOrganizationID = this.selectedOrganization.id;
@@ -96,6 +97,12 @@ export class MessagesComponent {
                 const update = await this.xapiService.getNewMessagesWithOrganization(messagePollRequest);
                 if (update.length > 0) this.messages = this.messages.concat(update);
             }
-        }, 5000);
+            this.pollingTimeout = setTimeout(poll, 5000);
+        };
+        poll();
+    }
+
+    ngOnDestroy() {
+        clearTimeout(this.pollingTimeout);
     }
 }
