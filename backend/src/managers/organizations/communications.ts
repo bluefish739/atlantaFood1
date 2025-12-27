@@ -10,10 +10,6 @@ export class CommunicationsManager {
             message.sendingOrganization = requestContext.getCurrentOrganizationID()!;
             message.chatIdentifier = [message.sendingOrganization, message.receivingOrganization].sort().join("|");
             message.timestamp = new Date();
-            // setTimeout(async () => {
-            //     await organizationDAO.saveMessage(message);
-            //     await this.updateChatSummary(message);
-            // }, 30000);
             await organizationDAO.saveMessage(message);
             await this.updateChatSummary(message);
         } catch (error: any) {
@@ -25,23 +21,10 @@ export class CommunicationsManager {
         const organizationID = requestContext.getCurrentOrganizationID()!;
         try {
             const data = await organizationDAO.getChatSummary(organizationID, otherOrganizationID);
-            if (this.chatSummaryFound(data)) {
-                return data.lastMessageTimestamp!;
-            }
-            return null;
+            return data == null ? null : data.lastMessageTimestamp!;
         } catch (error: any) {
             throw new ServerError("Failed to retrieve latest message timestamp: " + error.message);
         }
-    }
-
-    private chatSummaryFound(data: any): data is ChatSummary {
-        if (!data || typeof data !== "object") {
-            return false;
-        }
-        const hasChatIdentifier = typeof data.chatIdentifier === "string";
-        const hasLastMessageTimestamp = data.lastMessageTimestamp instanceof Date;
-        const hasRequiredProperties = hasChatIdentifier && hasLastMessageTimestamp;
-        return hasRequiredProperties;
     }
 
     private async validateMessage(requestContext: RequestContext, message: Message) {
@@ -65,15 +48,13 @@ export class CommunicationsManager {
 
     private async updateChatSummary(message: Message) {
         const data = await organizationDAO.getChatSummary(message.receivingOrganization!, message.sendingOrganization!);
-        if (this.chatSummaryFound(data)) {
-            const chatSummary = data as ChatSummary;
+        let chatSummary = new ChatSummary();
+        if (data != null) {
             chatSummary.lastMessageTimestamp = message.timestamp!;
-            await organizationDAO.saveChatSummary(chatSummary);
-            return;
+        } else {
+            chatSummary.chatIdentifier = [message.sendingOrganization, message.receivingOrganization].sort().join("|");
+            chatSummary.lastMessageTimestamp = message.timestamp;
         }
-        const chatSummary = new ChatSummary();
-        chatSummary.chatIdentifier = [message.sendingOrganization, message.receivingOrganization].sort().join("|");
-        chatSummary.lastMessageTimestamp = message.timestamp;
         await organizationDAO.saveChatSummary(chatSummary);
     }
 }
