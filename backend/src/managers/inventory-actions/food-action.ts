@@ -1,4 +1,4 @@
-import { BadRequestError, CategoryCount, DetailedFood, Food, FoodCategoryAssociation, GeneralConfirmationResponse, RequestContext, ServerError } from "../../../../shared/src/kinds";
+import { BadRequestError, CategoryCount, DetailedFood, Food, FoodCategoryAssociation, GeneralConfirmationResponse, InventorySummary, RequestContext, ServerError } from "../../../../shared/src/kinds";
 import * as logger from "firebase-functions/logger";
 import { generateId } from "../../shared/idutilities";
 import { foodDAO } from "../../daos/dao-factory";
@@ -9,9 +9,11 @@ export class FoodActionManager {
     async saveFood(requestContext: RequestContext, detailedFood: DetailedFood) {
         const organizationID = requestContext.getCurrentOrganizationID()!;
         let foodBeingSaved: Food;
+        let originalQuantity = 0;
         try {
             const existingFood = await this.validateSaveFoodRequest(organizationID, detailedFood);
             foodBeingSaved = existingFood ? existingFood : new Food();
+            originalQuantity = existingFood ? (existingFood.currentQuantity || 0) : 0;
         } catch (error: any) {
             logger.log("saveFood: failed to validate detailedFood object ", detailedFood);
             throw new BadRequestError(error);
@@ -36,7 +38,7 @@ export class FoodActionManager {
                 .map(foodCategoryAssociation => foodCategoryAssociation.foodCategoryID!);
             const idsOfFoodCategoryAssociationsToDelete = oldFoodCategoryIDs.filter(foodCategoryID => !detailedFood.categoryIDs.includes(foodCategoryID!));
             const idsOfFoodCategoryAssociationsToSave = detailedFood.categoryIDs.filter(foodCategoryID => !oldFoodCategoryIDs.includes(foodCategoryID));
-            this.saveFoodToDatabase(foodBeingSaved, idsOfFoodCategoryAssociationsToSave, idsOfFoodCategoryAssociationsToDelete);
+            this.saveFoodToDatabase(foodBeingSaved, originalQuantity, idsOfFoodCategoryAssociationsToSave, idsOfFoodCategoryAssociationsToDelete);
 
             const generalConfirmationResponse = new GeneralConfirmationResponse();
             generalConfirmationResponse.success = true;
@@ -86,7 +88,7 @@ export class FoodActionManager {
         return null;
     }
 
-    private async saveFoodToDatabase(food: Food, idsOfFoodCategoriestoSave: string[], idsOfFoodCategoriestoDelete: string[]) {
+    private async saveFoodToDatabase(food: Food, originalQuantity: number, idsOfFoodCategoriestoSave: string[], idsOfFoodCategoriestoDelete: string[]) {
         const foodID = food.id!;
         const transaction = datastore.transaction();
         try {
@@ -97,7 +99,7 @@ export class FoodActionManager {
             };
 
             transaction.save(foodEntity);
-
+            
             const foodCategoryEntities = idsOfFoodCategoriestoSave.map(foodCategoryID => {
                 const foodCategoryAssociation = new FoodCategoryAssociation();
                 foodCategoryAssociation.foodCategoryID = foodCategoryID;
@@ -110,27 +112,35 @@ export class FoodActionManager {
                 return foodCategoryAssociationEntity;
             });
             transaction.save(foodCategoryEntities);
+            
+            let inventorySummary = await foodDAO.getInventorySummaryByOrganizationID(food.organizationID!);
+            if (!inventorySummary) inventorySummary = new InventorySummary();
+            idsOfFoodCategoriestoSave.forEach(foodCategoryID => {
+                const categoryCount = inventorySummary.categoryCounts?.find(c => c.categoryID === foodCategoryID);
+                if (categoryCount) {
+                    categoryCount.quantity = (categoryCount.quantity || 0) + (food.currentQuantity || 0) - originalQuantity;
+                } else {
+                    const categoryCount = new CategoryCount();
+                    categoryCount.categoryID = foodCategoryID;
+                    categoryCount.quantity = food.currentQuantity || 0;
+                    inventorySummary.categoryCounts.push(categoryCount);
+                }
+            });
+            idsOfFoodCategoriestoDelete.forEach(foodCategoryID => {
+                const categoryCount = inventorySummary.categoryCounts?.find(c => c.categoryID === foodCategoryID);
+                if (categoryCount) {
+                    categoryCount.quantity = (categoryCount.quantity || 0) - ((food.currentQuantity || 0) - originalQuantity);
+                }
+            });
+            const existingCategories = await foodDAO.getFoodCategoryAssociationsByFoodID(foodID);
+            existingCategories.forEach(foodCategoryAssociation => {
+                if (idsOfFoodCategoriestoDelete.includes(foodCategoryAssociation.foodCategoryID!)) return;
+                const categoryCount = inventorySummary!.categoryCounts?.find(c => c.categoryID === foodCategoryAssociation.foodCategoryID);
+                if (categoryCount) {
+                    categoryCount.quantity = (categoryCount.quantity || 0) + (food.currentQuantity || 0) - originalQuantity;
+                }
+            });
 
-            const inventorySummary = await foodDAO.getInventorySummaryByOrganizationID(food.organizationID!);
-            if (idsOfFoodCategoriestoSave.length > 0) {
-                idsOfFoodCategoriestoSave.forEach(foodCategoryID => {
-                    const categoryCount = inventorySummary.categoryCounts?.find(c => c.categoryID === foodCategoryID);
-                    if (categoryCount) {
-                        categoryCount.quantity = (categoryCount.quantity || 0) + (food.currentQuantity || 0);
-                    } else {
-                        const categoryCount = new CategoryCount();
-                        categoryCount.categoryID = foodCategoryID;
-                        categoryCount.quantity = food.currentQuantity || 0;
-                        inventorySummary.categoryCounts.push(categoryCount);
-                    }
-                });
-                idsOfFoodCategoriestoDelete.forEach(foodCategoryID => {
-                    const categoryCount = inventorySummary.categoryCounts?.find(c => c.categoryID === foodCategoryID);
-                    if (categoryCount) {
-                        categoryCount.quantity = (categoryCount.quantity || 0) - (food.currentQuantity || 0);
-                    }
-                });
-            }
             const inventorySummaryEntity = {
                 key: datastore.key([FoodDAO.INVENTORY_SUMMARY_KIND, food.organizationID!]),
                 data: inventorySummary
@@ -160,9 +170,25 @@ export class FoodActionManager {
                 datastore.key([FoodDAO.FOOD_KIND, foodID])
             ];
 
+            const food = await foodDAO.getFoodByID(foodID);
+            const inventorySummary = await foodDAO.getInventorySummaryByOrganizationID(requestContext.getCurrentOrganizationID()!);
             foodCategoryAssociations.forEach(
-                foodCategoryAssociation => keys.push(datastore.key([FoodDAO.FOOD_CATEGORY_ASSOCIATION_KIND, foodID + "|" + foodCategoryAssociation.foodCategoryID]))
+                foodCategoryAssociation => {
+                    keys.push(datastore.key([FoodDAO.FOOD_CATEGORY_ASSOCIATION_KIND, foodID + "|" + foodCategoryAssociation.foodCategoryID]))
+                    if (inventorySummary && inventorySummary.categoryCounts) {
+                        const categoryCount = inventorySummary.categoryCounts.find(c => c.categoryID === foodCategoryAssociation.foodCategoryID);
+                        if (!categoryCount) {
+                            throw new BadRequestError("Inconsistent database state: category count not found for categoryID " + foodCategoryAssociation.foodCategoryID);
+                        }
+                        categoryCount.quantity = (categoryCount.quantity || 0) - (food!.currentQuantity || 0);
+                    }
+                }
             );
+            const inventorySummaryEntity = {
+                key: datastore.key([FoodDAO.INVENTORY_SUMMARY_KIND, requestContext.getCurrentOrganizationID()!]),
+                data: inventorySummary
+            };
+            transaction.save(inventorySummaryEntity);
 
             await transaction.run();
             transaction.delete(keys);
