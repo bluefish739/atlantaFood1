@@ -18,13 +18,13 @@ export class ChatManager {
             for (const org of organizationsAvailableToChat) {
                 const latestMessageTimestamp = await communicationsManager.getLatestMessageTimestamp(requestContext, org.id!);
                 if (latestMessageTimestamp !== null) {
-                    organizationsChatStatuses.organizationsWithActiveChats.push(org);
-                    timestampMap.set(org.id!, latestMessageTimestamp);
-                    
                     const chatSummary = await organizationDAO.getChatSummary(getIdentifier(organizationID, org.id!));
                     const lastReadTimestamp = organizationID < org.id! ? chatSummary?.lastReadByOrg1 : chatSummary?.lastReadByOrg2;
                     if (lastReadTimestamp == null || latestMessageTimestamp > lastReadTimestamp) {
                         organizationsChatStatuses.organizationsWithNewMessages.push(org);
+                    } else {
+                        organizationsChatStatuses.organizationsWithActiveChats.push(org);
+                        timestampMap.set(org.id!, latestMessageTimestamp);
                     }
                 } else {
                     organizationsChatStatuses.organizationsToSearch.push(org);
@@ -32,6 +32,8 @@ export class ChatManager {
             }
 
             organizationsChatStatuses.organizationsWithActiveChats.sort((a, b) => timestampMap.get(b.id!)!.getTime() - timestampMap.get(a.id!)!.getTime());
+            organizationsChatStatuses.organizationsWithActiveChats = 
+                [...organizationsChatStatuses.organizationsWithNewMessages, ...organizationsChatStatuses.organizationsWithActiveChats];
             organizationsChatStatuses.organizationsToSearch.sort((a, b) => a.name!.localeCompare(b.name!));
 
             return organizationsChatStatuses;
