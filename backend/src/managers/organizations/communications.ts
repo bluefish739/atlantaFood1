@@ -1,6 +1,7 @@
 import { BadRequestError, ChatSummary, Message, RequestContext, ServerError } from "../../../../shared/src/kinds";
 import { organizationDAO } from "../../daos/dao-factory";
 import { generateId } from "../../shared/idutilities";
+import { getIdentifier } from "../../utility-functions";
 
 export class CommunicationsManager {
     async sendMessage(requestContext: RequestContext, message: Message) {
@@ -8,7 +9,7 @@ export class CommunicationsManager {
             await this.validateMessage(requestContext, message);
             message.id = generateId();
             message.sendingOrganization = requestContext.getCurrentOrganizationID()!;
-            message.chatIdentifier = [message.sendingOrganization, message.receivingOrganization].sort().join("|");
+            message.chatIdentifier = getIdentifier(message.sendingOrganization, message.receivingOrganization!);
             message.timestamp = new Date();
             await organizationDAO.saveMessage(message);
             await this.updateChatSummary(message);
@@ -20,7 +21,8 @@ export class CommunicationsManager {
     async getLatestMessageTimestamp(requestContext: RequestContext, otherOrganizationID: string) {
         const organizationID = requestContext.getCurrentOrganizationID()!;
         try {
-            const data = await organizationDAO.getChatSummary(organizationID, otherOrganizationID);
+            const chatIdentifier = getIdentifier(organizationID, otherOrganizationID);
+            const data = await organizationDAO.getChatSummary(chatIdentifier);
             return data == null ? null : data.lastMessageTimestamp!;
         } catch (error: any) {
             throw new ServerError("Failed to retrieve latest message timestamp: " + error.message);
@@ -47,7 +49,8 @@ export class CommunicationsManager {
     }
 
     private async updateChatSummary(message: Message) {
-        const data = await organizationDAO.getChatSummary(message.receivingOrganization!, message.sendingOrganization!);
+        const chatIdentifier = getIdentifier(message.sendingOrganization!, message.receivingOrganization!);
+        const data = await organizationDAO.getChatSummary(chatIdentifier);
         let chatSummary = data || new ChatSummary();
         if (data != null) {
             data.lastMessageTimestamp = message.timestamp!;

@@ -73,9 +73,9 @@ export class OrganizationDAO {
         return message;
     }
 
-    public async getMessagesBetweenOrganizations(orgID1: string, orgID2: string) {
+    public async getMessagesBetweenOrganizations(chatIdentifier: string) {
         const query = datastore.createQuery(OrganizationDAO.MESSAGE_KIND)
-            .filter(new PropertyFilter('chatIdentifier', '=', [orgID1, orgID2].sort().join("|")));
+            .filter(new PropertyFilter('chatIdentifier', '=', chatIdentifier));
         const data = await query.run();
         const messages = data[0];
         return messages as Message[];
@@ -92,9 +92,9 @@ export class OrganizationDAO {
         return chatSummary;
     }
 
-    public async getChatSummary(orgID1: string, orgID2: string) {
+    public async getChatSummary(chatIdentifier: string) {
         const query = datastore.createQuery(OrganizationDAO.CHAT_SUMMARY_KIND)
-            .filter(new PropertyFilter('chatIdentifier', '=', [orgID1, orgID2].sort().join("|")));
+            .filter(new PropertyFilter('chatIdentifier', '=', chatIdentifier));
         const [data] = await query.run();
         return data[0];
     }

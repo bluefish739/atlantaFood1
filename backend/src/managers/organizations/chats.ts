@@ -1,6 +1,7 @@
 import { BadRequestError, ChatSummary, OrganizationChatStatuses, RequestContext, ServerError } from "../../../../shared/src/kinds";
 import { organizationDAO } from "../../daos/dao-factory";
 import { communicationsManager } from "../manager-factory";
+import { getIdentifier } from "../../utility-functions";
 
 export class ChatManager {
     async getOrganizationsWithActiveChats(requestContext: RequestContext) {
@@ -20,7 +21,7 @@ export class ChatManager {
                     organizationsChatStatuses.organizationsWithActiveChats.push(org);
                     timestampMap.set(org.id!, latestMessageTimestamp);
                     
-                    const chatSummary = await organizationDAO.getChatSummary(organizationID, org.id!);
+                    const chatSummary = await organizationDAO.getChatSummary(getIdentifier(organizationID, org.id!));
                     const lastReadTimestamp = organizationID < org.id! ? chatSummary?.lastReadByOrg1 : chatSummary?.lastReadByOrg2;
                     if (lastReadTimestamp == null || latestMessageTimestamp > lastReadTimestamp) {
                         organizationsChatStatuses.organizationsWithNewMessages.push(org);
@@ -42,7 +43,7 @@ export class ChatManager {
     async getNewMessagesWithOrganization(requestContext: RequestContext, otherOrganizationID: string, lastMessageTimestamp: Date) {
         try {
             const organizationID = requestContext.getCurrentOrganizationID()!;
-            const messages = await organizationDAO.getMessagesBetweenOrganizations(organizationID, otherOrganizationID);
+            const messages = await organizationDAO.getMessagesBetweenOrganizations(getIdentifier(organizationID, otherOrganizationID));
             messages.sort((a, b) => (a.timestamp!.getTime() - b.timestamp!.getTime()));
             const newMessages = messages.filter(message => message.timestamp! > lastMessageTimestamp);
 
@@ -54,7 +55,7 @@ export class ChatManager {
     }
 
     async updateChatSummary(organizationID: string, otherOrganizationID: string) {
-        const chatSummary: ChatSummary = await organizationDAO.getChatSummary(organizationID, otherOrganizationID);
+        const chatSummary: ChatSummary = await organizationDAO.getChatSummary(getIdentifier(organizationID, otherOrganizationID));
         if (!chatSummary) {
             return;
         }
