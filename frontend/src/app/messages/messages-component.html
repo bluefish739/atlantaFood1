@@ -12,7 +12,7 @@
                         <mat-option 
                             *ngFor="let org of organizationsWithActiveChats" 
                             [value]="org.name" 
-                            [ngClass]="{'has-new-message': organizationsWithNewMessages.includes(org)}">
+                            [ngClass]="{'has-new-message': hasNewMessage(org.id!)}">
                             {{ org.name }}
                         </mat-option>
                     </mat-autocomplete>

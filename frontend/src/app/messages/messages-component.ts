@@ -53,7 +53,6 @@ export class MessagesComponent {
         this.organizationsWithActiveChats = organizationsChatStatuses.organizationsWithActiveChats;
         this.organizationsToSearch = organizationsChatStatuses.organizationsToSearch;
         this.organizationsWithNewMessages = organizationsChatStatuses.organizationsWithNewMessages;
-        console.log("organizations with new messages:", this.organizationsWithNewMessages);
         this.startPolling();
     }
 
@@ -69,6 +68,10 @@ export class MessagesComponent {
         this.messages = await this.xapiService.getNewMessagesWithOrganization(messagePollRequest);
         this.selectedOrganization = organization;
         this.messagesLoading = false;
+    }
+
+    hasNewMessage(orgId: string): boolean {
+        return this.organizationsWithNewMessages.some(newOrg => newOrg.id === orgId);
     }
 
     async sendMessage() {
