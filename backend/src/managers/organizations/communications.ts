@@ -48,9 +48,9 @@ export class CommunicationsManager {
 
     private async updateChatSummary(message: Message) {
         const data = await organizationDAO.getChatSummary(message.receivingOrganization!, message.sendingOrganization!);
-        let chatSummary = new ChatSummary();
+        let chatSummary = data || new ChatSummary();
         if (data != null) {
-            chatSummary.lastMessageTimestamp = message.timestamp!;
+            data.lastMessageTimestamp = message.timestamp!;
         } else {
             chatSummary.chatIdentifier = [message.sendingOrganization, message.receivingOrganization].sort().join("|");
             chatSummary.lastMessageTimestamp = message.timestamp;

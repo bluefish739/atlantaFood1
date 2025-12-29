@@ -48,15 +48,14 @@ export class ChatManager {
     }
 
     async updateChatSummary(organizationID: string, otherOrganizationID: string) {
-        let chatSummary: ChatSummary = await organizationDAO.getChatSummary(organizationID, otherOrganizationID);
-        if (chatSummary == null) {
-            chatSummary = new ChatSummary();
+        const chatSummary: ChatSummary = await organizationDAO.getChatSummary(organizationID, otherOrganizationID);
+        if (!chatSummary) {
+            return;
+        }
+        if (organizationID < otherOrganizationID) {
+            chatSummary.lastReadByOrg1 = new Date();
         } else {
-            if (organizationID < otherOrganizationID) {
-                chatSummary.lastReadByOrg1 = new Date();
-            } else {
-                chatSummary.lastReadByOrg2 = new Date();
-            }
+            chatSummary.lastReadByOrg2 = new Date();
         }
         await organizationDAO.saveChatSummary(chatSummary);
     }
