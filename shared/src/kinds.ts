@@ -185,6 +185,7 @@ export class Message {
 export class OrganizationChatStatuses {
     organizationsWithActiveChats: Organization[] = [];
     organizationsToSearch: Organization[] = [];
+    organizationsWithNewMessages: Organization[] = [];
 }
 
 export class ChatSummary {
