@@ -21,6 +21,7 @@ import { last } from 'rxjs';
 export class MessagesComponent {
     organizationsWithActiveChats: Organization[] = [];
     organizationsToSearch: Organization[] = [];
+    organizationsWithNewMessages: Organization[] = [];
     organizationSearchForm = new FormGroup({
         searchedOrganization: new FormControl('')
     });
@@ -51,6 +52,8 @@ export class MessagesComponent {
         const organizationsChatStatuses = await this.xapiService.getOrganizationsChatStatuses();
         this.organizationsWithActiveChats = organizationsChatStatuses.organizationsWithActiveChats;
         this.organizationsToSearch = organizationsChatStatuses.organizationsToSearch;
+        this.organizationsWithNewMessages = organizationsChatStatuses.organizationsWithNewMessages;
+        console.log("organizations with new messages:", this.organizationsWithNewMessages);
         this.startPolling();
     }
 

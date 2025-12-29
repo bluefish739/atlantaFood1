@@ -9,7 +9,12 @@
                     <input type="text" placeholder="Start typing..." aria-label="Select an organization" matInput
                         [matAutocomplete]="chatAuto" formControlName="selectedChat">
                     <mat-autocomplete #chatAuto="matAutocomplete">
-                        <mat-option *ngFor="let org of organizationsWithActiveChats" [value]="org.name">{{ org.name }}</mat-option>
+                        <mat-option 
+                            *ngFor="let org of organizationsWithActiveChats" 
+                            [value]="org.name" 
+                            [ngClass]="{'has-new-message': organizationsWithNewMessages.includes(org)}">
+                            {{ org.name }}
+                        </mat-option>
                     </mat-autocomplete>
                 </mat-form-field>
                 <button type="submit" class="add-chat-button" mat-raised-button color="primary">Select Chat</button>

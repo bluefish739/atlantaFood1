@@ -19,6 +19,12 @@ export class ChatManager {
                 if (latestMessageTimestamp !== null) {
                     organizationsChatStatuses.organizationsWithActiveChats.push(org);
                     timestampMap.set(org.id!, latestMessageTimestamp);
+                    
+                    const chatSummary = await organizationDAO.getChatSummary(organizationID, org.id!);
+                    const lastReadTimestamp = organizationID < org.id! ? chatSummary?.lastReadByOrg1 : chatSummary?.lastReadByOrg2;
+                    if (lastReadTimestamp == null || latestMessageTimestamp > lastReadTimestamp) {
+                        organizationsChatStatuses.organizationsWithNewMessages.push(org);
+                    }
                 } else {
                     organizationsChatStatuses.organizationsToSearch.push(org);
                 }
