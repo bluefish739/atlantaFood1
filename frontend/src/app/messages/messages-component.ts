@@ -36,7 +36,6 @@ export class MessagesComponent {
     yes = "YES";
     organizationDetailsProvided = this.loading;
     messagesLoading = false;
-    pollingTimeout: any;
 
     constructor(private xapiService: XapiService) {
     }
@@ -95,20 +94,19 @@ export class MessagesComponent {
     }
 
     async startPolling() {
-        const poll = async () => {
-            if (this.selectedOrganization.id) {
-                const messagePollRequest = new MessagePollRequest();
-                messagePollRequest.otherOrganizationID = this.selectedOrganization.id;
-                messagePollRequest.lastMessageTimestamp = this.messages.length > 0 ? this.messages[this.messages.length - 1].timestamp! : new Date(1);
-                const update = await this.xapiService.getNewMessagesWithOrganization(messagePollRequest);
-                if (update.length > 0) this.messages = this.messages.concat(update);
-            }
-            this.pollingTimeout = setTimeout(poll, 5000);
-        };
-        poll();
+        while (this.selectedOrganization.id) {
+            const messagePollRequest = new MessagePollRequest();
+            messagePollRequest.otherOrganizationID = this.selectedOrganization.id;
+            messagePollRequest.lastMessageTimestamp = this.messages.length > 0 ? this.messages[this.messages.length - 1].timestamp! : new Date(1);
+            
+            const update = await this.xapiService.getNewMessagesWithOrganization(messagePollRequest);
+            this.messages = this.messages.concat(update);
+
+            await new Promise(resolve => setTimeout(resolve, 1000));
+        }
     }
 
     ngOnDestroy() {
-        clearTimeout(this.pollingTimeout);
+        this.selectedOrganization.id = undefined;
     }
 }

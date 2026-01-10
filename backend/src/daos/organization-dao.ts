@@ -73,7 +73,7 @@ export class OrganizationDAO {
         return message;
     }
 
-    public async getMessagesBetweenOrganizations(chatIdentifier: string) {
+    public async getMessagesBetweenOrganizations(chatIdentifier: string): Promise<Message[]> {
         const query = datastore.createQuery(OrganizationDAO.MESSAGE_KIND)
             .filter(new PropertyFilter('chatIdentifier', '=', chatIdentifier));
         const data = await query.run();
