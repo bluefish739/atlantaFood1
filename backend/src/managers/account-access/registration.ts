@@ -1,7 +1,7 @@
-import { ADMIN_ROLE_NAME, BadRequestError, InventorySummary, LoginRequest, LoginResponse, Organization, OrganizationEmployee, RequestContext, Role, ServerError, SignupData, User, UserRole } from "../../../../shared/src/kinds";
+import { ADMIN_ROLE_NAME, BadRequestError, LoginRequest, LoginResponse, Organization, OrganizationEmployee, RequestContext, Role, ServerError, SignupData, User, UserRole } from "../../../../shared/src/kinds";
 import * as logger from "firebase-functions/logger";
 import { generateId } from "../../shared/idutilities";
-import { foodDAO, organizationDAO, roleDAO, userDAO } from "../../daos/dao-factory";
+import { organizationDAO, roleDAO, userDAO } from "../../daos/dao-factory";
 import { checkDuplicatedUsername } from "../../utility-functions";
 
 export class RegistrationManager {
@@ -95,10 +95,6 @@ export class RegistrationManager {
         userRole.roleID = adminRole.id;
         await roleDAO.saveUserRole(userRole);
         logger.log("Created user role: ", userRole);
-
-        const inventorySummary = new InventorySummary();
-        inventorySummary.organizationID = organizationID;
-        await foodDAO.saveInventorySummary(inventorySummary);
     }
 
     async login(requestContext: RequestContext, loginRequest: LoginRequest) {
