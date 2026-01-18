@@ -1,7 +1,7 @@
 import { BadRequestError, ChatSummary, Message, OrganizationChatStatuses, RequestContext, ServerError } from "../../../../shared/src/kinds";
 import { organizationDAO } from "../../daos/dao-factory";
 import { communicationsManager } from "../manager-factory";
-import { getIdentifier } from "../../utility-functions";
+import { alphabeticalCompare, getIdentifier } from "../../utility-functions";
 import * as logger from "firebase-functions/logger";
 
 export class ChatManager {
@@ -18,25 +18,28 @@ export class ChatManager {
             const timestampMap = new Map<string, Date>();
             for (const org of organizationsAvailableToChat) {
                 const latestMessageTimestamp = await communicationsManager.getLatestMessageTimestamp(requestContext, org.id!);
-                if (latestMessageTimestamp !== null) {
+                if (latestMessageTimestamp !== null) { // There is an active chat
                     const chatSummary = await organizationDAO.getChatSummary(getIdentifier(organizationID, org.id!));
-                    const lastReadTimestamp = organizationID < org.id! ? chatSummary?.lastReadByOrg1 : chatSummary?.lastReadByOrg2;
+                    const lastReadTimestamp = alphabeticalCompare(organizationID, org.id!) ? chatSummary?.lastReadByOrg1 : chatSummary?.lastReadByOrg2;
+
                     if (lastReadTimestamp == null || latestMessageTimestamp > lastReadTimestamp) {
-                        organizationsChatStatuses.organizationsWithNewMessages.push(org);
+                        organizationsChatStatuses.organizationsWithNewMessages.push(org); // New messages to be read
                     } else {
                         organizationsChatStatuses.organizationsWithActiveChats.push(org);
-                        timestampMap.set(org.id!, latestMessageTimestamp);
+                        timestampMap.set(org.id!, latestMessageTimestamp); // Store timestamp for sorting
                     }
                 } else {
-                    organizationsChatStatuses.organizationsToSearch.push(org);
+                    organizationsChatStatuses.organizationsToSearch.push(org); // No active chat
                 }
             }
-
-            organizationsChatStatuses.organizationsWithActiveChats.sort((a, b) => timestampMap.get(b.id!)!.getTime() - timestampMap.get(a.id!)!.getTime());
+           
+            organizationsChatStatuses.organizationsToSearch.sort((a, b) => a.name!.localeCompare(b.name!)); // Sort organizations without active chats alphabetically
+            organizationsChatStatuses.organizationsWithActiveChats.sort((a, b) => 
+                timestampMap.get(b.id!)!.getTime() - timestampMap.get(a.id!)!.getTime() // Currently only contains organizations with no new messages, but active chat
+            );
             organizationsChatStatuses.organizationsWithActiveChats = 
-                [...organizationsChatStatuses.organizationsWithNewMessages, ...organizationsChatStatuses.organizationsWithActiveChats];
-            organizationsChatStatuses.organizationsToSearch.sort((a, b) => a.name!.localeCompare(b.name!));
-
+                [...organizationsChatStatuses.organizationsWithNewMessages, ...organizationsChatStatuses.organizationsWithActiveChats]; // Now append organizations with new messages at top
+            
             return organizationsChatStatuses;
         } catch (error: any) {
             throw new ServerError("Failed to retrieve organizations with active chats: " + error.message);
