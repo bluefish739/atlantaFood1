@@ -67,11 +67,9 @@ export class InventoryUpdatesComponent {
       if (this.isNewFood) {
         this.detailedFood.food!.currentQuantity = this.detailedFood.food!.initialQuantity;
       }
-      const response = await this.xapiService.saveFood(this.detailedFood);
-      console.log("onSubmit: response=", response);
+      await this.xapiService.saveFood(this.detailedFood);
       this.navigateToDetails();
     } catch (error: any) {
-      console.log("onSubmit: error=", error);
       if (error.error) {
         this.errorMessage = error.error.message;
       } else {
