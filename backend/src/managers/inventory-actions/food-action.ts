@@ -9,11 +9,11 @@ export class FoodActionManager {
     async saveFood(requestContext: RequestContext, detailedFood: DetailedFood) {
         const organizationID = requestContext.getCurrentOrganizationID()!;
         let foodBeingSaved: Food;
-        let originalQuantity = 0;
+        let previousQuantity = 0;
         try {
             const existingFood = await this.validateSaveFoodRequest(organizationID, detailedFood);
             foodBeingSaved = existingFood ? existingFood : new Food();
-            originalQuantity = existingFood ? (existingFood.currentQuantity || 0) : 0;
+            previousQuantity = existingFood ? (existingFood.currentQuantity || 0) : 0;
         } catch (error: any) {
             logger.log("saveFood: failed to validate detailedFood object ", detailedFood);
             throw new BadRequestError(error);
@@ -38,7 +38,7 @@ export class FoodActionManager {
                 .map(foodCategoryAssociation => foodCategoryAssociation.foodCategoryID!);
             const idsOfFoodCategoryAssociationsToDelete = oldFoodCategoryIDs.filter(foodCategoryID => !detailedFood.categoryIDs.includes(foodCategoryID!));
             const idsOfFoodCategoryAssociationsToSave = detailedFood.categoryIDs.filter(foodCategoryID => !oldFoodCategoryIDs.includes(foodCategoryID));
-            this.saveFoodToDatabase(foodBeingSaved, originalQuantity, idsOfFoodCategoryAssociationsToSave, idsOfFoodCategoryAssociationsToDelete);
+            this.saveFoodToDatabase(foodBeingSaved, previousQuantity, idsOfFoodCategoryAssociationsToSave, idsOfFoodCategoryAssociationsToDelete);
 
             const generalConfirmationResponse = new GeneralConfirmationResponse();
             generalConfirmationResponse.success = true;
@@ -88,7 +88,7 @@ export class FoodActionManager {
         return null;
     }
 
-    private async saveFoodToDatabase(food: Food, originalQuantity: number, idsOfFoodCategoriestoSave: string[], idsOfFoodCategoriestoDelete: string[]) {
+    private async saveFoodToDatabase(food: Food, previousQuantity: number, idsOfFoodCategoriestoSave: string[], idsOfFoodCategoriestoDelete: string[]) {
         const foodID = food.id!;
         const transaction = datastore.transaction();
         try {
@@ -98,8 +98,10 @@ export class FoodActionManager {
                 data: food
             };
 
+            // Save food itself
             transaction.save(foodEntity);
             
+            // Save new food category associations
             const foodCategoryEntities = idsOfFoodCategoriestoSave.map(foodCategoryID => {
                 const foodCategoryAssociation = new FoodCategoryAssociation();
                 foodCategoryAssociation.foodCategoryID = foodCategoryID;
@@ -113,31 +115,35 @@ export class FoodActionManager {
             });
             transaction.save(foodCategoryEntities);
             
-            let inventorySummary = await foodDAO.getInventorySummaryByOrganizationID(food.organizationID!);
+            let inventorySummary = await foodDAO.getInventorySummaryByOrganizationID(food.organizationID!); // Get existing or create new
             if (!inventorySummary) inventorySummary = new InventorySummary();
+
             idsOfFoodCategoriestoSave.forEach(foodCategoryID => {
                 const categoryCount = inventorySummary.categoryCounts?.find(c => c.categoryID === foodCategoryID);
                 if (categoryCount) {
-                    categoryCount.quantity = (categoryCount.quantity || 0) + (food.currentQuantity || 0) - originalQuantity;
+                    categoryCount.quantity! += food.currentQuantity!; // Add full quantity for new category
                 } else {
+                    // Otherwise create new category count with quantity equal to food quantity
                     const categoryCount = new CategoryCount();
                     categoryCount.categoryID = foodCategoryID;
-                    categoryCount.quantity = food.currentQuantity || 0;
+                    categoryCount.quantity = food.currentQuantity;
                     inventorySummary.categoryCounts.push(categoryCount);
                 }
             });
             idsOfFoodCategoriestoDelete.forEach(foodCategoryID => {
                 const categoryCount = inventorySummary.categoryCounts?.find(c => c.categoryID === foodCategoryID);
                 if (categoryCount) {
-                    categoryCount.quantity = (categoryCount.quantity || 0) - ((food.currentQuantity || 0) - originalQuantity);
+                    categoryCount.quantity! -= previousQuantity; // Subtract previously stored quantity from deleted category
                 }
             });
+
             const existingCategories = await foodDAO.getFoodCategoryAssociationsByFoodID(foodID);
             existingCategories.forEach(foodCategoryAssociation => {
-                if (idsOfFoodCategoriestoDelete.includes(foodCategoryAssociation.foodCategoryID!)) return;
+                if (idsOfFoodCategoriestoDelete.includes(foodCategoryAssociation.foodCategoryID!)) return; // Already handled above
+
                 const categoryCount = inventorySummary!.categoryCounts?.find(c => c.categoryID === foodCategoryAssociation.foodCategoryID);
                 if (categoryCount) {
-                    categoryCount.quantity = (categoryCount.quantity || 0) + (food.currentQuantity || 0) - originalQuantity;
+                    categoryCount.quantity! += food.currentQuantity! - previousQuantity; // Adjust quantity by difference
                 }
             });
 
