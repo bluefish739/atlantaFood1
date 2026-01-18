@@ -4,16 +4,17 @@ import { generateId } from "../../shared/idutilities";
 import { foodDAO } from "../../daos/dao-factory";
 import { datastore } from "../../daos/data-store-factory";
 import { FoodDAO } from "../../daos/food-dao";
+import { getAllFoodCategories } from "../../shared/utilities";
 
 export class FoodActionManager {
     async saveFood(requestContext: RequestContext, detailedFood: DetailedFood) {
         const organizationID = requestContext.getCurrentOrganizationID()!;
         let foodBeingSaved: Food;
-        let originalQuantity = 0;
+        let previousQuantity = 0;
         try {
             const existingFood = await this.validateSaveFoodRequest(organizationID, detailedFood);
             foodBeingSaved = existingFood ? existingFood : new Food();
-            originalQuantity = existingFood ? (existingFood.currentQuantity || 0) : 0;
+            previousQuantity = existingFood ? (existingFood.currentQuantity || 0) : 0;
         } catch (error: any) {
             logger.log("saveFood: failed to validate detailedFood object ", detailedFood);
             throw new BadRequestError(error);
@@ -38,7 +39,7 @@ export class FoodActionManager {
                 .map(foodCategoryAssociation => foodCategoryAssociation.foodCategoryID!);
             const idsOfFoodCategoryAssociationsToDelete = oldFoodCategoryIDs.filter(foodCategoryID => !detailedFood.categoryIDs.includes(foodCategoryID!));
             const idsOfFoodCategoryAssociationsToSave = detailedFood.categoryIDs.filter(foodCategoryID => !oldFoodCategoryIDs.includes(foodCategoryID));
-            this.saveFoodToDatabase(foodBeingSaved, originalQuantity, idsOfFoodCategoryAssociationsToSave, idsOfFoodCategoryAssociationsToDelete);
+            this.saveFoodToDatabase(foodBeingSaved, previousQuantity, idsOfFoodCategoryAssociationsToSave, idsOfFoodCategoryAssociationsToDelete);
 
             const generalConfirmationResponse = new GeneralConfirmationResponse();
             generalConfirmationResponse.success = true;
@@ -88,7 +89,7 @@ export class FoodActionManager {
         return null;
     }
 
-    private async saveFoodToDatabase(food: Food, originalQuantity: number, idsOfFoodCategoriestoSave: string[], idsOfFoodCategoriestoDelete: string[]) {
+    private async saveFoodToDatabase(food: Food, previousQuantity: number, idsOfFoodCategoriestoSave: string[], idsOfFoodCategoriestoDelete: string[]) {
         const foodID = food.id!;
         const transaction = datastore.transaction();
         try {
@@ -98,8 +99,10 @@ export class FoodActionManager {
                 data: food
             };
 
+            // Save food itself
             transaction.save(foodEntity);
             
+            // Save new food category associations
             const foodCategoryEntities = idsOfFoodCategoriestoSave.map(foodCategoryID => {
                 const foodCategoryAssociation = new FoodCategoryAssociation();
                 foodCategoryAssociation.foodCategoryID = foodCategoryID;
@@ -113,31 +116,28 @@ export class FoodActionManager {
             });
             transaction.save(foodCategoryEntities);
             
-            let inventorySummary = await foodDAO.getInventorySummaryByOrganizationID(food.organizationID!);
+            let inventorySummary = await foodDAO.getInventorySummaryByOrganizationID(food.organizationID!); // Get existing or create new
             if (!inventorySummary) inventorySummary = new InventorySummary();
-            idsOfFoodCategoriestoSave.forEach(foodCategoryID => {
-                const categoryCount = inventorySummary.categoryCounts?.find(c => c.categoryID === foodCategoryID);
-                if (categoryCount) {
-                    categoryCount.quantity = (categoryCount.quantity || 0) + (food.currentQuantity || 0) - originalQuantity;
-                } else {
+
+            const categories = await getAllFoodCategories();
+            const prevFoodCategories = (await foodDAO.getFoodCategoryAssociationsByFoodID(foodID)).map(assoc => assoc.foodCategoryID!);
+            categories.forEach(category => {
+                // Get existing category count in inventory summary or create new
+                let existingCategoryCount = inventorySummary.categoryCounts.find(c => c.categoryID === category.id);
+                if (!existingCategoryCount) {
                     const categoryCount = new CategoryCount();
-                    categoryCount.categoryID = foodCategoryID;
-                    categoryCount.quantity = food.currentQuantity || 0;
+                    categoryCount.categoryID = category.id;
+                    categoryCount.quantity = 0;
                     inventorySummary.categoryCounts.push(categoryCount);
+                    existingCategoryCount = categoryCount;
                 }
-            });
-            idsOfFoodCategoriestoDelete.forEach(foodCategoryID => {
-                const categoryCount = inventorySummary.categoryCounts?.find(c => c.categoryID === foodCategoryID);
-                if (categoryCount) {
-                    categoryCount.quantity = (categoryCount.quantity || 0) - ((food.currentQuantity || 0) - originalQuantity);
-                }
-            });
-            const existingCategories = await foodDAO.getFoodCategoryAssociationsByFoodID(foodID);
-            existingCategories.forEach(foodCategoryAssociation => {
-                if (idsOfFoodCategoriestoDelete.includes(foodCategoryAssociation.foodCategoryID!)) return;
-                const categoryCount = inventorySummary!.categoryCounts?.find(c => c.categoryID === foodCategoryAssociation.foodCategoryID);
-                if (categoryCount) {
-                    categoryCount.quantity = (categoryCount.quantity || 0) + (food.currentQuantity || 0) - originalQuantity;
+
+                if (idsOfFoodCategoriestoDelete.includes(category.id!)) {
+                    existingCategoryCount.quantity! -= previousQuantity; // If category is being deleted, subtract previous quantity
+                } else if (idsOfFoodCategoriestoSave.includes(category.id!)) {
+                    existingCategoryCount.quantity! += food.currentQuantity!; // If category is being added, add full current quantity
+                } else if (prevFoodCategories.includes(category.id!)) {
+                    existingCategoryCount.quantity! += food.currentQuantity! - previousQuantity; // If category is unchanged, adjust by difference
                 }
             });
 
