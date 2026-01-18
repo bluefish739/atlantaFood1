@@ -4,6 +4,7 @@ import { generateId } from "../../shared/idutilities";
 import { foodDAO } from "../../daos/dao-factory";
 import { datastore } from "../../daos/data-store-factory";
 import { FoodDAO } from "../../daos/food-dao";
+import { getAllFoodCategories } from "../../shared/utilities";
 
 export class FoodActionManager {
     async saveFood(requestContext: RequestContext, detailedFood: DetailedFood) {
@@ -118,32 +119,25 @@ export class FoodActionManager {
             let inventorySummary = await foodDAO.getInventorySummaryByOrganizationID(food.organizationID!); // Get existing or create new
             if (!inventorySummary) inventorySummary = new InventorySummary();
 
-            idsOfFoodCategoriestoSave.forEach(foodCategoryID => {
-                const categoryCount = inventorySummary.categoryCounts?.find(c => c.categoryID === foodCategoryID);
-                if (categoryCount) {
-                    categoryCount.quantity! += food.currentQuantity!; // Add full quantity for new category
-                } else {
-                    // Otherwise create new category count with quantity equal to food quantity
+            const categories = await getAllFoodCategories();
+            const prevFoodCategories = (await foodDAO.getFoodCategoryAssociationsByFoodID(foodID)).map(assoc => assoc.foodCategoryID!);
+            categories.forEach(category => {
+                // Get existing category count in inventory summary or create new
+                let existingCategoryCount = inventorySummary.categoryCounts.find(c => c.categoryID === category.id);
+                if (!existingCategoryCount) {
                     const categoryCount = new CategoryCount();
-                    categoryCount.categoryID = foodCategoryID;
-                    categoryCount.quantity = food.currentQuantity;
+                    categoryCount.categoryID = category.id;
+                    categoryCount.quantity = 0;
                     inventorySummary.categoryCounts.push(categoryCount);
+                    existingCategoryCount = categoryCount;
                 }
-            });
-            idsOfFoodCategoriestoDelete.forEach(foodCategoryID => {
-                const categoryCount = inventorySummary.categoryCounts?.find(c => c.categoryID === foodCategoryID);
-                if (categoryCount) {
-                    categoryCount.quantity! -= previousQuantity; // Subtract previously stored quantity from deleted category
-                }
-            });
 
-            const existingCategories = await foodDAO.getFoodCategoryAssociationsByFoodID(foodID);
-            existingCategories.forEach(foodCategoryAssociation => {
-                if (idsOfFoodCategoriestoDelete.includes(foodCategoryAssociation.foodCategoryID!)) return; // Already handled above
-
-                const categoryCount = inventorySummary!.categoryCounts?.find(c => c.categoryID === foodCategoryAssociation.foodCategoryID);
-                if (categoryCount) {
-                    categoryCount.quantity! += food.currentQuantity! - previousQuantity; // Adjust quantity by difference
+                if (idsOfFoodCategoriestoDelete.includes(category.id!)) {
+                    existingCategoryCount.quantity! -= previousQuantity; // If category is being deleted, subtract previous quantity
+                } else if (idsOfFoodCategoriestoSave.includes(category.id!)) {
+                    existingCategoryCount.quantity! += food.currentQuantity!; // If category is being added, add full current quantity
+                } else if (prevFoodCategories.includes(category.id!)) {
+                    existingCategoryCount.quantity! += food.currentQuantity! - previousQuantity; // If category is unchanged, adjust by difference
                 }
             });
 
