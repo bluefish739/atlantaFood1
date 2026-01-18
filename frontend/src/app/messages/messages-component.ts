@@ -31,9 +31,9 @@ export class MessagesComponent {
     selectedOrganization: Organization = new Organization();
     newMessageText = "";
     messages: Message[] = [];
-    loading = "LOADING";
-    no = "NO";
-    yes = "YES";
+    readonly loading = "LOADING";
+    readonly no = "NO";
+    readonly yes = "YES";
     organizationDetailsProvided = this.loading;
     messagesLoading = false;
 
